@@ -1,0 +1,28 @@
+name: eye_comm_project
+description: "EyeComm - Eye Tracking Communication Assistant"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  google_fonts: ^6.2.1
+  flutter_tts: ^4.2.5
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+  googleapis_auth: ^1.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
