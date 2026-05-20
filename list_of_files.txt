@@ -1,0 +1,590 @@
+ Volume in drive C has no label.
+ Volume Serial Number is 0E8F-69BE
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main
+
+04/20/2026  09:30 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               703 .gitignore
+04/20/2026  09:21 PM             1,706 .metadata
+04/20/2026  09:21 PM             1,420 analysis_options.yaml
+04/20/2026  09:21 PM    <DIR>          android
+04/20/2026  09:21 PM       101,840,632 eye_model.h5
+04/20/2026  09:21 PM    <DIR>          ios
+04/20/2026  09:21 PM    <DIR>          lib
+04/20/2026  09:21 PM    <DIR>          linux
+04/20/2026  09:30 PM                 0 list_of_files.txt
+04/20/2026  09:21 PM    <DIR>          macos
+04/20/2026  09:21 PM             3,056 model_code.py
+04/20/2026  09:21 PM            12,283 pubspec.lock
+04/20/2026  09:21 PM             3,904 pubspec.yaml
+04/20/2026  09:21 PM               625 README.md
+04/20/2026  09:21 PM             2,634 server.py
+04/20/2026  09:21 PM    <DIR>          test
+04/20/2026  09:21 PM    <DIR>          web
+04/20/2026  09:21 PM    <DIR>          windows
+              10 File(s)    101,866,963 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM               253 .gitignore
+04/20/2026  09:21 PM    <DIR>          app
+04/20/2026  09:21 PM               537 build.gradle.kts
+04/20/2026  09:21 PM    <DIR>          gradle
+04/20/2026  09:21 PM               138 gradle.properties
+04/20/2026  09:21 PM               772 settings.gradle.kts
+               4 File(s)          1,700 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             1,378 build.gradle.kts
+04/20/2026  09:21 PM    <DIR>          src
+               1 File(s)          1,378 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          debug
+04/20/2026  09:21 PM    <DIR>          main
+04/20/2026  09:21 PM    <DIR>          profile
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\debug
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               378 AndroidManifest.xml
+               1 File(s)            378 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             2,191 AndroidManifest.xml
+04/20/2026  09:21 PM    <DIR>          kotlin
+04/20/2026  09:21 PM    <DIR>          res
+               1 File(s)          2,191 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\kotlin
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          com
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\kotlin\com
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          example
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\kotlin\com\example
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          ers
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\kotlin\com\example\ers
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               117 MainActivity.kt
+               1 File(s)            117 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          drawable
+04/20/2026  09:21 PM    <DIR>          drawable-v21
+04/20/2026  09:21 PM    <DIR>          mipmap-hdpi
+04/20/2026  09:21 PM    <DIR>          mipmap-mdpi
+04/20/2026  09:21 PM    <DIR>          mipmap-xhdpi
+04/20/2026  09:21 PM    <DIR>          mipmap-xxhdpi
+04/20/2026  09:21 PM    <DIR>          mipmap-xxxhdpi
+04/20/2026  09:21 PM    <DIR>          values
+04/20/2026  09:21 PM    <DIR>          values-night
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\drawable
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               434 launch_background.xml
+               1 File(s)            434 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\drawable-v21
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               438 launch_background.xml
+               1 File(s)            438 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\mipmap-hdpi
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               544 ic_launcher.png
+               1 File(s)            544 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\mipmap-mdpi
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               442 ic_launcher.png
+               1 File(s)            442 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\mipmap-xhdpi
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               721 ic_launcher.png
+               1 File(s)            721 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\mipmap-xxhdpi
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             1,031 ic_launcher.png
+               1 File(s)          1,031 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\mipmap-xxxhdpi
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             1,443 ic_launcher.png
+               1 File(s)          1,443 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\values
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               996 styles.xml
+               1 File(s)            996 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\main\res\values-night
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               995 styles.xml
+               1 File(s)            995 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\app\src\profile
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               378 AndroidManifest.xml
+               1 File(s)            378 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\gradle
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          wrapper
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\android\gradle\wrapper
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               201 gradle-wrapper.properties
+               1 File(s)            201 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM               569 .gitignore
+04/20/2026  09:21 PM    <DIR>          Flutter
+04/20/2026  09:21 PM    <DIR>          Runner
+04/20/2026  09:21 PM    <DIR>          Runner.xcodeproj
+04/20/2026  09:21 PM    <DIR>          Runner.xcworkspace
+04/20/2026  09:21 PM    <DIR>          RunnerTests
+               1 File(s)            569 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Flutter
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               720 AppFrameworkInfo.plist
+04/20/2026  09:21 PM                30 Debug.xcconfig
+04/20/2026  09:21 PM                30 Release.xcconfig
+               3 File(s)            780 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               539 AppDelegate.swift
+04/20/2026  09:21 PM    <DIR>          Assets.xcassets
+04/20/2026  09:21 PM    <DIR>          Base.lproj
+04/20/2026  09:21 PM             2,204 Info.plist
+04/20/2026  09:21 PM                38 Runner-Bridging-Header.h
+04/20/2026  09:21 PM                76 SceneDelegate.swift
+               4 File(s)          2,857 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner\Assets.xcassets
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          AppIcon.appiconset
+04/20/2026  09:21 PM    <DIR>          LaunchImage.imageset
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner\Assets.xcassets\AppIcon.appiconset
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             2,519 Contents.json
+04/20/2026  09:21 PM            10,932 Icon-App-1024x1024@1x.png
+04/20/2026  09:21 PM               295 Icon-App-20x20@1x.png
+04/20/2026  09:21 PM               406 Icon-App-20x20@2x.png
+04/20/2026  09:21 PM               450 Icon-App-20x20@3x.png
+04/20/2026  09:21 PM               282 Icon-App-29x29@1x.png
+04/20/2026  09:21 PM               462 Icon-App-29x29@2x.png
+04/20/2026  09:21 PM               704 Icon-App-29x29@3x.png
+04/20/2026  09:21 PM               406 Icon-App-40x40@1x.png
+04/20/2026  09:21 PM               586 Icon-App-40x40@2x.png
+04/20/2026  09:21 PM               862 Icon-App-40x40@3x.png
+04/20/2026  09:21 PM               862 Icon-App-60x60@2x.png
+04/20/2026  09:21 PM             1,674 Icon-App-60x60@3x.png
+04/20/2026  09:21 PM               762 Icon-App-76x76@1x.png
+04/20/2026  09:21 PM             1,226 Icon-App-76x76@2x.png
+04/20/2026  09:21 PM             1,418 Icon-App-83.5x83.5@2x.png
+              16 File(s)         23,846 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner\Assets.xcassets\LaunchImage.imageset
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               391 Contents.json
+04/20/2026  09:21 PM                68 LaunchImage.png
+04/20/2026  09:21 PM                68 LaunchImage@2x.png
+04/20/2026  09:21 PM                68 LaunchImage@3x.png
+04/20/2026  09:21 PM               336 README.md
+               5 File(s)            931 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner\Base.lproj
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             2,377 LaunchScreen.storyboard
+04/20/2026  09:21 PM             1,605 Main.storyboard
+               2 File(s)          3,982 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcodeproj
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM            24,072 project.pbxproj
+04/20/2026  09:21 PM    <DIR>          project.xcworkspace
+04/20/2026  09:21 PM    <DIR>          xcshareddata
+               1 File(s)         24,072 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcodeproj\project.xcworkspace
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               135 contents.xcworkspacedata
+04/20/2026  09:21 PM    <DIR>          xcshareddata
+               1 File(s)            135 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcodeproj\project.xcworkspace\xcshareddata
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               238 IDEWorkspaceChecks.plist
+04/20/2026  09:21 PM               226 WorkspaceSettings.xcsettings
+               2 File(s)            464 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcodeproj\xcshareddata
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          xcschemes
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcodeproj\xcshareddata\xcschemes
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             3,833 Runner.xcscheme
+               1 File(s)          3,833 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcworkspace
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               152 contents.xcworkspacedata
+04/20/2026  09:21 PM    <DIR>          xcshareddata
+               1 File(s)            152 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\Runner.xcworkspace\xcshareddata
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               238 IDEWorkspaceChecks.plist
+04/20/2026  09:21 PM               226 WorkspaceSettings.xcsettings
+               2 File(s)            464 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\ios\RunnerTests
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               285 RunnerTests.swift
+               1 File(s)            285 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\lib
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM            17,639 advanced_screens.dart
+04/20/2026  09:21 PM            14,689 core_services.dart
+04/20/2026  09:21 PM            12,299 main.dart
+04/20/2026  09:21 PM            24,851 sub_screens.dart
+               4 File(s)         69,478 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\linux
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM                18 .gitignore
+04/20/2026  09:21 PM             4,745 CMakeLists.txt
+04/20/2026  09:21 PM    <DIR>          flutter
+04/20/2026  09:21 PM    <DIR>          runner
+               2 File(s)          4,763 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\linux\flutter
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             2,815 CMakeLists.txt
+04/20/2026  09:21 PM               739 generated_plugins.cmake
+04/20/2026  09:21 PM               161 generated_plugin_registrant.cc
+04/20/2026  09:21 PM               303 generated_plugin_registrant.h
+               4 File(s)          4,018 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\linux\runner
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               974 CMakeLists.txt
+04/20/2026  09:21 PM               180 main.cc
+04/20/2026  09:21 PM             5,445 my_application.cc
+04/20/2026  09:21 PM               451 my_application.h
+               4 File(s)          7,050 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM                89 .gitignore
+04/20/2026  09:21 PM    <DIR>          Flutter
+04/20/2026  09:21 PM    <DIR>          Runner
+04/20/2026  09:21 PM    <DIR>          Runner.xcodeproj
+04/20/2026  09:21 PM    <DIR>          Runner.xcworkspace
+04/20/2026  09:21 PM    <DIR>          RunnerTests
+               1 File(s)             89 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Flutter
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM                48 Flutter-Debug.xcconfig
+04/20/2026  09:21 PM                48 Flutter-Release.xcconfig
+04/20/2026  09:21 PM               251 GeneratedPluginRegistrant.swift
+               3 File(s)            347 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               311 AppDelegate.swift
+04/20/2026  09:21 PM    <DIR>          Assets.xcassets
+04/20/2026  09:21 PM    <DIR>          Base.lproj
+04/20/2026  09:21 PM    <DIR>          Configs
+04/20/2026  09:21 PM               348 DebugProfile.entitlements
+04/20/2026  09:21 PM             1,060 Info.plist
+04/20/2026  09:21 PM               388 MainFlutterWindow.swift
+04/20/2026  09:21 PM               240 Release.entitlements
+               5 File(s)          2,347 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner\Assets.xcassets
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          AppIcon.appiconset
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner\Assets.xcassets\AppIcon.appiconset
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM           102,994 app_icon_1024.png
+04/20/2026  09:21 PM             5,680 app_icon_128.png
+04/20/2026  09:21 PM               520 app_icon_16.png
+04/20/2026  09:21 PM            14,142 app_icon_256.png
+04/20/2026  09:21 PM             1,066 app_icon_32.png
+04/20/2026  09:21 PM            36,406 app_icon_512.png
+04/20/2026  09:21 PM             2,218 app_icon_64.png
+04/20/2026  09:21 PM             1,291 Contents.json
+               8 File(s)        164,317 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner\Base.lproj
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM            23,729 MainMenu.xib
+               1 File(s)         23,729 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner\Configs
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               593 AppInfo.xcconfig
+04/20/2026  09:21 PM                77 Debug.xcconfig
+04/20/2026  09:21 PM                79 Release.xcconfig
+04/20/2026  09:21 PM               580 Warnings.xcconfig
+               4 File(s)          1,329 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcodeproj
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM            26,294 project.pbxproj
+04/20/2026  09:21 PM    <DIR>          project.xcworkspace
+04/20/2026  09:21 PM    <DIR>          xcshareddata
+               1 File(s)         26,294 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcodeproj\project.xcworkspace
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          xcshareddata
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcodeproj\project.xcworkspace\xcshareddata
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               238 IDEWorkspaceChecks.plist
+               1 File(s)            238 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcodeproj\xcshareddata
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM    <DIR>          xcschemes
+               0 File(s)              0 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcodeproj\xcshareddata\xcschemes
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             3,671 Runner.xcscheme
+               1 File(s)          3,671 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcworkspace
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               152 contents.xcworkspacedata
+04/20/2026  09:21 PM    <DIR>          xcshareddata
+               1 File(s)            152 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\Runner.xcworkspace\xcshareddata
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               238 IDEWorkspaceChecks.plist
+               1 File(s)            238 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\macos\RunnerTests
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM               290 RunnerTests.swift
+               1 File(s)            290 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\test
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM             1,054 widget_test.dart
+               1 File(s)          1,054 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\web
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM               917 favicon.png
+04/20/2026  09:21 PM    <DIR>          icons
+04/20/2026  09:21 PM             1,511 index.html
+04/20/2026  09:21 PM               902 manifest.json
+               3 File(s)          3,330 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\web\icons
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             5,292 Icon-192.png
+04/20/2026  09:21 PM             8,252 Icon-512.png
+04/20/2026  09:21 PM             5,594 Icon-maskable-192.png
+04/20/2026  09:21 PM            20,998 Icon-maskable-512.png
+               4 File(s)         40,136 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\windows
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:30 PM    <DIR>          ..
+04/20/2026  09:21 PM               291 .gitignore
+04/20/2026  09:21 PM             4,142 CMakeLists.txt
+04/20/2026  09:21 PM    <DIR>          flutter
+04/20/2026  09:21 PM    <DIR>          runner
+               2 File(s)          4,433 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\windows\flutter
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             3,742 CMakeLists.txt
+04/20/2026  09:21 PM               757 generated_plugins.cmake
+04/20/2026  09:21 PM               309 generated_plugin_registrant.cc
+04/20/2026  09:21 PM               302 generated_plugin_registrant.h
+               4 File(s)          5,110 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\windows\runner
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM             1,796 CMakeLists.txt
+04/20/2026  09:21 PM             2,122 flutter_window.cpp
+04/20/2026  09:21 PM               928 flutter_window.h
+04/20/2026  09:21 PM             1,256 main.cpp
+04/20/2026  09:21 PM               432 resource.h
+04/20/2026  09:21 PM    <DIR>          resources
+04/20/2026  09:21 PM               602 runner.exe.manifest
+04/20/2026  09:21 PM             3,009 Runner.rc
+04/20/2026  09:21 PM             1,797 utils.cpp
+04/20/2026  09:21 PM               672 utils.h
+04/20/2026  09:21 PM             8,534 win32_window.cpp
+04/20/2026  09:21 PM             3,522 win32_window.h
+              11 File(s)         24,670 bytes
+
+ Directory of C:\Users\Amir\Desktop\sssssssssssssssssss\eye_comm_project-main\eye_comm_project-main\windows\runner\resources
+
+04/20/2026  09:21 PM    <DIR>          .
+04/20/2026  09:21 PM    <DIR>          ..
+04/20/2026  09:21 PM            33,772 app_icon.ico
+               1 File(s)         33,772 bytes
+
+     Total Files Listed:
+             137 File(s)    102,363,575 bytes
+             191 Dir(s)  148,547,579,904 bytes free

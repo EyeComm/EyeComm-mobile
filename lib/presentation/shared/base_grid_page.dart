@@ -12,6 +12,7 @@ import '../core/emergency_service.dart';
 import 'dynamic_eye_card.dart';
 import 'modern_tracking_quality_bar.dart'; // ⬅️ استيراد البار المودرن الجديد
 
+
 /// ════════════════════════════════════════════════════════════════════════
 /// BaseGridPage — single shared scaffold for every EyeComm screen.
 ///
