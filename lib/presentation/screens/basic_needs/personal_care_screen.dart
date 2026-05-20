@@ -16,11 +16,9 @@ class PersonalCareScreen extends StatelessWidget {
       color: const Color(0xFF00897B), // لون Teal مريح
       items: [
         {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
-
-        // خيارات سريعة ومباشرة
         {'eye': 'left', 'text': ar ? 'دخول الحمام' : 'Bathroom', 'iconAsset': 'assets/icons/toilet.png', 'color': const Color(0xFF5D4037), 'is_nav': false, 'eye_name': eyeName('left')},
-        {'eye': 'right', 'text': ar ? 'استحمام / غسيل وجه' : 'Shower / Wash', 'iconAsset': 'assets/icons/shower.png', 'color': const Color(0xFF0288D1), 'is_nav': false, 'eye_name': eyeName('right')},
-        {'eye': 'up', 'text': ar ? 'عناية (أسنان/شعر)' : 'Grooming', 'iconAsset': 'assets/icons/toothbrush.png', 'color': const Color(0xFF00ACC1), 'is_nav': false, 'eye_name': eyeName('up')},
+        {'eye': 'right', 'text': ar ? 'استحمام' : 'Shower', 'iconAsset': 'assets/icons/shower.png', 'color': const Color(0xFF0288D1), 'is_nav': false, 'eye_name': eyeName('right')},
+        {'eye': 'up', 'text': ar ? 'عناية وأدوية' : 'Grooming & Meds', 'iconAsset': 'assets/icons/toothbrush.png', 'color': const Color(0xFF00ACC1), 'is_nav': false, 'eye_name': eyeName('up')},
         {'eye': 'down', 'text': ar ? 'تغيير ملابس' : 'Change Clothes', 'iconAsset': 'assets/icons/clothes.png', 'color': const Color(0xFF43A047), 'is_nav': false, 'eye_name': eyeName('down')},
       ],
       onAction: (eye, ctx) async {

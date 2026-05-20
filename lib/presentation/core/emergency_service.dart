@@ -6,7 +6,6 @@ import 'voice_service.dart';
 
 // ══════════════════════════════════════════════════════════════════
 // EmergencyDetector
-// Watches for eye-movement inactivity and escalates alerts.
 // ══════════════════════════════════════════════════════════════════
 class EmergencyDetector {
   static Timer? _t;
@@ -14,7 +13,6 @@ class EmergencyDetector {
   static bool _activated = false;
   static bool _warn1 = false, _warn2 = false, _warn3 = false;
 
-  /// Called whenever a valid eye-tracking result is received.
   static void recordMovement() {
     _last = DateTime.now();
     _activated = false;
@@ -26,31 +24,33 @@ class EmergencyDetector {
     _activated = false;
   }
 
-  /// Subscribe to receive the inactivity duration in seconds.
   static Function(int seconds)? onWarning;
 
   static void _start() {
     _t?.cancel();
     _warn1 = _warn2 = _warn3 = false;
+
+    // 🎯 خلينا التايمر شغال عشان البانر اللي فوق يفضل شغال، بس شلنا الصوت عشان ميضايقكيش
     _t = Timer.periodic(const Duration(seconds: 5), (_) {
       if (_last == null) return;
       final int s = DateTime.now().difference(_last!).inSeconds;
       onWarning?.call(s);
+
       if (s >= 150 && s < 210 && !_warn1) {
         _warn1 = true;
-        VoiceService.speak(AppLanguage.t('are_you_ok'));
+        // VoiceService.speak(AppLanguage.t('are_you_ok')); // 🚫 تم الإيقاف
       }
       if (s >= 210 && s < 270 && !_warn2) {
         _warn2 = true;
-        VoiceService.speak(AppLanguage.t('no_movement_warn'));
+        // VoiceService.speak(AppLanguage.t('no_movement_warn')); // 🚫 تم الإيقاف
       }
       if (s >= 270 && s < 300 && !_warn3) {
         _warn3 = true;
-        VoiceService.speak(AppLanguage.t('emergency_alert'));
+        // VoiceService.speak(AppLanguage.t('emergency_alert')); // 🚫 تم الإيقاف
       }
       if (s >= 300 && !_activated) {
         _activated = true;
-        _callSequence();
+        _callSequence(); // دي هتفضل شغالة لوساب التطبيق 5 دقايق كاملين
       }
     });
   }
@@ -72,7 +72,6 @@ class EmergencyDetector {
 
 // ══════════════════════════════════════════════════════════════════
 // CaregiverNumberManager
-// Simple in-memory list of caregiver phone numbers.
 // ══════════════════════════════════════════════════════════════════
 class CaregiverNumberManager {
   static List<String> numbers = [];

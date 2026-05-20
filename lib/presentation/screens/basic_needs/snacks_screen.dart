@@ -17,10 +17,10 @@ class SnacksScreen extends StatelessWidget {
       color: const Color(0xFF43A047),
       items: [
         {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
-        {'eye': 'left', 'text': ar ? 'فواكه طازجة' : 'Fresh Fruits', 'iconAsset': 'assets/icons/fruits.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},
-        {'eye': 'right', 'text': ar ? 'مكسرات صحية' : 'Healthy Nuts', 'iconAsset': 'assets/icons/nuts.png', 'color': const Color(0xFF795548), 'is_nav': true, 'eye_name': eyeName('right')},
-        {'eye': 'up', 'text': ar ? 'مقرمشات خفيفة' : 'Light Snacks', 'iconAsset': 'assets/icons/popcorn.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('up')},
-        {'eye': 'down', 'text': ar ? 'مكملات وبروتين' : 'Protein & Sweets', 'iconAsset': 'assets/icons/protein_shake.png', 'color': const Color(0xFF8E24AA), 'is_nav': true, 'eye_name': eyeName('down')},
+        {'eye': 'left', 'text': ar ? 'فواكه' : 'Fruits', 'iconAsset': 'assets/icons/fruits.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},
+        {'eye': 'right', 'text': ar ? 'مكسرات' : 'Nuts', 'iconAsset': 'assets/icons/nuts.png', 'color': const Color(0xFF795548), 'is_nav': true, 'eye_name': eyeName('right')},
+        {'eye': 'up', 'text': ar ? 'مقرمشات' : 'Snacks', 'iconAsset': 'assets/icons/popcorn.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('up')},
+        {'eye': 'down', 'text': ar ? 'بروتين' : 'Protein', 'iconAsset': 'assets/icons/protein_shake.png', 'color': const Color(0xFF8E24AA), 'is_nav': true, 'eye_name': eyeName('down')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }

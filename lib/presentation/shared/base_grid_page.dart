@@ -10,15 +10,8 @@ import '../core/language_service.dart';
 import '../core/voice_service.dart';
 import '../core/emergency_service.dart';
 import 'dynamic_eye_card.dart';
-import 'modern_tracking_quality_bar.dart'; // ⬅️ استيراد البار المودرن الجديد
+import 'modern_tracking_quality_bar.dart';
 
-
-/// ════════════════════════════════════════════════════════════════════════
-/// BaseGridPage — single shared scaffold for every EyeComm screen.
-///
-/// Shows the modern integrated live MJPEG camera stream & countdown bar
-/// alongside the eye-controlled card grid.
-/// ════════════════════════════════════════════════════════════════════════
 class BaseGridPage extends StatefulWidget {
   final String title;
   final Color  color;
@@ -26,13 +19,13 @@ class BaseGridPage extends StatefulWidget {
   final int    timerSeconds;
   final Future<void> Function(String eye, BuildContext ctx)? onAction;
 
-  // Main-screen extras
+  final Widget Function(BuildContext context, int index, Map<String, dynamic> item, String stable, int cd, int totalTimer)? itemBuilder;
+
   final bool        isMainScreen;
   final String      warningMsg;
   final Color       warningColor;
   final VoidCallback? onLangTap;
 
-  /// Python server base URL — local Windows link
   final String serverBase;
 
   const BaseGridPage({
@@ -42,6 +35,7 @@ class BaseGridPage extends StatefulWidget {
     required this.items,
     this.timerSeconds  = 5,
     this.onAction,
+    this.itemBuilder,
     this.isMainScreen  = false,
     this.warningMsg    = '',
     this.warningColor  = Colors.transparent,
@@ -54,7 +48,6 @@ class BaseGridPage extends StatefulWidget {
 }
 
 class _BaseGridPageState extends State<BaseGridPage> {
-  // Eye-tracking state
   String    _eye       = 'none';
   bool      _connected = false;
   int       _cd        = 0;
@@ -70,7 +63,6 @@ class _BaseGridPageState extends State<BaseGridPage> {
     _startPoll();
   }
 
-  // ── HTTP poll → /predict ───────────────────────────────────────────────
   void _startPoll() {
     _pollTimer?.cancel();
     _stable   = 'none';
@@ -81,6 +73,8 @@ class _BaseGridPageState extends State<BaseGridPage> {
   }
 
   Future<void> _poll() async {
+    if (!mounted || !ModalRoute.of(context)!.isCurrent) return;
+
     if (_busy) return;
     _busy = true;
     try {
@@ -128,7 +122,6 @@ class _BaseGridPageState extends State<BaseGridPage> {
     }
   }
 
-  // ── Execute confirmed action ───────────────────────────────────────────
   void _execute(String eye) async {
     final item = widget.items.firstWhere(
             (e) => e['eye'] == eye, orElse: () => {});
@@ -191,9 +184,13 @@ class _BaseGridPageState extends State<BaseGridPage> {
     super.dispose();
   }
 
-  // ── Grid layout (النسخة الذكية المعدلة) ──────────────────────────────────
   Widget _safeCard(int i) {
     if (i >= widget.items.length) return const SizedBox();
+
+    if (widget.itemBuilder != null) {
+      return widget.itemBuilder!(context, i, widget.items[i], _stable, _cd, widget.timerSeconds);
+    }
+
     return DynamicEyeCard(
         item: widget.items[i], stable: _stable,
         cd: _cd, totalTimer: widget.timerSeconds);
@@ -242,12 +239,10 @@ class _BaseGridPageState extends State<BaseGridPage> {
         SizedBox(height: gap),
         Expanded(child: Row(children: [
           if (len == 4) ...[
-            // 🎯 هنا السر: لو هم 4 كروت، نحط مسافة فاضية يمين وشمال قد كارت كامل عشان ييجي في النص
             const Expanded(flex: 2, child: SizedBox()), SizedBox(width: gap),
             Expanded(flex: 2, child: _safeCard(3)), SizedBox(width: gap),
             const Expanded(flex: 2, child: SizedBox()),
           ] else ...[
-            // لو هم 5 كروت، سنتر الكارتين الباقيين
             const Expanded(flex: 1, child: SizedBox()),
             Expanded(flex: 2, child: _safeCard(3)), SizedBox(width: gap),
             Expanded(flex: 2, child: _safeCard(4)),
@@ -258,76 +253,6 @@ class _BaseGridPageState extends State<BaseGridPage> {
     ]);
   }
 
-  // ── Headers ────────────────────────────────────────────────────────────
-  Widget _mainHeader(BuildContext context) {
-    final now  = DateTime.now();
-    final h    = now.hour.toString().padLeft(2, '0');
-    final m    = now.minute.toString().padLeft(2, '0');
-    final ampm = now.hour < 12 ? 'AM' : 'PM';
-    final bool ar   = AppLanguage.current == 'ar';
-    final double sw = MediaQuery.of(context).size.width;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(ar ? 'مرحباً' : 'Hello',
-              style: GoogleFonts.inter(
-                  fontSize: (sw * 0.043).clamp(14, 20).toDouble(),
-                  fontWeight: FontWeight.w700, color: kTextMain1)),
-          Text('$h:$m $ampm',
-              style: GoogleFonts.inter(
-                  fontSize: (sw * 0.031).clamp(10, 14).toDouble(),
-                  color: kTextSub1)),
-        ]),
-        const Spacer(),
-        Container(
-          width: 10, height: 10,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _connected ? const Color(0xFF22C55E) : Colors.red),
-        ),
-        const SizedBox(width: 6),
-        Text(_connected ? (ar ? 'متصل' : 'Live') : (ar ? 'منقطع' : 'Off'),
-            style: GoogleFonts.inter(
-                fontSize: (sw * 0.031).clamp(10, 14).toDouble(),
-                fontWeight: FontWeight.w600,
-                color: _connected ? const Color(0xFF22C55E) : Colors.red)),
-        const SizedBox(width: 16),
-        if (widget.onLangTap != null)
-          GestureDetector(
-              onTap: widget.onLangTap,
-              child: const Icon(Icons.language_rounded,
-                  color: kTextSub1, size: 24)),
-      ]),
-    );
-  }
-
-  Widget _subHeader(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    child: Row(children: [
-      InkWell(
-        onTap: () => Navigator.pop(context),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: kSurface1,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: kBorder1)),
-          child: const Icon(Icons.arrow_back_ios_new_rounded,
-              size: 20, color: kTextMain1),
-        ),
-      ),
-      const SizedBox(width: 16),
-      Text(widget.title,
-          style: GoogleFonts.cairo(
-              color: kTextMain1, fontSize: 22,
-              fontWeight: FontWeight.bold)),
-    ]),
-  );
-
-  // ── Root build ─────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final bool ar = AppLanguage.current == 'ar';
@@ -338,7 +263,6 @@ class _BaseGridPageState extends State<BaseGridPage> {
         backgroundColor: kBg1,
         body: SafeArea(
           child: Column(children: [
-            // Warning banner
             if (widget.warningMsg.isNotEmpty)
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
@@ -353,12 +277,10 @@ class _BaseGridPageState extends State<BaseGridPage> {
                         fontWeight: FontWeight.bold)),
               ),
 
-            // Header
-            widget.isMainScreen
-                ? _mainHeader(context)
-                : _subHeader(context),
+            // 🎯 تم إزالة الهيدر بالكامل من هنا لتوفر الطول للكاميرا والـ Grid
+            const SizedBox(height: 4),
 
-            // ── 🎯 تم التعديل هنا: دمج الكاميرا والعداد في البار المودرن الشامل ──
+            // 🎯 نمرر تفاصيل الصفحة الحالية للبار ليصنع الـ Breadcrumbs والتاريخ داخلياً
             ModernTrackingQualityBar(
               currentEye: _eye,
               stableDirection: _stable,
@@ -366,11 +288,12 @@ class _BaseGridPageState extends State<BaseGridPage> {
               totalTimer: widget.timerSeconds,
               serverBase: widget.serverBase,
               activeColor: widget.color,
+              pageTitle: widget.title,
+              isMainScreen: widget.isMainScreen,
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
 
-            // Card grid
             Expanded(
               child: LayoutBuilder(builder: (ctx, screen) {
                 final bool wide =

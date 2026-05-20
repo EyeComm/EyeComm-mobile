@@ -45,15 +45,18 @@ def camera_loop():
             time.sleep(0.03)
             continue
 
+        # 🎯 شلنا الـ flip من هنا عشان MediaPipe يتعرف على اليمين والشمال صح
         h, w = frame.shape[:2]
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = face_mesh.process(rgb)
 
         pred = "none"
-        display_frame = frame.copy()
+
+        display_frame = np.zeros((200, 200, 3), dtype=np.uint8)
 
         if results.multi_face_landmarks:
             landmarks = results.multi_face_landmarks[0]
+            # النقط دي هتجيب العين اليمين فعلياً لأن الصورة لسه طبيعية
             xs = [int(landmarks.landmark[i].x * w) for i in RIGHT_EYE]
             ys = [int(landmarks.landmark[i].y * h) for i in RIGHT_EYE]
 
@@ -73,25 +76,24 @@ def camera_loop():
                     p = model.predict(img_input, verbose=0)
                     pred = classes[np.argmax(p)]
 
-                    cv2.rectangle(display_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                    cv2.putText(
-                        display_frame, pred,
-                        (x1, max(y1 - 10, 10)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2
-                    )
+                    # 🎯 التعديل السحري هنا: نقلب قصاصة العين بس عشان تظهر كأنها مراية
+                    eye_flipped = cv2.flip(eye, 1)
+
+                    # نكبرها ونبعتها
+                    display_frame = cv2.resize(eye_flipped, (200, 200))
+
                 except Exception:
                     pass
 
-        # ── FIX: encode BEFORE releasing the lock, check ret inside lock ──
+        # encode BEFORE releasing the lock
         ret_enc, jpeg = cv2.imencode('.jpg', display_frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
 
         with lock:
             current_prediction = pred
             if ret_enc:
-                global_frame = jpeg.tobytes()   # store encoded bytes, not raw frame
+                global_frame = jpeg.tobytes()
 
         time.sleep(0.03)
-
 
 threading.Thread(target=camera_loop, daemon=True).start()
 

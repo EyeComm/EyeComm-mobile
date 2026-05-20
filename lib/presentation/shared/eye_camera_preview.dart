@@ -148,18 +148,15 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
       );
     }
 
-    return Transform.scale(
-      scaleX: -1,
-      child: Image.memory(
-        _frameBytes!,
-        fit: BoxFit.cover,
-        gaplessPlayback: true,
+    return Image.memory(
+      _frameBytes!,
+      fit: BoxFit.cover,
+      gaplessPlayback: true,
         errorBuilder: (_, __, ___) => Container(
           color: const Color(0xFF0D1B2A),
           child: const Icon(Icons.broken_image_rounded,
               color: Colors.white24, size: 28),
         ),
-      ),
     );
   }
 }

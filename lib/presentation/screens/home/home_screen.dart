@@ -60,22 +60,25 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 🎯 الترتيب هنا اتعدل عشان يترص صح في الـ BaseGridPage
+    // الصف الأول (هياخد 3 كروت على الشاشات العريضة): شمال، أعلى (في النص)، يمين
+    // الصف التاني (هياخد كارتين): إغلاق، أسفل
     final List<Map<String, dynamic>> menuItems = [
-      {
-        'eye': 'closed',
-        'text': AppLanguage.t("basic"),
-        'iconAsset': 'assets/basic.png',
-        'color': const Color(0xFF2B8EE8),
-        'eye_name': eyeName('closed'),
-        'page': () => const BasicNeedsScreen(),
-      },
       {
         'eye': 'left',
         'text': AppLanguage.t("health"),
-        'iconAsset': 'assets/health.png',
+        'iconAsset': 'assets/health.png', // تأكدي إن عندك الأيقونات أو استخدمي الإيموجي لو لسه مغيرتيهاش
         'color': const Color(0xFFE8762B),
         'eye_name': eyeName('left'),
         'page': () => const HealthScreen(),
+      },
+      {
+        'eye': 'up',
+        'text': AppLanguage.t("social"),
+        'iconAsset': 'assets/social.png',
+        'color': const Color(0xFF0DB868),
+        'eye_name': eyeName('up'),
+        'page': () => const SocialScreen(),
       },
       {
         'eye': 'right',
@@ -86,12 +89,12 @@ class _MainScreenState extends State<MainScreen> {
         'page': () => const SmartControlMain(),
       },
       {
-        'eye': 'up',
-        'text': AppLanguage.t("social"),
-        'iconAsset': 'assets/social.png',
-        'color': const Color(0xFF0DB868),
-        'eye_name': eyeName('up'),
-        'page': () => const SocialScreen(),
+        'eye': 'closed',
+        'text': AppLanguage.t("basic"),
+        'iconAsset': 'assets/basic.png',
+        'color': const Color(0xFF2B8EE8),
+        'eye_name': eyeName('closed'),
+        'page': () => const BasicNeedsScreen(),
       },
       {
         'eye': 'down',
@@ -104,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     return BaseGridPage(
-      title: 'EyeComm',
+      title: AppLanguage.current == 'ar' ? 'الرئيسية' : 'EyeComm',
       color: const Color(0xFF2B8EE8),
       items: menuItems,
       isMainScreen: true,
@@ -113,7 +116,7 @@ class _MainScreenState extends State<MainScreen> {
       onLangTap: () => pushReplacement(context, const LanguageSelectionPage()),
       onAction: (String eye, BuildContext ctx) async {
         final item =
-            menuItems.firstWhere((m) => m['eye'] == eye, orElse: () => {});
+        menuItems.firstWhere((m) => m['eye'] == eye, orElse: () => {});
         if (item.isEmpty) return;
         VoiceService.speak(item['text'].toString().trim());
         await push(ctx, item['page']() as Widget);
