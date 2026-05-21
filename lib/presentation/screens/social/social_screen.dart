@@ -17,14 +17,7 @@ class SocialScreen extends StatelessWidget {
       title: ar ? 'تواصل اجتماعي' : 'Social',
       color: const Color(0xFF0DB868),
       items: [
-        {
-          'eye': 'closed',
-          'text': ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
-          'color': const Color(0xFF455A64),
-          'is_nav': false,
-          'eye_name': eyeName('closed')
-        },
+        // 1. اليسار
         {
           'eye': 'left',
           'text': ar ? 'ردود سريعة' : 'Quick Phrases',
@@ -33,14 +26,7 @@ class SocialScreen extends StatelessWidget {
           'is_nav': true,
           'eye_name': eyeName('left')
         },
-        {
-          'eye': 'right',
-          'text': ar ? 'مشاعري' : 'My Feelings',
-          'iconAsset': 'assets/icons/feelings.png',
-          'color': const Color(0xFFD81B60),
-          'is_nav': true,
-          'eye_name': eyeName('right')
-        },
+        // 2. الأعلى
         {
           'eye': 'up',
           'text': ar ? 'تحيات ومجاملات' : 'Greetings',
@@ -49,6 +35,16 @@ class SocialScreen extends StatelessWidget {
           'is_nav': true,
           'eye_name': eyeName('up')
         },
+        // 3. اليمين
+        {
+          'eye': 'right',
+          'text': ar ? 'مشاعري' : 'My Feelings',
+          'iconAsset': 'assets/icons/feelings.png',
+          'color': const Color(0xFFD81B60),
+          'is_nav': true,
+          'eye_name': eyeName('right')
+        },
+        // 4. الأسفل
         {
           'eye': 'down',
           'text': ar ? 'نداء المرافق' : 'Caregiver',
@@ -57,21 +53,23 @@ class SocialScreen extends StatelessWidget {
           'is_nav': true,
           'eye_name': eyeName('down')
         },
+        // 5. الإغلاق (رجوع)
+        {
+          'eye': 'closed',
+          'text': ar ? 'رجوع' : 'Back',
+          'iconAsset': 'assets/icons/back.png',
+          'color': const Color(0xFF455A64),
+          'is_nav': false,
+          'eye_name': eyeName('closed')
+        },
       ],
       onAction: (eye, ctx) async {
-        if (eye == 'closed') {
-          Navigator.pop(ctx);
-          return;
-        }
-
-        if (eye == 'left') {
-          await push(ctx, _buildQuickPhrases(ar));
-        } else if (eye == 'right') {
-          await push(ctx, _buildFeelings(ar));
-        } else if (eye == 'up') {
-          await push(ctx, _buildGreetings(ar));
-        } else if (eye == 'down') {
-          await push(ctx, const CaregiverScreen());
+        switch (eye) {
+          case 'left':   await push(ctx, _buildQuickPhrases(ar)); break;
+          case 'up':     await push(ctx, _buildGreetings(ar)); break;
+          case 'right':  await push(ctx, _buildFeelings(ar)); break;
+          case 'down':   await push(ctx, const CaregiverScreen()); break;
+          case 'closed': Navigator.pop(ctx); break;
         }
       },
     );
@@ -90,18 +88,18 @@ class SocialScreen extends StatelessWidget {
           'eye_name': eyeName('left')
         },
         {
-          'eye': 'right',
-          'text': ar ? 'لا / أرفض' : 'No / Never',
-          'iconAsset': 'assets/icons/no.png',
-          'color': const Color(0xFFE53935),
-          'eye_name': eyeName('right')
-        },
-        {
           'eye': 'up',
           'text': ar ? 'شكراً لك' : 'Thank You',
           'iconAsset': 'assets/icons/thanks.png',
           'color': const Color(0xFF00ACC1),
           'eye_name': eyeName('up')
+        },
+        {
+          'eye': 'right',
+          'text': ar ? 'لا / أرفض' : 'No / Never',
+          'iconAsset': 'assets/icons/no.png',
+          'color': const Color(0xFFE53935),
+          'eye_name': eyeName('right')
         },
         {
           'eye': 'down',
@@ -127,18 +125,18 @@ class SocialScreen extends StatelessWidget {
           'eye_name': eyeName('left')
         },
         {
-          'eye': 'right',
-          'text': ar ? 'أشعر بالحزن أو الضيق' : 'I feel sad or upset',
-          'iconAsset': 'assets/icons/sad.png',
-          'color': const Color(0xFF1E88E5),
-          'eye_name': eyeName('right')
-        },
-        {
           'eye': 'up',
           'text': ar ? 'أنا غاضب ومحبط الآن' : 'I am angry and frustrated',
           'iconAsset': 'assets/icons/angry.png',
           'color': const Color(0xFFD32F2F),
           'eye_name': eyeName('up')
+        },
+        {
+          'eye': 'right',
+          'text': ar ? 'أشعر بالحزن أو الضيق' : 'I feel sad or upset',
+          'iconAsset': 'assets/icons/sad.png',
+          'color': const Color(0xFF1E88E5),
+          'eye_name': eyeName('right')
         },
         {
           'eye': 'down',
@@ -164,18 +162,18 @@ class SocialScreen extends StatelessWidget {
           'eye_name': eyeName('left')
         },
         {
-          'eye': 'right',
-          'text': ar ? 'كيف حالك؟' : 'How are you?',
-          'iconAsset': 'assets/icons/how_are_you.png',
-          'color': const Color(0xFF00897B),
-          'eye_name': eyeName('right')
-        },
-        {
           'eye': 'up',
           'text': ar ? 'مع السلامة، أراك لاحقاً' : 'Goodbye, see you later',
           'iconAsset': 'assets/icons/goodbye.png',
           'color': const Color(0xFF8E24AA),
           'eye_name': eyeName('up')
+        },
+        {
+          'eye': 'right',
+          'text': ar ? 'كيف حالك؟' : 'How are you?',
+          'iconAsset': 'assets/icons/how_are_you.png',
+          'color': const Color(0xFF00897B),
+          'eye_name': eyeName('right')
         },
         {
           'eye': 'down',
