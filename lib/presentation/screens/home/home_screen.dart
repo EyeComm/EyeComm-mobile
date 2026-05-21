@@ -91,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
       {
         'eye': 'closed',
         'text': AppLanguage.t("basic"),
-        'iconAsset': 'assets/basic.png',
+        'iconAsset': 'assets/basic-needs.png',
         'color': const Color(0xFF2B8EE8),
         'eye_name': eyeName('closed'),
         'page': () => const BasicNeedsScreen(),

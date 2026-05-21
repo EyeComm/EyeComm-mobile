@@ -25,11 +25,11 @@ class GestureBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding:
-          EdgeInsets.symmetric(horizontal: fs * 0.85, vertical: fs * 0.32),
+      EdgeInsets.symmetric(horizontal: fs * 0.85, vertical: fs * 0.32),
       decoration: BoxDecoration(
-        color: fg.withOpacity(0.10),
+        color: fg.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: fg.withOpacity(0.25), width: 0.8),
+        border: Border.all(color: fg.withValues(alpha: 0.25), width: 0.8),
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Image.asset(
@@ -90,24 +90,27 @@ class DynamicEyeCard extends StatelessWidget {
     final String ename = item['eye_name']?.toString() ?? eyeName(eye);
     final bool active  = stable == eye && cd > 0;
 
+    // جلب مسار الصورة من الـ Map الممرر للكارت إذا كان متاحاً
+    final String? iconAsset = item['iconAsset'] as String?;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
-        color: active ? c.withOpacity(0.12) : kSurface1,
+        color: active ? c.withValues(alpha: 0.12) : kSurface1,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: active ? c.withOpacity(0.5) : kBorder1,
+          color: active ? c.withValues(alpha: 0.5) : kBorder1,
           width: active ? 1.8 : 1.0,
         ),
         boxShadow: active
             ? [BoxShadow(
-                color: c.withOpacity(0.18),
-                blurRadius: 18,
-                offset: const Offset(0, 4))]
+            color: c.withValues(alpha: 0.18),
+            blurRadius: 18,
+            offset: const Offset(0, 4))]
             : [BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 6,
-                offset: const Offset(0, 2))],
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2))],
       ),
       child: LayoutBuilder(builder: (ctx, box) {
         final double iconSize  = (box.maxWidth * 0.22).clamp(24.0, 48.0);
@@ -120,17 +123,24 @@ class DynamicEyeCard extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ── Emoji badge ──────────────────────────────────────────────
+            // ── Icon / Emoji badge ───────────────────────────────────────
             Container(
               width: badgeSide,
               height: badgeSide,
               decoration: BoxDecoration(
-                color: c.withOpacity(0.15),
+                color: c.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(badgeSide * 0.26),
               ),
               child: Center(
-                child:
-                    Text(emoji, style: TextStyle(fontSize: iconSize * 0.8)),
+                child: (iconAsset != null && iconAsset.isNotEmpty)
+                    ? Image.asset(
+                  iconAsset,
+                  width: iconSize * 1.25,
+                  height: iconSize * 1.25,
+                  errorBuilder: (_, __, ___) =>
+                      Icon(Icons.broken_image, color: c, size: iconSize * 1.25),
+                )
+                    : Text(emoji, style: TextStyle(fontSize: iconSize * 1.25)),
               ),
             ),
             SizedBox(height: vGap),
