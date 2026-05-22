@@ -16,12 +16,10 @@ class LanguageSelectionPage extends StatefulWidget {
   const LanguageSelectionPage({super.key});
 
   @override
-  State<LanguageSelectionPage> createState() =>
-      _LanguageSelectionPageState();
+  State<LanguageSelectionPage> createState() => _LanguageSelectionPageState();
 }
 
-class _LanguageSelectionPageState
-    extends State<LanguageSelectionPage> {
+class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   String _eye = 'none';
   int _cd = 0;
   String _stable = 'none';
@@ -52,8 +50,7 @@ class _LanguageSelectionPageState
 
   void _startPoll() {
     _t?.cancel();
-    _t = Timer.periodic(
-        const Duration(milliseconds: 800), (_) => _poll());
+    _t = Timer.periodic(const Duration(milliseconds: 800), (_) => _poll());
   }
 
   Future<void> _poll() async {
@@ -69,8 +66,7 @@ class _LanguageSelectionPageState
         setState(() => _eye = eye);
         if (eye != 'none') {
           if (eye == _stable) {
-            final int d =
-                DateTime.now().difference(_stableAt!).inSeconds;
+            final int d = DateTime.now().difference(_stableAt!).inSeconds;
             final int nc = 5 - d;
             if (nc != _cd) setState(() => _cd = nc.clamp(0, 5));
             if (d >= 5) {
@@ -79,16 +75,16 @@ class _LanguageSelectionPageState
             }
           } else {
             setState(() {
-              _stable   = eye;
+              _stable = eye;
               _stableAt = DateTime.now();
-              _cd       = 5;
+              _cd = 5;
             });
           }
         } else {
           setState(() {
-            _stable   = 'none';
+            _stable = 'none';
             _stableAt = null;
-            _cd       = 0;
+            _cd = 0;
           });
         }
       }
@@ -106,8 +102,7 @@ class _LanguageSelectionPageState
     } else if (eye == 'right') {
       AppLanguage.current = 'ar';
       await VoiceService.setLang('ar');
-      VoiceService.speak(
-          'تم اختيار اللغة العربية. أهلاً بك في آي كوم.');
+      VoiceService.speak('تم اختيار اللغة العربية. أهلاً بك في آي كوم.');
     } else {
       _startPoll();
       return;
@@ -127,17 +122,14 @@ class _LanguageSelectionPageState
       backgroundColor: kBg1,
       body: SafeArea(
         child: LayoutBuilder(builder: (ctx, screen) {
-          final double cardSize =
-          (screen.maxWidth * 0.42).clamp(140.0, 240.0);
-          final double gap =
-          (screen.maxWidth * 0.04).clamp(16.0, 32.0);
-          final double logoSize =
-          (screen.maxWidth * 0.25).clamp(80.0, 140.0);
+          final double cardSize = (screen.maxWidth * 0.42).clamp(140.0, 240.0);
+          final double gap = (screen.maxWidth * 0.04).clamp(16.0, 32.0);
+          final double logoSize = (screen.maxWidth * 0.25).clamp(80.0, 140.0);
 
           return Column(children: [
             const SizedBox(height: 12),
 
-            // ── 🎯 تم التعديل هنا: استخدام البار المودرن الموحد لمنع الاختلاف ──
+            // ── 🎯 البار المودرن الموحد لمنع الاختلاف ──
             ModernTrackingQualityBar(
               currentEye: _eye,
               stableDirection: _stable,
@@ -160,8 +152,7 @@ class _LanguageSelectionPageState
                         height: logoSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                              color: kBorder1, width: 1.5),
+                          border: Border.all(color: kBorder1, width: 1.5),
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.black.withOpacity(0.08),
@@ -186,46 +177,50 @@ class _LanguageSelectionPageState
                       Text('EyeComm',
                           style: GoogleFonts.orbitron(
                               color: kTextMain1,
-                              fontSize: (screen.maxWidth * 0.07)
-                                  .clamp(24.0, 36.0),
+                              fontSize:
+                                  (screen.maxWidth * 0.07).clamp(24.0, 36.0),
                               fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
                       Text(
                         'Choose Language / اختر اللغة',
                         style: GoogleFonts.cairo(
                             color: const Color(0xFF606060),
-                            fontSize: (screen.maxWidth * 0.035)
-                                .clamp(14.0, 18.0),
+                            fontSize:
+                                (screen.maxWidth * 0.035).clamp(14.0, 18.0),
                             fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                          height: (screen.maxHeight * 0.06)
-                              .clamp(24.0, 48.0)),
+                          height: (screen.maxHeight * 0.06).clamp(24.0, 48.0)),
 
                       // Language cards
                       Directionality(
                         textDirection: TextDirection.ltr,
                         child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            for (int i = 0;
-                            i < _cards.length;
-                            i++) ...[
+                            for (int i = 0; i < _cards.length; i++) ...[
                               if (i > 0) SizedBox(width: gap),
                               SizedBox(
                                 width: cardSize,
                                 height: cardSize,
-                                child: DynamicEyeCard(
-                                  item: {
-                                    'eye':      _cards[i].eyeCmd,
-                                    'text':     _cards[i].title,
-                                    'color':    _cards[i].color,
-                                    'eye_name': _cards[i].hint,
+                                // 🎯 تغليف الكارد بـ GestureDetector ليدعم الضغط اليدوي الفوري
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _t?.cancel(); // إيقاف الفحص مؤقتاً لمنع التعارض أثناء النقل
+                                    _selectLang(_cards[i]
+                                        .eyeCmd); // تنفيذ نفس دالة التوجيه فوراً
                                   },
-                                  stable: _stable,
-                                  cd: _cd,
-                                  totalTimer: 5,
+                                  child: DynamicEyeCard(
+                                    item: {
+                                      'eye': _cards[i].eyeCmd,
+                                      'text': _cards[i].title,
+                                      'color': _cards[i].color,
+                                      'eye_name': _cards[i].hint,
+                                    },
+                                    stable: _stable,
+                                    cd: _cd,
+                                    totalTimer: 5,
+                                  ),
                                 ),
                               ),
                             ],
@@ -247,10 +242,11 @@ class _LanguageSelectionPageState
 class _CardDef {
   final String symbol, title, hint, eyeCmd;
   final Color color;
+
   const _CardDef(
       {required this.symbol,
-        required this.title,
-        required this.hint,
-        required this.color,
-        required this.eyeCmd});
+      required this.title,
+      required this.hint,
+      required this.color,
+      required this.eyeCmd});
 }

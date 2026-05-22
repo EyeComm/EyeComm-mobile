@@ -5,11 +5,11 @@ import '../core/eye_utils.dart';
 import 'shared.dart';
 
 class DeviceSwitchCard extends StatelessWidget {
-  final String iconAsset; // ⬅️ التعديل هنا: مسار الصورة بدل الإيموجي
+  final String iconAsset; // ⬅️ مسار الصورة بدل الإيموجي
   final String label;
   final String gestureName;
   final String eyeCmd;
-  final bool isOn;
+  final bool? isOn; // 🎯 تعديل: جعلها تقبل الـ null لدعم الكروت العادية والإنارة معاً
   final Color activeColor;
   final String? statusText;
   final VoidCallback? onTap;
@@ -24,7 +24,7 @@ class DeviceSwitchCard extends StatelessWidget {
     required this.label,
     required this.gestureName,
     required this.eyeCmd,
-    required this.isOn,
+    required this.isOn, // 🎯 تم التعديل لتتوافق مع السيرفر والـ Hub
     required this.activeColor,
     this.statusText,
     this.onTap,
@@ -39,6 +39,10 @@ class DeviceSwitchCard extends StatelessWidget {
     final Color cardBg = active ? activeColor.withOpacity(0.12) : kSurface1;
     final Color borderColor = active ? activeColor.withOpacity(0.5) : kBorder1;
 
+    // تحديد هل الكارت الحالي يمثل جهاز تشغيل/إطفاء أم كارت عادي
+    final bool hasSwitch = isOn != null;
+    final bool isDeviceOn = isOn ?? false;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -49,24 +53,27 @@ class DeviceSwitchCard extends StatelessWidget {
           border: Border.all(color: borderColor, width: active ? 1.8 : 1.0),
           boxShadow: active
               ? [
-                  BoxShadow(
-                      color: activeColor.withOpacity(0.18),
-                      blurRadius: 18,
-                      offset: const Offset(0, 4))
-                ]
+            BoxShadow(
+                color: activeColor.withOpacity(0.18),
+                blurRadius: 18,
+                offset: const Offset(0, 4))
+          ]
               : [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2))
-                ],
+            BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 6,
+                offset: const Offset(0, 2))
+          ],
         ),
         child: Stack(
           children: [
-            Positioned(
-                top: 12,
-                right: 12,
-                child: _SmallSwitch(isOn: isOn, activeColor: activeColor)),
+            // 🎯 إذا كان الكارت يحتوي على حالة تشغيل (isOn ليس null) يتم إظهار السويتش
+            if (hasSwitch)
+              Positioned(
+                  top: 12,
+                  right: 12,
+                  child: _SmallSwitch(isOn: isDeviceOn, activeColor: activeColor)),
+
             LayoutBuilder(builder: (ctx, box) {
               final double iconSize = (box.maxWidth * 0.22).clamp(24.0, 48.0);
               final double badgeSide = iconSize * 1.7;
@@ -77,12 +84,12 @@ class DeviceSwitchCard extends StatelessWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // ── 🎯 استخدام الصورة (Asset) هنا ──
+                  // ── 🎯 استخدام الصورة (Asset) ──
                   Container(
                     width: badgeSide,
                     height: badgeSide,
                     decoration: BoxDecoration(
-                      color: isOn
+                      color: isDeviceOn
                           ? activeColor.withOpacity(0.15)
                           : kBorder1.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(badgeSide * 0.26),
@@ -92,8 +99,8 @@ class DeviceSwitchCard extends StatelessWidget {
                         iconAsset,
                         width: iconSize * 0.8,
                         height: iconSize * 0.8,
-                        // الصورة هتاخد لون الكارت لو شغال، أو رمادي لو مطفي
-                        color: isOn ? activeColor : kTextSub1,
+                        // الصورة تأخذ لون الكارت لو شغال أو كارت عادي، ورمادي لو مطفي
+                        color: (!hasSwitch || isDeviceOn) ? activeColor : kTextSub1,
                         errorBuilder: (_, __, ___) =>
                             Icon(Icons.broken_image, color: kTextSub1),
                       ),
@@ -114,7 +121,7 @@ class DeviceSwitchCard extends StatelessWidget {
                         style: GoogleFonts.cairo(
                             fontSize: labelFs * 0.75,
                             fontWeight: FontWeight.bold,
-                            color: isOn ? activeColor : kTextSub1))
+                            color: isDeviceOn ? activeColor : kTextSub1))
                   else
                     SizedBox(height: labelFs * 0.75),
 
@@ -129,7 +136,7 @@ class DeviceSwitchCard extends StatelessWidget {
                   SizedBox(height: vGap),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: box.maxWidth * 0.1),
+                    EdgeInsets.symmetric(horizontal: box.maxWidth * 0.1),
                     child: Opacity(
                       opacity: active ? 1.0 : 0.0,
                       child: ClipRRect(

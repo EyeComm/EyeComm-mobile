@@ -13,8 +13,6 @@ class SmartHomeHallPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 💡 الحفاظ على الـ State: نبحث أولاً إذا كان الـ Cubit تم إنشاؤه مسبقاً في مستوى أعلى
-    // إذا لم يكن موجوداً، نقوم بإنشائه هنا لحماية التطبيق من الـ Crash.
     try {
       context.read<SmartHomeHallCubit>();
       return const _HallView();
@@ -45,10 +43,10 @@ class _HallView extends StatelessWidget {
         final cubit = context.read<SmartHomeHallCubit>();
         final hallState = cubit.hallState;
 
-        // خريطة العناصر لتمريرها للـ BaseGrid لضبط الترتيب والهندسة الرياضية للأبعاد
+        // 🎯 خريطة العناصر بعد إدخال "النور الرئيسي" بدل "الباب" في اتجاه اليمين
         final List<Map<String, dynamic>> items = [
           {'eye': 'left', 'text': ar ? 'التكييف' : 'AC'},
-          {'eye': 'right', 'text': ar ? 'الباب' : 'Door'},
+          {'eye': 'right', 'text': ar ? 'النور الرئيسي' : 'Main Light'},
           {'eye': 'up', 'text': ar ? 'الشاشة' : 'TV'},
           {'eye': 'down', 'text': ar ? 'الدفاية' : 'Heater'},
           {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back'},
@@ -61,20 +59,32 @@ class _HallView extends StatelessWidget {
           cameraCardAspectRatio: 1.15,
           items: items,
           timerSeconds: hallState.totalTimer,
-          // 🎯 نمرر الـ State الخارجي للـ BaseGridPage لإلغاء الـ Polling الداخلي التكراري
           currentEye: state.currentEye,
           stableDirection: state.stableDirection,
           countdownSeconds: state.countdownSeconds,
           itemBuilder: (context, index, item, stable, cd, totalTimer) {
-            return _buildDeviceCard(index, hallState, ar);
+            return _buildDeviceCard(context, index, hallState, ar, stable, cd, totalTimer, cubit);
+          },
+          onAction: (eye, ctx) async {
+            if (eye != 'closed') {
+              cubit.executeCommand(eye);
+            }
           },
         );
       },
     );
   }
 
-  // 🎯 بناء كروت التحكم بناءً على الحالات الحالية والمستمرة داخل الـ SmartHomeHallState
-  Widget _buildDeviceCard(int index, SmartHomeHallState state, bool ar) {
+  Widget _buildDeviceCard(
+      BuildContext context,
+      int index,
+      SmartHomeHallState state,
+      bool ar,
+      String stable,
+      int cd,
+      int totalTimer,
+      SmartHomeHallCubit cubit,
+      ) {
     switch (index) {
       case 0:
         return DeviceSwitchCard(
@@ -89,21 +99,23 @@ class _HallView extends StatelessWidget {
           statusText: state.acMode == AcMode.hot
               ? (ar ? '🔥 سخن' : '🔥 Hot')
               : (state.acMode == AcMode.cold ? (ar ? '❄️ بارد' : '❄️ Cold') : null),
-          stable: state.stableDirection,
-          cd: state.countdownSeconds,
-          totalTimer: state.totalTimer,
+          stable: stable,
+          cd: cd,
+          totalTimer: totalTimer,
+          onTap: () => cubit.executeCommand('left'),
         );
-      case 1:
+      case 1: // 🎯 كارد النور الرئيسي الجديد الخاص بالصالة بدلاً من الباب
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/door.png',
-          label: ar ? 'الباب' : 'Door',
+          iconAsset: 'assets/icons/light.png',
+          label: ar ? 'النور الرئيسي' : 'Main Light',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
-          isOn: state.doorOpen,
-          activeColor: const Color(0xFF8D6E63),
-          stable: state.stableDirection,
-          cd: state.countdownSeconds,
-          totalTimer: state.totalTimer,
+          isOn: state.doorOpen, // ربطناه بمتغير الـ right الحالي في الـ Cubit لتجنب كسر الأنظمة الأخرى
+          activeColor: const Color(0xFF388E3C),
+          stable: stable,
+          cd: cd,
+          totalTimer: totalTimer,
+          onTap: () => cubit.executeCommand('right'),
         );
       case 2:
         return DeviceSwitchCard(
@@ -113,9 +125,10 @@ class _HallView extends StatelessWidget {
           eyeCmd: 'up',
           isOn: state.tvOn,
           activeColor: const Color(0xFF42A5F5),
-          stable: state.stableDirection,
-          cd: state.countdownSeconds,
-          totalTimer: state.totalTimer,
+          stable: stable,
+          cd: cd,
+          totalTimer: totalTimer,
+          onTap: () => cubit.executeCommand('up'),
         );
       case 3:
         return DeviceSwitchCard(
@@ -125,9 +138,10 @@ class _HallView extends StatelessWidget {
           eyeCmd: 'down',
           isOn: state.heaterOn,
           activeColor: const Color(0xFFFF7043),
-          stable: state.stableDirection,
-          cd: state.countdownSeconds,
-          totalTimer: state.totalTimer,
+          stable: stable,
+          cd: cd,
+          totalTimer: totalTimer,
+          onTap: () => cubit.executeCommand('down'),
         );
       case 4:
         return DeviceSwitchCard(
@@ -135,11 +149,15 @@ class _HallView extends StatelessWidget {
           label: ar ? 'رجوع' : 'Back',
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',
-          isOn: false,
-          activeColor: Colors.grey,
-          stable: state.stableDirection,
-          cd: state.countdownSeconds,
-          totalTimer: state.totalTimer,
+          isOn: null,
+          activeColor: const Color(0xFF455A64),
+          stable: stable,
+          cd: cd,
+          totalTimer: totalTimer,
+          onTap: () {
+            cubit.executeCommand('closed');
+            if (Navigator.canPop(context)) Navigator.pop(context);
+          },
         );
       default:
         return const SizedBox();

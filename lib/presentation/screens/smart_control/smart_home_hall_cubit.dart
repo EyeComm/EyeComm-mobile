@@ -45,6 +45,12 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
 
   @override
   Future<void> onGestureConfirmed(String gesture) async {
+    // العين أكدت الحركة -> ننفذ الأمر مباشرة
+    executeCommand(gesture);
+  }
+
+  // 🎯 الدالة الجديدة الموحدة: لتنفيذ الأوامر بالعين أو باليد فوراً
+  void executeCommand(String gesture) {
     switch (gesture) {
       case 'closed':
         VoiceService.speak(_ar ? 'رجوع' : 'Back');

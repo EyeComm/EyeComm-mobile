@@ -16,7 +16,7 @@ class AppLanguage {
       'change_lang': 'Language',
       'basic': 'Basic Needs',
       'health': 'Health & Emergency',
-      'smart': 'Smart Home',
+      'smart': 'Smart Control',
       'social': 'Social & Caregiver',
       'keyboard': 'Keyboard',
       'food': 'Food',

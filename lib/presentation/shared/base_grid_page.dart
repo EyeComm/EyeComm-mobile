@@ -153,7 +153,7 @@ class _BaseGridPageState extends State<BaseGridPage> {
 
   void _execute(String eye) async {
     final item =
-        widget.items.firstWhere((e) => e['eye'] == eye, orElse: () => {});
+    widget.items.firstWhere((e) => e['eye'] == eye, orElse: () => {});
     if (item.isNotEmpty) {
       VoiceService.speak(cleanForSpeech(item['text'].toString()));
     }
@@ -235,22 +235,30 @@ class _BaseGridPageState extends State<BaseGridPage> {
       return const SizedBox();
     }
 
-    if (widget.itemBuilder != null) {
-      return widget.itemBuilder!(
+    final currentItem = widget.items[actualItemIndex];
+    final String currentEyeCmd = currentItem['eye'].toString();
+
+    // 🎯 دعم التغليف بالضغط اليدوي سواء كان الكارد مبنياً خارجياً عبر itemBuilder أو افتراضياً
+    return GestureDetector(
+      onTap: () {
+        _pollTimer?.cancel(); // إيقاف مؤقت للتايمر لمنع التدخل أثناء الأكشن اليدوي
+        _execute(currentEyeCmd); // تنفيذ نفس دالة التوجيه والنطق فوراً
+      },
+      child: widget.itemBuilder != null
+          ? widget.itemBuilder!(
         context,
         actualItemIndex,
-        widget.items[actualItemIndex],
+        currentItem,
         stable,
         cd,
         widget.timerSeconds,
-      );
-    }
-
-    return DynamicEyeCard(
-      item: widget.items[actualItemIndex],
-      stable: stable,
-      cd: cd,
-      totalTimer: widget.timerSeconds,
+      )
+          : DynamicEyeCard(
+        item: currentItem,
+        stable: stable,
+        cd: cd,
+        totalTimer: widget.timerSeconds,
+      ),
     );
   }
 
@@ -261,33 +269,33 @@ class _BaseGridPageState extends State<BaseGridPage> {
     return Column(children: [
       Expanded(
           child: Row(children: [
-        Expanded(flex: 2, child: _safeCard(0, stable, cd)),
-        SizedBox(width: gap),
-        Expanded(flex: 2, child: _safeCard(1, stable, cd)),
-      ])),
+            Expanded(flex: 2, child: _safeCard(0, stable, cd)),
+            SizedBox(width: gap),
+            Expanded(flex: 2, child: _safeCard(1, stable, cd)),
+          ])),
       if (len > 2) ...[
         SizedBox(height: gap),
         Expanded(
             child: Row(children: [
-          if (len == 3) ...[
-            const Expanded(flex: 1, child: SizedBox()),
-            Expanded(flex: 2, child: _safeCard(2, stable, cd)),
-            const Expanded(flex: 1, child: SizedBox()),
-          ] else ...[
-            Expanded(flex: 2, child: _safeCard(2, stable, cd)),
-            SizedBox(width: gap),
-            Expanded(flex: 2, child: _safeCard(3, stable, cd)),
-          ]
-        ])),
+              if (len == 3) ...[
+                const Expanded(flex: 1, child: SizedBox()),
+                Expanded(flex: 2, child: _safeCard(2, stable, cd)),
+                const Expanded(flex: 1, child: SizedBox()),
+              ] else ...[
+                Expanded(flex: 2, child: _safeCard(2, stable, cd)),
+                SizedBox(width: gap),
+                Expanded(flex: 2, child: _safeCard(3, stable, cd)),
+              ]
+            ])),
       ],
       if (len > 4) ...[
         SizedBox(height: gap),
         Expanded(
             child: Row(children: [
-          const Expanded(flex: 1, child: SizedBox()),
-          Expanded(flex: 2, child: _safeCard(4, stable, cd)),
-          const Expanded(flex: 1, child: SizedBox()),
-        ])),
+              const Expanded(flex: 1, child: SizedBox()),
+              Expanded(flex: 2, child: _safeCard(4, stable, cd)),
+              const Expanded(flex: 1, child: SizedBox()),
+            ])),
       ]
     ]);
   }
@@ -350,7 +358,7 @@ class _BaseGridPageState extends State<BaseGridPage> {
                 width: double.infinity,
                 color: widget.warningColor,
                 padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
                 child: Text(widget.warningMsg,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.cairo(
@@ -385,7 +393,7 @@ class _BaseGridPageState extends State<BaseGridPage> {
 
                 return Padding(
                   padding:
-                      EdgeInsets.symmetric(horizontal: pad, vertical: pad / 2),
+                  EdgeInsets.symmetric(horizontal: pad, vertical: pad / 2),
                   child: wide
                       ? _wideGrid(gap, effectiveStable, effectiveCd)
                       : _portraitGrid(gap, effectiveStable, effectiveCd),
