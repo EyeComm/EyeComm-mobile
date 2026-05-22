@@ -22,6 +22,8 @@ class _EmergencyPageState extends State<EmergencyPage> {
   Widget build(BuildContext context) => BaseGridPage(
     title: _ar ? '🚨 طوارئ' : '🚨 EMERGENCY',
     color: const Color(0xFFC62828),
+    showCameraCard: true,
+    cameraCardAspectRatio: 1.15,
     items: [
       // 1. اليسار (مساعدة)
       {

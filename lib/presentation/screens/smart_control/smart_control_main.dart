@@ -25,6 +25,8 @@ class SmartControlMain extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'التحكم الذكي' : 'Smart Control',
       color: const Color(0xFF7C2BE8),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {
           'eye': 'left',

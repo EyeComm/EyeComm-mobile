@@ -57,6 +57,8 @@ class _HallView extends StatelessWidget {
         return BaseGridPage(
           title: ar ? 'الصالة' : 'Hall',
           color: const Color(0xFF00C853),
+          showCameraCard: true,
+          cameraCardAspectRatio: 1.15,
           items: items,
           timerSeconds: hallState.totalTimer,
           // 🎯 نمرر الـ State الخارجي للـ BaseGridPage لإلغاء الـ Polling الداخلي التكراري

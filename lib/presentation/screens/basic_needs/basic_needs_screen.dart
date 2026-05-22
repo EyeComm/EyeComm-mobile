@@ -19,6 +19,8 @@ class BasicNeedsScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'الاحتياجات الأساسية' : 'Basic Needs',
       color: Colors.blue,
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'طعام' : 'Food', 'iconAsset': 'assets/icons/food.png', 'color': Colors.red, 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'عناية ونظافة' : 'Personal Care', 'iconAsset': 'assets/icons/care.png', 'color': Colors.teal, 'is_nav': true, 'eye_name': eyeName('up')},

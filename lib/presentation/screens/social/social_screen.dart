@@ -16,6 +16,8 @@ class SocialScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'تواصل اجتماعي' : 'Social',
       color: const Color(0xFF0DB868),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         // 1. اليسار
         {

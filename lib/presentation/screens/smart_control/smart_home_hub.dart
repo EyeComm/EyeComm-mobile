@@ -25,6 +25,8 @@ class SmartHomeHub extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'المنزل الذكي' : 'Smart Home',
       color: const Color(0xFF1565C0),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {
           'eye': 'left',

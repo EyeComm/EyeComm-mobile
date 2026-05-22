@@ -15,6 +15,8 @@ class BreakfastScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'الإفطار' : 'Breakfast',
       color: const Color(0xFFFBC02D),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'بيض' : 'Eggs', 'iconAsset': 'assets/icons/eggs.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'أكل شعبي' : 'Traditional', 'iconAsset': 'assets/icons/foul.png', 'color': const Color(0xFF6D4C41), 'is_nav': true, 'eye_name': eyeName('up')},

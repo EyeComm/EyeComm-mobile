@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class EyeCameraPreview extends StatefulWidget {
-  final String currentEye;
   final String serverBase;
 
   const EyeCameraPreview({
     super.key,
-    required this.currentEye,
-    this.serverBase = 'http://127.0.0.1:5000', // شغال لوكال على الويندوز تمام
+    this.serverBase = 'http://127.0.0.1:5000',
   });
 
   @override
@@ -19,6 +17,7 @@ class EyeCameraPreview extends StatefulWidget {
 
 class _EyeCameraPreviewState extends State<EyeCameraPreview> {
   Uint8List? _frameBytes;
+
   bool _streamError = false;
   bool _connecting = true;
 
@@ -34,49 +33,62 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
 
   Future<void> _connectStream() async {
     if (!mounted) return;
+
     setState(() {
       _connecting = true;
       _streamError = false;
     });
+
     try {
-      // ── التعديل الأساسي هنا: تم تغيير /stream إلى /video_feed ليطابق السيرفر ──
       final uri = Uri.parse('${widget.serverBase}/video_feed');
+
       final request = http.Request('GET', uri);
+
       final response =
-          await _client.send(request).timeout(const Duration(seconds: 8));
+      await _client.send(request).timeout(
+        const Duration(seconds: 8),
+      );
 
       if (response.statusCode != 200) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             _streamError = true;
             _connecting = false;
           });
+        }
         return;
       }
 
-      if (mounted) setState(() => _connecting = false);
+      if (mounted) {
+        setState(() => _connecting = false);
+      }
 
       final List<int> buffer = [];
 
       _sub = response.stream.listen(
-        (chunk) {
+            (chunk) {
           buffer.addAll(chunk);
           _extractFrames(buffer);
         },
         onError: (_) {
-          if (mounted) setState(() => _streamError = true);
+          if (mounted) {
+            setState(() => _streamError = true);
+          }
         },
         onDone: () {
-          if (mounted) setState(() => _streamError = true);
+          if (mounted) {
+            setState(() => _streamError = true);
+          }
         },
         cancelOnError: true,
       );
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _streamError = true;
           _connecting = false;
         });
+      }
     }
   }
 
@@ -85,33 +97,47 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
 
   void _extractFrames(List<int> buf) {
     int start = _indexOf(buf, _jpegStart, 0);
+
     while (start != -1) {
       int end = _indexOf(buf, _jpegEnd, start + 2);
+
       if (end == -1) break;
 
-      final frameBytes = Uint8List.fromList(buf.sublist(start, end + 2));
+      final frameBytes =
+      Uint8List.fromList(buf.sublist(start, end + 2));
+
       buf.removeRange(0, end + 2);
 
-      if (mounted) setState(() => _frameBytes = frameBytes);
+      if (mounted) {
+        setState(() => _frameBytes = frameBytes);
+      }
+
       start = _indexOf(buf, _jpegStart, 0);
     }
+
     if (buf.isNotEmpty) {
       final next = _indexOf(buf, _jpegStart, 0);
-      if (next > 0) buf.removeRange(0, next);
+
+      if (next > 0) {
+        buf.removeRange(0, next);
+      }
     }
   }
 
   int _indexOf(List<int> src, List<int> pattern, int from) {
     for (int i = from; i <= src.length - pattern.length; i++) {
       bool match = true;
+
       for (int j = 0; j < pattern.length; j++) {
         if (src[i + j] != pattern[j]) {
           match = false;
           break;
         }
       }
+
       if (match) return i;
     }
+
     return -1;
   }
 
@@ -129,10 +155,12 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
         color: const Color(0xFF0D1B2A),
         child: const Center(
           child: SizedBox(
-            width: 20,
-            height: 20,
+            width: 26,
+            height: 26,
             child: CircularProgressIndicator(
-                color: Colors.cyanAccent, strokeWidth: 2),
+              strokeWidth: 2.2,
+              color: Colors.cyanAccent,
+            ),
           ),
         ),
       );
@@ -142,21 +170,36 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
       return Container(
         color: const Color(0xFF0D1B2A),
         child: const Center(
-          child:
-              Icon(Icons.videocam_off_rounded, color: Colors.white24, size: 28),
+          child: Icon(
+            Icons.videocam_off_rounded,
+            color: Colors.white24,
+            size: 34,
+          ),
         ),
       );
     }
 
-    return Image.memory(
-      _frameBytes!,
-      fit: BoxFit.cover,
-      gaplessPlayback: true,
-        errorBuilder: (_, __, ___) => Container(
-          color: const Color(0xFF0D1B2A),
-          child: const Icon(Icons.broken_image_rounded,
-              color: Colors.white24, size: 28),
-        ),
+    return Container(
+      color: Colors.black,
+      child: Image.memory(
+        _frameBytes!,
+        fit: BoxFit.cover,
+        gaplessPlayback: true,
+        filterQuality: FilterQuality.high,
+
+        errorBuilder: (_, __, ___) {
+          return Container(
+            color: const Color(0xFF0D1B2A),
+            child: const Center(
+              child: Icon(
+                Icons.broken_image_rounded,
+                color: Colors.white24,
+                size: 30,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

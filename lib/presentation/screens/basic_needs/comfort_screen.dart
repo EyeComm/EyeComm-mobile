@@ -14,6 +14,8 @@ class ComfortScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'راحتي' : 'Comfort',
       color: const Color(0xFF8E24AA),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'تعديل وضعيتي' : 'Change Position', 'iconAsset': 'assets/icons/pillow.png', 'color': const Color(0xFF8E24AA), 'is_nav': false, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'أشعر بالحر' : 'I Feel Hot', 'iconAsset': 'assets/icons/hot.png', 'color': const Color(0xFFE53935), 'is_nav': false, 'eye_name': eyeName('up')},

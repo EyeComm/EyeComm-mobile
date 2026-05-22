@@ -15,6 +15,8 @@ class DinnerScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'العشاء' : 'Dinner',
       color: const Color(0xFFF4511E),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'بروتين خفيف' : 'Light Protein', 'iconAsset': 'assets/icons/yogurt.png', 'color': const Color(0xFF039BE5), 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'شوربات دافئة' : 'Warm Soups', 'iconAsset': 'assets/icons/soup_bowl.png', 'color': const Color(0xFFFB8C00), 'is_nav': true, 'eye_name': eyeName('up')},

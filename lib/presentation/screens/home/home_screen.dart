@@ -111,6 +111,8 @@ class _MainScreenState extends State<MainScreen> {
       color: const Color(0xFF2B8EE8),
       items: menuItems,
       isMainScreen: true,
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       warningMsg: _warningMsg,
       warningColor: _warningColor,
       onLangTap: () => pushReplacement(context, const LanguageSelectionPage()),

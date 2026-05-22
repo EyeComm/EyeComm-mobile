@@ -18,6 +18,8 @@ class HealthScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'الصحة' : 'Health',
       color: const Color(0xFFE53935), // لون أحمر طبي
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         // 1. اليسار (أشعر بألم)
         {

@@ -15,6 +15,8 @@ class SymptomsCategoriesScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'الأعراض' : 'Symptoms',
       color: const Color(0xFFF57C00),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
         {'eye': 'left', 'text': ar ? 'تنفس' : 'Breathing', 'iconAsset': 'assets/icons/breathing.png', 'color': const Color(0xFF0288D1), 'is_nav': true, 'eye_name': eyeName('left')},

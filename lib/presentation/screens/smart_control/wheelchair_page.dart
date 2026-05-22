@@ -36,6 +36,8 @@ class WheelchairPage extends StatelessWidget {
           return BaseGridPage(
             title: ar ? 'الكرسي المتحرك' : 'Wheelchair',
             color: const Color(0xFF2E7D32),
+            showCameraCard: true,
+            cameraCardAspectRatio: 1.15,
             items: [
               {
                 'eye': 'left',

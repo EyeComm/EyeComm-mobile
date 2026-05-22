@@ -14,6 +14,8 @@ class PersonalCareScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'عناية ونظافة' : 'Personal Care',
       color: const Color(0xFF00897B),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'دخول الحمام' : 'Bathroom', 'iconAsset': 'assets/icons/toilet.png', 'color': const Color(0xFF5D4037), 'is_nav': false, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'عناية وأدوية' : 'Grooming & Meds', 'iconAsset': 'assets/icons/toothbrush.png', 'color': const Color(0xFF00ACC1), 'is_nav': false, 'eye_name': eyeName('up')},

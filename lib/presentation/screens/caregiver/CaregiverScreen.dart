@@ -15,6 +15,8 @@ class CaregiverScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'نداء المرافق' : 'Call Caregiver',
       color: const Color(0xFFE64A19), // لون برتقالي داكن يعطي إحساس بالأهمية
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
 

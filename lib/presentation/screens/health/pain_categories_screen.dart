@@ -15,6 +15,8 @@ class PainCategoriesScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'أماكن الألم' : 'Pain Areas',
       color: const Color(0xFFD32F2F),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
         {'eye': 'left', 'text': ar ? 'الرأس والأسنان' : 'Head & Face', 'iconAsset': 'assets/icons/headache.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},

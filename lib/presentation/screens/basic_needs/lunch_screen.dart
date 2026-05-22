@@ -15,6 +15,8 @@ class LunchScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'الغداء' : 'Lunch',
       color: const Color(0xFFE53935),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'دجاج وطواجن' : 'Chicken', 'iconAsset': 'assets/icons/chicken.png', 'color': const Color(0xFFFB8C00), 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'نشويات' : 'Carbs', 'iconAsset': 'assets/icons/rice.png', 'color': const Color(0xFF0288D1), 'is_nav': true, 'eye_name': eyeName('up')},

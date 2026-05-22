@@ -16,6 +16,8 @@ class DrinksScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'المشروبات' : 'Drinks',
       color: const Color(0xFF0288D1),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'مياه' : 'Water', 'iconAsset': 'assets/icons/water.png', 'color': const Color(0xFF29B6F6), 'is_nav': false, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'مشروبات ساخنة' : 'Hot Drinks', 'iconAsset': 'assets/icons/hot_drink.png', 'color': const Color(0xFFD84315), 'is_nav': true, 'eye_name': eyeName('up')},

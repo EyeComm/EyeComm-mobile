@@ -15,6 +15,8 @@ class SnacksScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'سناكس' : 'Snacks',
       color: const Color(0xFF43A047),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'فواكه' : 'Fruits', 'iconAsset': 'assets/icons/fruits.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'مقرمشات' : 'Snacks', 'iconAsset': 'assets/icons/popcorn.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('up')},

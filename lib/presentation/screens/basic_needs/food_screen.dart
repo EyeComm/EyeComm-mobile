@@ -18,6 +18,8 @@ class FoodScreen extends StatelessWidget {
     return BaseGridPage(
       title: ar ? 'وجبات الطعام' : 'Meals',
       color: const Color(0xFFE53935),
+      showCameraCard: true,
+      cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'إفطار' : 'Breakfast', 'iconAsset': 'assets/icons/breakfast.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'غداء' : 'Lunch', 'iconAsset': 'assets/icons/lunch.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('up')},
