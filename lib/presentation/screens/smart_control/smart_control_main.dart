@@ -27,44 +27,52 @@ class SmartControlMain extends StatelessWidget {
       color: const Color(0xFF7C2BE8),
       items: [
         {
-          'eye'      : 'closed',
-          'text'     : ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
-          'color'    : const Color(0xFF455A64),
-          'is_nav'   : false,
-          'eye_name' : eyeName('closed'),
-        },
-        {
-          'eye'      : 'left',
-          'text'     : ar ? 'المنزل\nالذكي' : 'Smart\nHome',
+          'eye': 'left',
+          'text': ar ? 'المنزل\nالذكي' : 'Smart\nHome',
           'iconAsset': 'assets/icons/home_control.png',
-          'color'    : const Color(0xFF1565C0),
-          'is_nav'   : true,
-          'eye_name' : eyeName('left'),
+          'color': const Color(0xFF1565C0),
+          'is_nav': true,
+          'eye_name': eyeName('left'),
         },
         {
-          'eye'      : 'right',
-          'text'     : ar ? 'الكرسي\nالمتحرك' : 'Wheel\nChair',
-          'iconAsset': 'assets/icons/wheelchair.png',
-          'color'    : const Color(0xFF2E7D32),
-          'is_nav'   : true,
-          'eye_name' : eyeName('right'),
-        },
-        {
-          'eye'      : 'up',
-          'text'     : ar ? 'طوارئ' : 'Emergency',
+          'eye': 'up',
+          'text': ar ? 'طوارئ' : 'Emergency',
           'iconAsset': 'assets/icons/siren.png',
-          'color'    : const Color(0xFFC62828),
-          'is_nav'   : true,
-          'eye_name' : eyeName('up'),
+          'color': const Color(0xFFC62828),
+          'is_nav': true,
+          'eye_name': eyeName('up'),
+        },
+        {
+          'eye': 'right',
+          'text': ar ? 'الكرسي\nالمتحرك' : 'Wheel\nChair',
+          'iconAsset': 'assets/icons/wheelchair.png',
+          'color': const Color(0xFF2E7D32),
+          'is_nav': true,
+          'eye_name': eyeName('right'),
+        },
+        {
+          'eye': 'closed',
+          'text': ar ? 'رجوع' : 'Back',
+          'iconAsset': 'assets/icons/back.png',
+          'color': const Color(0xFF455A64),
+          'is_nav': false,
+          'eye_name': eyeName('closed'),
         },
       ],
       onAction: (eye, ctx) async {
         switch (eye) {
-          case 'closed': Navigator.pop(ctx); break;
-          case 'left':   await push(ctx, const SmartHomeHub()); break;
-          case 'right':  await push(ctx, const WheelchairPage()); break;
-          case 'up':     await push(ctx, const EmergencyPage()); break;
+          case 'closed':
+            Navigator.pop(ctx);
+            break;
+          case 'left':
+            await push(ctx, const SmartHomeHub());
+            break;
+          case 'right':
+            await push(ctx, const WheelchairPage());
+            break;
+          case 'up':
+            await push(ctx, const EmergencyPage());
+            break;
         }
       },
     );

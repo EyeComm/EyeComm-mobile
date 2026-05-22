@@ -27,37 +27,51 @@ class SmartHomeHub extends StatelessWidget {
       color: const Color(0xFF1565C0),
       items: [
         {
-          'eye'      : 'closed',
-          'text'     : ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
-          'color'    : const Color(0xFF455A64),
-          'is_nav'   : false,
-          'eye_name' : eyeName('closed'),
-        },
-        {
-          'eye'      : 'left',
-          'text'     : ar ? 'الصالة' : 'Hall',
+          'eye': 'left',
+          'text': ar ? 'الصالة' : 'Hall',
           'iconAsset': 'assets/icons/hall.png',
-          'color'    : const Color(0xFF00695C),
-          'is_nav'   : true,
-          'eye_name' : eyeName('left'),
+          'color': const Color(0xFF00695C),
+          'is_nav': true,
+          'eye_name': eyeName('left'),
         },
         {
-          'eye'      : 'right',
-          'text'     : ar ? 'الأوضة' : 'Room',
+          'eye': 'up',
+          'text': ar ? 'النور الرئيسي' : 'Main Light',
+          'iconAsset': 'assets/icons/light.png',
+          'color': const Color(0xFF388E3C),
+          'is_nav': false,
+          'eye_name': eyeName('up'),
+        },
+        {
+          'eye': 'right',
+          'text': ar ? 'الأوضة' : 'Room',
           'iconAsset': 'assets/icons/room.png',
-          'color'    : Colors.indigo,
-          'is_nav'   : true,
-          'eye_name' : eyeName('right'),
+          'color': Colors.indigo,
+          'is_nav': true,
+          'eye_name': eyeName('right'),
+        },
+        {
+          'eye': 'closed',
+          'text': ar ? 'رجوع' : 'Back',
+          'iconAsset': 'assets/icons/back.png',
+          'color': const Color(0xFF455A64),
+          'is_nav': false,
+          'eye_name': eyeName('closed'),
         },
       ],
       onAction: (eye, ctx) async {
         switch (eye) {
           // Each push creates a new BlocProvider inside the destination page.
           // No manual BlocProvider wrapping needed here.
-          case 'closed': Navigator.pop(ctx); break;
-          case 'left':   await push(ctx, const SmartHomeHallPage()); break;
-          case 'right':  await push(ctx, const SmartHomeRoomPage()); break;
+          case 'closed':
+            Navigator.pop(ctx);
+            break;
+          case 'left':
+            await push(ctx, const SmartHomeHallPage());
+            break;
+          case 'right':
+            await push(ctx, const SmartHomeRoomPage());
+            break;
         }
       },
     );

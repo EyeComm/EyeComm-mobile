@@ -1,14 +1,5 @@
-// ════════════════════════════════════════════════════════════════════════════
-// smart_home_hall_state.dart
-//
-// Immutable device state for the Hall screen.
-// Extends EyeTrackingState so the UI only needs one BlocBuilder for both
-// eye-tracking feedback AND device states.
-// ════════════════════════════════════════════════════════════════════════════
-
 import '../eye_tracking/eye_tracking_state.dart';
 
-/// AC operating mode — more type-safe than a raw String or int.
 enum AcMode { off, hot, cold }
 
 class SmartHomeHallState extends EyeTrackingState {
@@ -18,12 +9,10 @@ class SmartHomeHallState extends EyeTrackingState {
   final AcMode acMode;
 
   const SmartHomeHallState({
-    // Device state
     this.doorOpen = false,
     this.tvOn     = false,
     this.heaterOn = false,
     this.acMode   = AcMode.off,
-    // Eye-tracking state (forwarded to parent)
     super.currentEye,
     super.stableDirection,
     super.countdownSeconds,
@@ -37,7 +26,6 @@ class SmartHomeHallState extends EyeTrackingState {
     bool?   tvOn,
     bool?   heaterOn,
     AcMode? acMode,
-    // EyeTrackingState fields
     String? currentEye,
     String? stableDirection,
     int?    countdownSeconds,
@@ -61,10 +49,10 @@ class SmartHomeHallState extends EyeTrackingState {
 
   @override
   List<Object?> get props => [
-        ...super.props,
-        doorOpen,
-        tvOn,
-        heaterOn,
-        acMode,
-      ];
+    ...super.props,
+    doorOpen,
+    tvOn,
+    heaterOn,
+    acMode,
+  ];
 }
