@@ -52,4 +52,10 @@ class IoTService {
   static Future<void> emergency() => _send('/emergency');
   static Future<void> help()      => _send('/help');
   static Future<void> stopAll()   => _send('/stop');
+
+  // ── Wheelchair (الكرسي المتحرك - الجزء الجديد) ───────────────────────────
+  static Future<void> wheelchairForward()  => _send('/move?dir=F');
+  static Future<void> wheelchairBackward() => _send('/move?dir=B');
+  static Future<void> wheelchairLeft()     => _send('/move?dir=L');
+  static Future<void> wheelchairRight()    => _send('/move?dir=R');
 }
