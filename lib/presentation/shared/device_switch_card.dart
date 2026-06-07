@@ -72,7 +72,8 @@ class DeviceSwitchCard extends StatelessWidget {
               Positioned(
                   top: 12,
                   right: 12,
-                  child: _SmallSwitch(isOn: isDeviceOn, activeColor: activeColor)),
+                  child: _SmallSwitch(
+                      isOn: isDeviceOn, activeColor: activeColor)),
 
             LayoutBuilder(builder: (ctx, box) {
               final double iconSize = (box.maxWidth * 0.22).clamp(24.0, 48.0);
@@ -90,23 +91,24 @@ class DeviceSwitchCard extends StatelessWidget {
                     height: badgeSide,
                     decoration: BoxDecoration(
                       color: isDeviceOn
-                          ? activeColor.withOpacity(0.15)
-                          : kBorder1.withOpacity(0.3),
+                          ? activeColor.withOpacity(
+                          0.15) // خلفية ملونة خفيفة لو شغال
+                          : kBorder1.withOpacity(0.3), // خلفية رمادية لو مطفي
                       borderRadius: BorderRadius.circular(badgeSide * 0.26),
                     ),
                     child: Center(
-                      child: Image.asset(
-                        iconAsset,
-                        width: iconSize * 0.8,
-                        height: iconSize * 0.8,
-                        // الصورة تأخذ لون الكارت لو شغال أو كارت عادي، ورمادي لو مطفي
-                        color: (!hasSwitch || isDeviceOn) ? activeColor : kTextSub1,
-                        errorBuilder: (_, __, ___) =>
-                            Icon(Icons.broken_image, color: kTextSub1),
+                      child: Opacity(
+                        opacity: (!hasSwitch || isDeviceOn) ? 1.0 : 0.4,
+                        child: Image.asset(
+                          iconAsset,
+                          width: iconSize * 0.8,
+                          height: iconSize * 0.8,
+                          errorBuilder: (_, __, ___) =>
+                              Icon(Icons.broken_image, color: kTextSub1),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: vGap),
+                  ), SizedBox(height: vGap),
 
                   Text(label,
                       textAlign: TextAlign.center,
