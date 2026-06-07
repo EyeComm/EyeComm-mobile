@@ -30,8 +30,8 @@ class SmartControlMain extends StatelessWidget {
       items: [
         {
           'eye': 'left',
-          'text': ar ? 'المنزل\nالذكي' : 'Smart\nHome',
-          'iconAsset': 'assets/icons/home_control.png',
+          'text': ar ? 'المنزل الذكي' : 'Smart Home',
+          'iconAsset': 'assets/home_control.png',
           'color': const Color(0xFF1565C0),
           'is_nav': true,
           'eye_name': eyeName('left'),
@@ -39,15 +39,15 @@ class SmartControlMain extends StatelessWidget {
         {
           'eye': 'up',
           'text': ar ? 'طوارئ' : 'Emergency',
-          'iconAsset': 'assets/icons/siren.png',
+          'iconAsset': 'assets/siren.png',
           'color': const Color(0xFFC62828),
           'is_nav': true,
           'eye_name': eyeName('up'),
         },
         {
           'eye': 'right',
-          'text': ar ? 'الكرسي\nالمتحرك' : 'Wheel\nChair',
-          'iconAsset': 'assets/icons/wheelchair.png',
+          'text': ar ? 'الكرسي المتحرك' : 'Wheel Chair',
+          'iconAsset': 'assets/wheelchair.png',
           'color': const Color(0xFF2E7D32),
           'is_nav': true,
           'eye_name': eyeName('right'),
@@ -55,7 +55,7 @@ class SmartControlMain extends StatelessWidget {
         {
           'eye': 'closed',
           'text': ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
+          'iconAsset': 'assets/back.png',
           'color': const Color(0xFF455A64),
           'is_nav': false,
           'eye_name': eyeName('closed'),

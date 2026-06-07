@@ -25,7 +25,7 @@ class HealthScreen extends StatelessWidget {
         {
           'eye': 'left',
           'text': ar ? 'أشعر بألم' : 'Pain',
-          'iconAsset': 'assets/icons/pain.png',
+          'iconAsset': 'assets/pain.png',
           'color': const Color(0xFFD32F2F),
           'is_nav': true,
           'eye_name': eyeName('left')
@@ -34,7 +34,7 @@ class HealthScreen extends StatelessWidget {
         {
           'eye': 'up',
           'text': ar ? 'الأدوية' : 'Medication',
-          'iconAsset': 'assets/icons/pills.png',
+          'iconAsset': 'assets/pills.png',
           'color': const Color(0xFF1976D2),
           'is_nav': true,
           'eye_name': eyeName('up')
@@ -43,7 +43,7 @@ class HealthScreen extends StatelessWidget {
         {
           'eye': 'right',
           'text': ar ? 'أعراض أخرى' : 'Symptoms',
-          'iconAsset': 'assets/icons/symptoms.png',
+          'iconAsset': 'assets/symptoms.png',
           'color': const Color(0xFFF57C00),
           'is_nav': true,
           'eye_name': eyeName('right')
@@ -52,7 +52,7 @@ class HealthScreen extends StatelessWidget {
         {
           'eye': 'closed',
           'text': ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
+          'iconAsset': 'assets/back.png',
           'color': const Color(0xFF455A64),
           'is_nav': false,
           'eye_name': eyeName('closed')

@@ -18,12 +18,12 @@ class CaregiverScreen extends StatelessWidget {
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
       items: [
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
 
         {'eye': 'left', 'text': ar ? 'تعال فوراً!' : 'Come Now!', 'iconAsset': 'assets/urgent.png', 'color': const Color(0xFFD32F2F), 'is_nav': false, 'eye_name': eyeName('left')},
         {'eye': 'right', 'text': ar ? 'أحتاج مساعدة' : 'Need Help', 'iconAsset': 'assets/help.png', 'color': const Color(0xFFF57C00), 'is_nav': false, 'eye_name': eyeName('right')},
         {'eye': 'up', 'text': ar ? 'طوارئ طبية' : 'Emergency', 'iconAsset': 'assets/siren.png', 'color': const Color(0xFFB71C1C), 'is_nav': false, 'eye_name': eyeName('up')},
-        {'eye': 'down', 'text': ar ? 'أنا بخير' : 'I am Fine', 'iconAsset': 'assets/happy.png', 'color': const Color(0xFF388E3C), 'is_nav': false, 'eye_name': eyeName('down')},
+        {'eye': 'down', 'text': ar ? 'أنا بخير' : 'I am Fine', 'iconAsset': 'assets/fine.png', 'color': const Color(0xFF388E3C), 'is_nav': false, 'eye_name': eyeName('down')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }

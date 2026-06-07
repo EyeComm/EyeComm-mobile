@@ -78,7 +78,7 @@ class _HallView extends StatelessWidget {
     switch (index) {
       case 0:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/ac.png',
+          iconAsset: 'assets/ac.png',
           label: ar ? 'التكييف' : 'AC',
           gestureName: eyeName('left'),
           eyeCmd: 'left',
@@ -95,7 +95,7 @@ class _HallView extends StatelessWidget {
         );
       case 1:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/door.png',
+          iconAsset: 'assets/door.png',
           label: ar ? 'الباب' : 'Door',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
@@ -107,7 +107,7 @@ class _HallView extends StatelessWidget {
         );
       case 2:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/tv.png',
+          iconAsset: 'assets/tv.png',
           label: ar ? 'الشاشة' : 'TV',
           gestureName: eyeName('up'),
           eyeCmd: 'up',
@@ -119,7 +119,7 @@ class _HallView extends StatelessWidget {
         );
       case 3:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/heater.png',
+          iconAsset: 'assets/heater.png',
           label: ar ? 'الدفاية' : 'Heater',
           gestureName: eyeName('down'),
           eyeCmd: 'down',
@@ -131,7 +131,7 @@ class _HallView extends StatelessWidget {
         );
       case 4:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/back.png',
+          iconAsset: 'assets/back.png',
           label: ar ? 'رجوع' : 'Back',
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',

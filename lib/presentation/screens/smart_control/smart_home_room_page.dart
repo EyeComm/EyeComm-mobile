@@ -66,7 +66,7 @@ class _RoomView extends StatelessWidget {
             switch (index) {
               case 0:
                 return DeviceSwitchCard(
-                  iconAsset: 'assets/icons/light.png',
+                  iconAsset: 'assets/light.png',
                   label: ar ? 'النور' : 'Light',
                   gestureName: eyeName('down'),
                   eyeCmd: 'down',
@@ -78,7 +78,7 @@ class _RoomView extends StatelessWidget {
                 );
               case 1:
                 return DeviceSwitchCard(
-                  iconAsset: 'assets/icons/fan.png',
+                  iconAsset: 'assets/fan.png',
                   label: ar ? 'المروحة' : 'Fan',
                   gestureName: eyeName('left'),
                   eyeCmd: 'left',
@@ -90,22 +90,22 @@ class _RoomView extends StatelessWidget {
                 );
               case 2:
                 return DeviceSwitchCard(
-                  iconAsset: 'assets/icons/bed.png',
+                  iconAsset: 'assets/bed.png',
                   label: ar ? 'السرير' : 'Bed',
                   gestureName: eyeName('right'),
                   eyeCmd: 'right',
                   isOn: roomState.bedUp,
                   activeColor: const Color(0xFF6A1B9A),
                   statusText: ar
-                      ? (roomState.bedUp ? 'مرفوع ⬆️' : 'نازل ⬇️')
-                      : (roomState.bedUp ? 'UP ⬆️' : 'DOWN ⬇️'),
+                      ? (roomState.bedUp ? 'مرفوع ⬆' : 'نازل ⬇')
+                      : (roomState.bedUp ? 'UP ⬆' : 'DOWN ⬇'),
                   stable: stable,
                   cd: cd,
                   totalTimer: totalTimer,
                 );
               case 3:
                 return DeviceSwitchCard(
-                  iconAsset: 'assets/icons/window.png',
+                  iconAsset: 'assets/window.png',
                   label: ar ? 'الشباك' : 'Window',
                   gestureName: eyeName('up'),
                   eyeCmd: 'up',
@@ -121,7 +121,7 @@ class _RoomView extends StatelessWidget {
               case 4:
               default:
                 return DeviceSwitchCard(
-                  iconAsset: 'assets/icons/back.png',
+                  iconAsset: 'assets/back.png',
                   label: ar ? 'رجوع' : 'Back',
                   gestureName: eyeName('closed'),
                   eyeCmd: 'closed',

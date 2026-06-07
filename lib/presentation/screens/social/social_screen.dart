@@ -23,7 +23,7 @@ class SocialScreen extends StatelessWidget {
         {
           'eye': 'left',
           'text': ar ? 'ردود سريعة' : 'Quick Phrases',
-          'iconAsset': 'assets/icons/chat.png',
+          'iconAsset': 'assets/chat.png',
           'color': const Color(0xFF00897B),
           'is_nav': true,
           'eye_name': eyeName('left')
@@ -32,7 +32,7 @@ class SocialScreen extends StatelessWidget {
         {
           'eye': 'up',
           'text': ar ? 'تحيات ومجاملات' : 'Greetings',
-          'iconAsset': 'assets/icons/handshake.png',
+          'iconAsset': 'assets/handshake.png',
           'color': const Color(0xFF3949AB),
           'is_nav': true,
           'eye_name': eyeName('up')
@@ -41,7 +41,7 @@ class SocialScreen extends StatelessWidget {
         {
           'eye': 'right',
           'text': ar ? 'مشاعري' : 'My Feelings',
-          'iconAsset': 'assets/icons/feelings.png',
+          'iconAsset': 'assets/feelings.png',
           'color': const Color(0xFFD81B60),
           'is_nav': true,
           'eye_name': eyeName('right')
@@ -50,7 +50,7 @@ class SocialScreen extends StatelessWidget {
         {
           'eye': 'down',
           'text': ar ? 'نداء المرافق' : 'Caregiver',
-          'iconAsset': 'assets/icons/caregiver.png',
+          'iconAsset': 'assets/caregiver.png',
           'color': const Color(0xFFE64A19),
           'is_nav': true,
           'eye_name': eyeName('down')
@@ -59,7 +59,7 @@ class SocialScreen extends StatelessWidget {
         {
           'eye': 'closed',
           'text': ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
+          'iconAsset': 'assets/back.png',
           'color': const Color(0xFF455A64),
           'is_nav': false,
           'eye_name': eyeName('closed')

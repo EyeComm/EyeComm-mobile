@@ -31,7 +31,7 @@ class SmartHomeHub extends StatelessWidget {
         {
           'eye': 'left',
           'text': ar ? 'الصالة' : 'Hall',
-          'iconAsset': 'assets/icons/hall.png',
+          'iconAsset': 'assets/hall.png',
           'color': const Color(0xFF00695C),
           'is_nav': true,
           'eye_name': eyeName('left'),
@@ -39,7 +39,7 @@ class SmartHomeHub extends StatelessWidget {
         {
           'eye': 'up',
           'text': ar ? 'النور الرئيسي' : 'Main Light',
-          'iconAsset': 'assets/icons/light.png',
+          'iconAsset': 'assets/light.png',
           'color': const Color(0xFF388E3C),
           'is_nav': false,
           'eye_name': eyeName('up'),
@@ -47,7 +47,7 @@ class SmartHomeHub extends StatelessWidget {
         {
           'eye': 'right',
           'text': ar ? 'الأوضة' : 'Room',
-          'iconAsset': 'assets/icons/room.png',
+          'iconAsset': 'assets/room.png',
           'color': Colors.indigo,
           'is_nav': true,
           'eye_name': eyeName('right'),
@@ -55,7 +55,7 @@ class SmartHomeHub extends StatelessWidget {
         {
           'eye': 'closed',
           'text': ar ? 'رجوع' : 'Back',
-          'iconAsset': 'assets/icons/back.png',
+          'iconAsset': 'assets/back.png',
           'color': const Color(0xFF455A64),
           'is_nav': false,
           'eye_name': eyeName('closed'),
