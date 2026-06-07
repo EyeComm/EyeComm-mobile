@@ -17,11 +17,11 @@ class PersonalCareScreen extends StatelessWidget {
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
       items: [
-        {'eye': 'left', 'text': ar ? 'دخول الحمام' : 'Bathroom', 'iconAsset': 'assets/icons/toilet.png', 'color': const Color(0xFF5D4037), 'is_nav': false, 'eye_name': eyeName('left')},
-        {'eye': 'up', 'text': ar ? 'عناية وأدوية' : 'Grooming & Meds', 'iconAsset': 'assets/icons/toothbrush.png', 'color': const Color(0xFF00ACC1), 'is_nav': false, 'eye_name': eyeName('up')},
-        {'eye': 'right', 'text': ar ? 'استحمام' : 'Shower', 'iconAsset': 'assets/icons/shower.png', 'color': const Color(0xFF0288D1), 'is_nav': false, 'eye_name': eyeName('right')},
-        {'eye': 'down', 'text': ar ? 'تغيير ملابس' : 'Change Clothes', 'iconAsset': 'assets/icons/clothes.png', 'color': const Color(0xFF43A047), 'is_nav': false, 'eye_name': eyeName('down')},
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
+        {'eye': 'left', 'text': ar ? 'دخول الحمام' : 'Bathroom', 'iconAsset': 'assets/toilet.png', 'color': const Color(0xFF5D4037), 'is_nav': false, 'eye_name': eyeName('left')},
+        {'eye': 'up', 'text': ar ? 'عناية وأدوية' : 'Grooming & Meds', 'iconAsset': 'assets/toothbrush.png', 'color': const Color(0xFF00ACC1), 'is_nav': false, 'eye_name': eyeName('up')},
+        {'eye': 'right', 'text': ar ? 'استحمام' : 'Shower', 'iconAsset': 'assets/shower.png', 'color': const Color(0xFF0288D1), 'is_nav': false, 'eye_name': eyeName('right')},
+        {'eye': 'down', 'text': ar ? 'تغيير ملابس' : 'Change Clothes', 'iconAsset': 'assets/clothes.png', 'color': const Color(0xFF43A047), 'is_nav': false, 'eye_name': eyeName('down')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }

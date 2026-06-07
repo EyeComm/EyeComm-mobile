@@ -21,11 +21,11 @@ class FoodScreen extends StatelessWidget {
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
       items: [
-        {'eye': 'left', 'text': ar ? 'إفطار' : 'Breakfast', 'iconAsset': 'assets/icons/breakfast.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('left')},
-        {'eye': 'up', 'text': ar ? 'غداء' : 'Lunch', 'iconAsset': 'assets/icons/lunch.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('up')},
-        {'eye': 'right', 'text': ar ? 'عشاء' : 'Dinner', 'iconAsset': 'assets/icons/dinner.png', 'color': const Color(0xFFF4511E), 'is_nav': true, 'eye_name': eyeName('right')},
-        {'eye': 'down', 'text': ar ? 'سناكس' : 'Snacks', 'iconAsset': 'assets/icons/snacks.png', 'color': const Color(0xFF43A047), 'is_nav': true, 'eye_name': eyeName('down')},
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
+        {'eye': 'left', 'text': ar ? 'إفطار' : 'Breakfast', 'iconAsset': 'assets/breakfast.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('left')},
+        {'eye': 'up', 'text': ar ? 'غداء' : 'Lunch', 'iconAsset': 'assets/lunch.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('up')},
+        {'eye': 'right', 'text': ar ? 'عشاء' : 'Dinner', 'iconAsset': 'assets/dinner.png', 'color': const Color(0xFFF4511E), 'is_nav': true, 'eye_name': eyeName('right')},
+        {'eye': 'down', 'text': ar ? 'سناكس' : 'Snacks', 'iconAsset': 'assets/snacks.png', 'color': const Color(0xFF43A047), 'is_nav': true, 'eye_name': eyeName('down')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ],
       onAction: (eye, ctx) async {
         switch (eye) {
