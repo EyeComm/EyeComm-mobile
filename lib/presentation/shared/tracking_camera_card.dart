@@ -3,41 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../core/app_theme.dart';
 import 'eye_camera_preview.dart';
 
-/// 🎯 NEW WIDGET: TrackingCameraCard
-///
-/// A large, dedicated camera preview card designed to be placed in the grid layout.
-/// - Extracted from ModernTrackingQualityBar to solve aspect ratio distortion
-/// - Non-interactive (cannot trigger eye actions)
-/// - Includes LIVE indicator and subtle tracking glow
-/// - Maintains proper aspect ratio on Windows desktop
-/// - Matches DynamicEyeCard visual style
-///
-/// Usage in BaseGridPage:
-/// ```dart
-/// if (showCameraCard) {
-///   itemBuilder: (ctx, i, item, stable, cd, timer) {
-///     if (i == 0) {
-///       return TrackingCameraCard(
-///         currentEye: stable,
-///         serverBase: widget.serverBase,
-///         accentColor: widget.color,
-///       );
-///     }
-///     return DynamicEyeCard(item: item, stable: stable, cd: cd, totalTimer: timer);
-///   }
-/// }
-/// ```
 class TrackingCameraCard extends StatefulWidget {
-  /// The current eye direction (for glow effect feedback)
   final String currentEye;
-
-  /// API endpoint for eye tracking data
   final String serverBase;
-
-  /// Primary accent color matching the screen theme
   final Color accentColor;
-
-  /// Optional: Show subtle gesture label if eye is detected
   final bool showGestureLabel;
 
   const TrackingCameraCard({
@@ -62,12 +31,24 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
     super.initState();
     _glowCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: const Duration(milliseconds: 2000), // إبطاء الحركة لراحة العين
     )..repeat(reverse: true);
 
-    _glowAnim = Tween<double>(begin: 0.25, end: 0.65).animate(
+    _glowAnim = Tween<double>(begin: 0.08, end: 0.25).animate(
       CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut),
     );
+  }
+
+  // 🎯 دالة الألوان الموحدة والمطابقة تماماً للكروت لحماية العين من الأصفر الفاقع
+  Color _colorForEye(String cmd) {
+    switch (cmd) {
+      case 'left':   return const Color(0xFF2B8EE8); // أزرق
+      case 'right':  return const Color(0xFFF9A825); // برتقالي
+      case 'up':     return const Color(0xFFE53935); // أحمر
+      case 'down':   return const Color(0xFF7E57C2); // بنفسجي
+      case 'closed': return const Color(0xFF78909C); // رمادي
+      default:       return const Color(0xFF4CAF50); // أخضر التتبع المستقر الافتراضي
+    }
   }
 
   @override
@@ -79,32 +60,29 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
   @override
   Widget build(BuildContext context) {
     final bool isTracking = widget.currentEye != 'none';
+
+    // 🎨 سحب اللون ديناميكياً بناءً على اتجاه العين الحالي ليتطابق الكارت مع حركة المستخدم
     final Color glowColor = isTracking
-        ? widget.accentColor
-        : const Color(0xFFF59E0B); // Yellow when searching
+        ? _colorForEye(widget.currentEye)
+        : const Color(0xFF90A4AE); // رمادي معتدل مريح للعين أثناء وضع الاستعداد والبحث
 
     return AnimatedBuilder(
       animation: _glowAnim,
       builder: (context, _) {
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
             color: kSurface1,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: glowColor.withOpacity(0.35 + _glowAnim.value * 0.2),
-              width: 1.8,
+              color: glowColor.withOpacity(0.25),
+              width: 2.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: glowColor.withOpacity(_glowAnim.value * 0.15),
-                blurRadius: 18,
+                color: glowColor.withOpacity(_glowAnim.value * 0.12),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -112,36 +90,16 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
             borderRadius: BorderRadius.circular(16),
             child: Stack(
               children: [
-                // ── Camera preview (fills entire card) ─────────────────────
+
+                // ── 📸 عرض بث الكاميرا مع تمرير الحركة النشطة لتفعيل الفلتر الذكي ──
                 Positioned.fill(
                   child: EyeCameraPreview(
                     serverBase: widget.serverBase,
+                    stableDirection: widget.currentEye, // ⬅️ تمرير الاتجاه لغلق وعزل البيانات القديمة بنجاح
                   ),
                 ),
 
-                // ── LIVE badge (top-left corner) ──────────────────────────
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: _LiveIndicator(
-                    isTracking: isTracking,
-                    glowColor: glowColor,
-                    glowOpacity: _glowAnim.value,
-                  ),
-                ),
-
-                // ── Optional: Gesture indicator (top-right corner) ────────
-                if (widget.showGestureLabel && isTracking)
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: _GestureIndicator(
-                      eyeDirection: widget.currentEye,
-                      color: glowColor,
-                    ),
-                  ),
-
-                // ── Subtle tracking indicator bar (bottom) ────────────────
+                // ── خط سفلي انسيابي ناعم يعطي تأكيداً مرئياً بلون الحركة ──
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -152,7 +110,7 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
                       gradient: LinearGradient(
                         colors: [
                           glowColor.withOpacity(0.0),
-                          glowColor.withOpacity(0.5 + _glowAnim.value * 0.4),
+                          glowColor.withOpacity(0.4),
                           glowColor.withOpacity(0.0),
                         ],
                       ),
@@ -164,115 +122,6 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
           ),
         );
       },
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  _LiveIndicator – Shows "LIVE" badge with pulsing glow
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _LiveIndicator extends StatelessWidget {
-  final bool isTracking;
-  final Color glowColor;
-  final double glowOpacity;
-
-  const _LiveIndicator({
-    required this.isTracking,
-    required this.glowColor,
-    required this.glowOpacity,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: glowColor.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: glowColor.withOpacity(0.35), width: 1),
-        boxShadow: [
-          if (isTracking)
-            BoxShadow(
-              color: glowColor.withOpacity(glowOpacity * 0.4),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Pulsing dot
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: glowColor,
-              boxShadow: isTracking
-                  ? [
-                BoxShadow(
-                  color: glowColor.withOpacity(glowOpacity * 0.5),
-                  blurRadius: 4,
-                ),
-              ]
-                  : null,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            isTracking ? 'LIVE' : 'OFF',
-            style: GoogleFonts.orbitron(
-              fontSize: 10,
-              fontWeight: FontWeight.w800,
-              color: glowColor,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  _GestureIndicator – Shows current eye direction
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _GestureIndicator extends StatelessWidget {
-  final String eyeDirection;
-  final Color color;
-
-  const _GestureIndicator({
-    required this.eyeDirection,
-    required this.color,
-  });
-
-  String _directionEmoji(String dir) {
-    switch (dir) {
-      case 'left':   return '⬅️';
-      case 'right':  return '➡️';
-      case 'up':     return '⬆️';
-      case 'down':   return '⬇️';
-      case 'closed': return '◉';
-      default:       return '●';
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color.withOpacity(0.15),
-        border: Border.all(color: color.withOpacity(0.35), width: 1),
-      ),
-      child: Text(
-        _directionEmoji(eyeDirection),
-        style: const TextStyle(fontSize: 16),
-      ),
     );
   }
 }
