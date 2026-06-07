@@ -96,19 +96,20 @@ class _HallView extends StatelessWidget {
               ? const Color(0xFFEF5350)
               : (state.acMode == AcMode.cold ? const Color(0xFF4FC3F7) : Colors.grey),
           statusText: state.acMode == AcMode.hot
-              ? (ar ? '🔥 سخن' : '🔥 Hot')
-              : (state.acMode == AcMode.cold ? (ar ? '❄️ بارد' : '❄️ Cold') : null),
+              ? (ar ? ' سخن' : ' Hot')
+              : (state.acMode == AcMode.cold ? (ar ? ' بارد' : ' Cold') : null),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
           onTap: () => cubit.executeCommand('left'),
         );
+      case 1:
         return DeviceSwitchCard(
           iconAsset: 'assets/light.png',
           label: ar ? 'النور الرئيسي' : 'Main Light',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
-          isOn: state.doorOpen, // ربطناه بمتغير الـ right الحالي في الـ Cubit لتجنب كسر الأنظمة الأخرى
+          isOn: state.lightOn,
           activeColor: const Color(0xFF388E3C),
           stable: stable,
           cd: cd,

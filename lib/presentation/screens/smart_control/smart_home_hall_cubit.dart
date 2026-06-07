@@ -45,11 +45,9 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
 
   @override
   Future<void> onGestureConfirmed(String gesture) async {
-    // العين أكدت الحركة -> ننفذ الأمر مباشرة
     executeCommand(gesture);
   }
 
-  // 🎯 الدالة الجديدة الموحدة: لتنفيذ الأوامر بالعين أو باليد فوراً
   void executeCommand(String gesture) {
     switch (gesture) {
       case 'closed':
@@ -74,13 +72,13 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
   }
 
   void _toggleDoor() {
-    final bool next = !hallState.doorOpen;
-    emit(hallState.copyWith(doorOpen: next));
+    final bool next = !hallState.lightOn;
+    emit(hallState.copyWith(lightOn: next));
     VoiceService.speak(
-      _ar ? (next ? 'الباب مفتوح' : 'الباب مغلق')
-          : (next ? 'Door Open'  : 'Door Closed'),
+      _ar ? (next ? 'نور الصالة مفتوح' : 'نور الصالة مطفي')
+          : (next ? 'hall light on'  : 'hall light off'),
     );
-    unawaited(next ? IoTService.doorOpen() : IoTService.doorClose());
+    unawaited(next ? IoTService.light2On() : IoTService.light2Off());
   }
 
   void _toggleTv() {

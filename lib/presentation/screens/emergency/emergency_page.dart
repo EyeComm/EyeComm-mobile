@@ -111,7 +111,7 @@ class _EmergencyView extends StatelessWidget {
       case 1:
         final bool isEmergency = emState.activeAlert == 'emergency';
         return DeviceSwitchCard(
-          iconAsset: 'assets/emergency.png',
+          iconAsset: 'assets/siren.png',
           label: ar ? ' طوارئ' : ' EMERGENCY',
           gestureName: eyeName('up'),
           eyeCmd: 'up',

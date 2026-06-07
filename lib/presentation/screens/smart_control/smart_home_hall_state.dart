@@ -3,13 +3,13 @@ import '../eye_tracking/eye_tracking_state.dart';
 enum AcMode { off, hot, cold }
 
 class SmartHomeHallState extends EyeTrackingState {
-  final bool   doorOpen;
+  final bool   lightOn;
   final bool   tvOn;
   final bool   heaterOn;
   final AcMode acMode;
 
   const SmartHomeHallState({
-    this.doorOpen = false,
+    this.lightOn = false,
     this.tvOn     = false,
     this.heaterOn = false,
     this.acMode   = AcMode.off,
@@ -22,7 +22,7 @@ class SmartHomeHallState extends EyeTrackingState {
 
   @override
   SmartHomeHallState copyWith({
-    bool?   doorOpen,
+    bool?   lightOn,
     bool?   tvOn,
     bool?   heaterOn,
     AcMode? acMode,
@@ -33,7 +33,7 @@ class SmartHomeHallState extends EyeTrackingState {
     Object? confirmedGesture = kKeepGesture,
   }) {
     return SmartHomeHallState(
-      doorOpen         : doorOpen         ?? this.doorOpen,
+      lightOn         : lightOn         ?? this.lightOn,
       tvOn             : tvOn             ?? this.tvOn,
       heaterOn         : heaterOn         ?? this.heaterOn,
       acMode           : acMode           ?? this.acMode,
@@ -50,7 +50,7 @@ class SmartHomeHallState extends EyeTrackingState {
   @override
   List<Object?> get props => [
     ...super.props,
-    doorOpen,
+    lightOn,
     tvOn,
     heaterOn,
     acMode,

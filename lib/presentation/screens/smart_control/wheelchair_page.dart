@@ -5,7 +5,6 @@ import '../../core/eye_utils.dart';
 import '../../core/language_service.dart';
 import '../../shared/base_grid_page.dart';
 import '../../shared/device_switch_card.dart';
-import 'smart_home_hall_cubit.dart'; // لتمرير نوع الـ State الأصلي عند الحاجة
 import '../eye_tracking/eye_tracking_state.dart';
 import 'wheelchair_cubit.dart';
 
@@ -44,7 +43,6 @@ class _WheelchairView extends StatelessWidget {
         final cubit = context.read<WheelchairCubit>();
         final wheelchairState = cubit.wheelchairState;
 
-        // تم إضافة جميع الاتجاهات الخمسة (بما فيها الخلف) لتطابق نظام الشبكة الموحد
         final List<Map<String, dynamic>> items = [
           {'eye': 'up', 'text': ar ? 'للأمام' : 'Forward'},
           {'eye': 'down', 'text': ar ? 'للخلف' : 'Backward'},
@@ -55,7 +53,7 @@ class _WheelchairView extends StatelessWidget {
 
         return BaseGridPage(
           title: ar ? 'الكرسي المتحرك' : 'Wheelchair',
-          color: const Color(0xFF2E7D32), // لون أخضر غامق مميز للكرسي
+          color: const Color(0xFF2E7D32),
           showCameraCard: true,
           cameraCardAspectRatio: 1.15,
           items: items,

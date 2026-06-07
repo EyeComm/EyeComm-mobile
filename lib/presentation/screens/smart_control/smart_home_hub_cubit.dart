@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'package:eye_comm_project/presentation/core/language_service.dart';
 import 'package:eye_comm_project/presentation/core/voice_service.dart';
 
+import '../../../data/iot_service.dart';
 import '../eye_tracking/eye_tracking_cubit.dart';
-import '../eye_tracking/eye_tracking_state.dart';
 import 'smart_home_hub_state.dart';
 
 export 'smart_home_hub_state.dart';
@@ -69,11 +68,12 @@ class SmartHomeHubCubit extends EyeTrackingCubit {
   }
 
   Future<void> _sendDoorCommand(bool open) async {
-    final String command = open ? "door open" : "door close";
-    print("Sending to ESP32: $command");
     try {
-      final url = Uri.parse('http://127.0.0.1:5000/command?cmd=$command');
-      await http.get(url).timeout(const Duration(seconds: 2));
+      if (open) {
+        await IoTService.doorOpen();
+      } else {
+        await IoTService.doorClose();
+      }
     } catch (e) {
       print("Error sending command to ESP32: $e");
     }
