@@ -43,7 +43,6 @@ class _HallView extends StatelessWidget {
         final cubit = context.read<SmartHomeHallCubit>();
         final hallState = cubit.hallState;
 
-        // 🎯 خريطة العناصر بعد إدخال "النور الرئيسي" بدل "الباب" في اتجاه اليمين
         final List<Map<String, dynamic>> items = [
           {'eye': 'left', 'text': ar ? 'التكييف' : 'AC'},
           {'eye': 'right', 'text': ar ? 'النور الرئيسي' : 'Main Light'},
@@ -88,7 +87,7 @@ class _HallView extends StatelessWidget {
     switch (index) {
       case 0:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/ac.png',
+          iconAsset: 'assets/ac.png',
           label: ar ? 'التكييف' : 'AC',
           gestureName: eyeName('left'),
           eyeCmd: 'left',
@@ -104,9 +103,8 @@ class _HallView extends StatelessWidget {
           totalTimer: totalTimer,
           onTap: () => cubit.executeCommand('left'),
         );
-      case 1: // 🎯 كارد النور الرئيسي الجديد الخاص بالصالة بدلاً من الباب
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/light.png',
+          iconAsset: 'assets/light.png',
           label: ar ? 'النور الرئيسي' : 'Main Light',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
@@ -119,7 +117,7 @@ class _HallView extends StatelessWidget {
         );
       case 2:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/tv.png',
+          iconAsset: 'assets/tv.png',
           label: ar ? 'الشاشة' : 'TV',
           gestureName: eyeName('up'),
           eyeCmd: 'up',
@@ -132,7 +130,7 @@ class _HallView extends StatelessWidget {
         );
       case 3:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/heater.png',
+          iconAsset: 'assets/heater.png',
           label: ar ? 'الدفاية' : 'Heater',
           gestureName: eyeName('down'),
           eyeCmd: 'down',
@@ -145,7 +143,7 @@ class _HallView extends StatelessWidget {
         );
       case 4:
         return DeviceSwitchCard(
-          iconAsset: 'assets/icons/back.png',
+          iconAsset: 'assets/back.png',
           label: ar ? 'رجوع' : 'Back',
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',

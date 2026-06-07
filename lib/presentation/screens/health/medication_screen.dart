@@ -17,12 +17,11 @@ class MedicationScreen extends StatelessWidget {
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
       items: [
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
-
-        {'eye': 'left', 'text': ar ? 'مسكن ألم' : 'Painkiller', 'iconAsset': 'assets/icons/painkiller.png', 'color': const Color(0xFFE53935), 'is_nav': false, 'eye_name': eyeName('left')},
-        {'eye': 'right', 'text': ar ? 'دواء التشنجات' : 'Spasm Meds', 'iconAsset': 'assets/icons/muscle_spasm.png', 'color': const Color(0xFF8E24AA), 'is_nav': false, 'eye_name': eyeName('right')},
-        {'eye': 'up', 'text': ar ? 'دواء الموعد الأساسي' : 'Scheduled Meds', 'iconAsset': 'assets/icons/pills.png', 'color': const Color(0xFF43A047), 'is_nav': false, 'eye_name': eyeName('up')},
-        {'eye': 'down', 'text': ar ? 'مراجعة الطبيب' : 'Call Doctor', 'iconAsset': 'assets/icons/doctor.png', 'color': const Color(0xFF0288D1), 'is_nav': false, 'eye_name': eyeName('down')},
+        {'eye': 'left', 'text': ar ? 'مسكن ألم' : 'Painkiller', 'iconAsset': 'assets/painkiller.png', 'color': const Color(0xFFE53935), 'is_nav': false, 'eye_name': eyeName('left')},
+        {'eye': 'right', 'text': ar ? 'دواء التشنجات' : 'Spasm Meds', 'iconAsset': 'assets/muscle_spasm.png', 'color': const Color(0xFF8E24AA), 'is_nav': false, 'eye_name': eyeName('right')},
+        {'eye': 'up', 'text': ar ? 'دواء الموعد الأساسي' : 'Scheduled Meds', 'iconAsset': 'assets/pills.png', 'color': const Color(0xFF43A047), 'is_nav': false, 'eye_name': eyeName('up')},
+        {'eye': 'down', 'text': ar ? 'مراجعة الطبيب' : 'Call Doctor', 'iconAsset': 'assets/doctor.png', 'color': const Color(0xFF0288D1), 'is_nav': false, 'eye_name': eyeName('down')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }

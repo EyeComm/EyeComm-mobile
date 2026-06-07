@@ -18,11 +18,11 @@ class PainCategoriesScreen extends StatelessWidget {
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
       items: [
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
-        {'eye': 'left', 'text': ar ? 'الرأس والأسنان' : 'Head & Face', 'iconAsset': 'assets/icons/headache.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},
-        {'eye': 'right', 'text': ar ? 'الصدر والبطن' : 'Chest & Stomach', 'iconAsset': 'assets/icons/stomach_pain.png', 'color': const Color(0xFFF57C00), 'is_nav': true, 'eye_name': eyeName('right')},
-        {'eye': 'up', 'text': ar ? 'تشنجات وأعصاب' : 'Spasms & Nerves', 'iconAsset': 'assets/icons/nerve.png', 'color': const Color(0xFF8E24AA), 'is_nav': true, 'eye_name': eyeName('up')},
-        {'eye': 'down', 'text': ar ? 'جلد وقرح فراش' : 'Skin & Bedsores', 'iconAsset': 'assets/icons/bedsore.png', 'color': const Color(0xFF0288D1), 'is_nav': true, 'eye_name': eyeName('down')},
+        {'eye': 'left', 'text': ar ? 'الرأس والأسنان' : 'Head & Face', 'iconAsset': 'assets/headache.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},
+        {'eye': 'right', 'text': ar ? 'الصدر والبطن' : 'Chest & Stomach', 'iconAsset': 'assets/stomach_pain.png', 'color': const Color(0xFFF57C00), 'is_nav': true, 'eye_name': eyeName('right')},
+        {'eye': 'up', 'text': ar ? 'تشنجات وأعصاب' : 'Spasms & Nerves', 'iconAsset': 'assets/nerve.png', 'color': const Color(0xFF8E24AA), 'is_nav': true, 'eye_name': eyeName('up')},
+        {'eye': 'down', 'text': ar ? 'جلد وقرح فراش' : 'Skin & Bedsores', 'iconAsset': 'assets/bedsore.png', 'color': const Color(0xFF0288D1), 'is_nav': true, 'eye_name': eyeName('down')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }

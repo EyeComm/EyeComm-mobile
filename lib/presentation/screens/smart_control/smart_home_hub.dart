@@ -2,7 +2,8 @@
 // smart_home_hub.dart
 //
 // Thin routing widget for the Smart Home sub-menu.
-// Manages local state for the door and renders custom DeviceSwitchCards.
+// No BlocProvider wrapping is done here — each room page manages its own
+// cubit lifecycle internally via BlocProvider.create.
 // ════════════════════════════════════════════════════════════════════════════
 
 import 'dart:convert';
@@ -72,7 +73,7 @@ class _SmartHomeHubState extends State<SmartHomeHub> {
       {
         'eye': 'left',
         'text': ar ? 'الصالة' : 'Hall',
-        'iconAsset': 'assets/icons/hall.png',
+        'iconAsset': 'assets/hall.png',
         'color': const Color(0xFF00695C),
         'is_nav': true,
         'eye_name': eyeName('left'),
@@ -80,7 +81,7 @@ class _SmartHomeHubState extends State<SmartHomeHub> {
       {
         'eye': 'up',
         'text': ar ? 'الباب' : 'Door',
-        'iconAsset': 'assets/icons/door.png',
+        'iconAsset': 'assets/door.png',
         'color': const Color(0xFF8D6E63),
         'is_nav': false,
         'eye_name': eyeName('up'),
@@ -88,7 +89,7 @@ class _SmartHomeHubState extends State<SmartHomeHub> {
       {
         'eye': 'right',
         'text': ar ? 'الأوضة' : 'Room',
-        'iconAsset': 'assets/icons/room.png',
+        'iconAsset': 'assets/room.png',
         'color': Colors.indigo,
         'is_nav': true,
         'eye_name': eyeName('right'),
@@ -96,7 +97,7 @@ class _SmartHomeHubState extends State<SmartHomeHub> {
       {
         'eye': 'closed',
         'text': ar ? 'رجوع' : 'Back',
-        'iconAsset': 'assets/icons/back.png',
+        'iconAsset': 'assets/back.png',
         'color': const Color(0xFF455A64),
         'is_nav': false,
         'eye_name': eyeName('closed'),

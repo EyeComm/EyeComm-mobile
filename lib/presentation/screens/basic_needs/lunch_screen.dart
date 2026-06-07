@@ -35,9 +35,9 @@ class LunchScreen extends StatelessWidget {
           ]));
         } else if (eye == 'up') {
           await push(ctx, SubItemsScreen(titleAr: 'نشويات', titleEn: 'Carbs', options: [
-            {'eye': 'left', 'text': ar ? 'أرز مدور معمر' : 'Roz Modawar', 'iconAsset': 'assets/icons/roz.png', 'color': const Color(0xFF039BE5), 'eye_name': eyeName('left')},
-            {'eye': 'up', 'text': ar ? 'مكرونة' : 'Pasta', 'iconAsset': 'assets/icons/pasta.png', 'color': const Color(0xFF0277BD), 'eye_name': eyeName('up')},
-            {'eye': 'right', 'text': ar ? 'أرز أبيض' : 'White Rice', 'iconAsset': 'assets/icons/white_rice.png', 'color': const Color(0xFF0288D1), 'eye_name': eyeName('right')},
+            {'eye': 'left', 'text': ar ? 'أرز مدور معمر' : 'Roz Modawar', 'iconAsset': 'assets/roz.png', 'color': const Color(0xFF039BE5), 'eye_name': eyeName('left')},
+            {'eye': 'up', 'text': ar ? 'مكرونة' : 'Pasta', 'iconAsset': 'assets/pasta.png', 'color': const Color(0xFF0277BD), 'eye_name': eyeName('up')},
+            {'eye': 'right', 'text': ar ? 'أرز أبيض' : 'White Rice', 'iconAsset': 'assets/white_rice.png', 'color': const Color(0xFF0288D1), 'eye_name': eyeName('right')},
           ]));
         } else if (eye == 'right') {
           await push(ctx, SubItemsScreen(titleAr: 'لحوم وأسماك', titleEn: 'Meat & Fish', options: [
