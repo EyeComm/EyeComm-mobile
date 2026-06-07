@@ -9,7 +9,9 @@ import '../../core/language_service.dart';
 import '../../core/voice_service.dart';
 import '../../core/nav_helper.dart';
 import '../../shared/dynamic_eye_card.dart';
-import '../../shared/modern_tracking_quality_bar.dart'; // ⬅️ استيراد البار المودرن الجديد
+import '../../shared/modern_tracking_quality_bar.dart';
+// 📸 استيراد الكاميرا بريفيو المخصصة لكي تعمل هنا أيضاً
+import '../../shared/eye_camera_preview.dart'; // ⬅️ تأكدي من صحة مسار الملف في مشروعك
 import '../home/home_screen.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
@@ -35,13 +37,15 @@ class _LanguageSelectionPageState
         title: 'English',
         hint: 'Look Left',
         color: Color(0xFF2B8EE8),
-        eyeCmd: 'left'),
+        eyeCmd: 'left',
+        iconAsset: 'assets/en.png'),
     _CardDef(
         symbol: 'ع',
         title: 'العربية',
         hint: 'انظر يميناً',
         color: Color(0xFF0DB868),
-        eyeCmd: 'right'),
+        eyeCmd: 'right',
+        iconAsset: 'assets/ar.png'),
   ];
 
   @override
@@ -102,12 +106,11 @@ class _LanguageSelectionPageState
     if (eye == 'left') {
       AppLanguage.current = 'en';
       await VoiceService.setLang('en-US');
-      VoiceService.speak('English selected. Welcome to EyeComm.');
+      await VoiceService.speak('English selected. Welcome to EyeComm.');
     } else if (eye == 'right') {
       AppLanguage.current = 'ar';
       await VoiceService.setLang('ar');
-      VoiceService.speak(
-          'تم اختيار اللغة العربية. أهلاً بك في آي كوم.');
+      await VoiceService.speak('تم اختيار اللغة العربية. أهلاً بك في آي كوم.');
     } else {
       _startPoll();
       return;
@@ -131,13 +134,13 @@ class _LanguageSelectionPageState
           (screen.maxWidth * 0.42).clamp(140.0, 240.0);
           final double gap =
           (screen.maxWidth * 0.04).clamp(16.0, 32.0);
-          final double logoSize =
-          (screen.maxWidth * 0.25).clamp(80.0, 140.0);
+          final double cameraWidth =
+          (screen.maxWidth * 0.50).clamp(160.0, 260.0);
 
           return Column(children: [
             const SizedBox(height: 12),
 
-            // ── 🎯 تم التعديل هنا: استخدام البار المودرن الموحد لمنع الاختلاف ──
+            // ── 🎯 بار التتبع الموحد ──
             ModernTrackingQualityBar(
               currentEye: _eye,
               stableDirection: _stable,
@@ -147,62 +150,52 @@ class _LanguageSelectionPageState
               activeColor: const Color(0xFF2B8EE8),
             ),
 
-            // ── Logo + Cards ────────────────────────────────────────────
+            // ── المحتوى الرئيسي ────────────────────────────────────────────
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo
+                      const SizedBox(height: 10),
+
+                      // 2. 📸 مربع الكاميرا باستخدام الـ Preview المخصصة والمضمونة لفك التقطيع
                       Container(
-                        width: logoSize,
-                        height: logoSize,
+                        width: cameraWidth,
+                        height: cameraWidth / 1.15, // التناسق المتبع 1.15
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: kBorder1, width: 1.5),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 15,
-                                offset: const Offset(0, 4))
-                          ],
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: kBorder1, width: 2),
                         ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            'assets/logo.jpeg',
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
-                              color: kSurface1,
-                              child: Icon(Icons.remove_red_eye_rounded,
-                                  color: const Color(0xFF2B8EE8),
-                                  size: logoSize * 0.5),
-                            ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: EyeCameraPreview(
+                            serverBase: 'http://127.0.0.1:5000',
+                            stableDirection: _stable,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+
+                      const SizedBox(height: 20),
                       Text('EyeComm',
                           style: GoogleFonts.orbitron(
                               color: kTextMain1,
-                              fontSize: (screen.maxWidth * 0.07)
-                                  .clamp(24.0, 36.0),
+                              fontSize: (screen.maxWidth * 0.06)
+                                  .clamp(20.0, 30.0),
                               fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Text(
                         'Choose Language / اختر اللغة',
                         style: GoogleFonts.cairo(
                             color: const Color(0xFF606060),
                             fontSize: (screen.maxWidth * 0.035)
-                                .clamp(14.0, 18.0),
+                                .clamp(14.0, 16.0),
                             fontWeight: FontWeight.w600),
                       ),
-                      SizedBox(
-                          height: (screen.maxHeight * 0.06)
-                              .clamp(24.0, 48.0)),
+                      const SizedBox(height: 24),
 
-                      // Language cards
+                      // كروت اللغات مدعومة بالصور المضافة
                       Directionality(
                         textDirection: TextDirection.ltr,
                         child: Row(
@@ -218,10 +211,11 @@ class _LanguageSelectionPageState
                                 height: cardSize,
                                 child: DynamicEyeCard(
                                   item: {
-                                    'eye':      _cards[i].eyeCmd,
-                                    'text':     _cards[i].title,
-                                    'color':    _cards[i].color,
-                                    'eye_name': _cards[i].hint,
+                                    'eye':       _cards[i].eyeCmd,
+                                    'text':      _cards[i].title,
+                                    'color':     _cards[i].color,
+                                    'eye_name':  _cards[i].hint,
+                                    'iconAsset': _cards[i].iconAsset,
                                   },
                                   stable: _stable,
                                   cd: _cd,
@@ -232,6 +226,7 @@ class _LanguageSelectionPageState
                           ],
                         ),
                       ),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -245,12 +240,13 @@ class _LanguageSelectionPageState
 }
 
 class _CardDef {
-  final String symbol, title, hint, eyeCmd;
+  final String symbol, title, hint, eyeCmd, iconAsset;
   final Color color;
   const _CardDef(
       {required this.symbol,
         required this.title,
         required this.hint,
         required this.color,
-        required this.eyeCmd});
+        required this.eyeCmd,
+        required this.iconAsset});
 }
