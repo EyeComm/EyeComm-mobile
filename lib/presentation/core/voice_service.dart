@@ -2,22 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'language_service.dart';
 
-/// Wrapper around flutter_tts. Call [init] once at startup (done via
-/// [AppLanguage.init]), then call [speak] from anywhere.
 class VoiceService {
   static final FlutterTts _tts = FlutterTts();
   static bool _init = false;
-  static String _arCode = 'ar-SA'; // Default fallback
+  static String _arCode = 'ar-SA';
 
   static Future<void> init() async {
     try {
-      await _tts.setSpeechRate(0.48); // سرعة مناسبة للعربي
+      await _tts.setSpeechRate(0.48);
       await _tts.setPitch(1.0);
       await _tts.setVolume(1.0);
 
       final List<dynamic> langs = await _tts.getLanguages;
 
-      // 🎯 البحث عن اللهجة المصرية كأولوية، لو مفيش نشوف أي عربي متاح
       bool foundArabic = false;
       for (final l in langs) {
         if (l.toString() == 'ar-EG') {
@@ -47,7 +44,6 @@ class VoiceService {
       final isAr = AppLanguage.current == 'ar';
       await _tts.setLanguage(isAr ? _arCode : 'en-US');
 
-      // 🎯 تنظيف النص من أي رموز أو علامات تعجب/ترقيم غريبة ممكن تخلي المحرك يسكت
       final cleanText = text.replaceAll(RegExp(r'[^\w\s\u0600-\u06FF]'), '').trim();
 
       if (cleanText.isNotEmpty) {

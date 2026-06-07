@@ -9,7 +9,6 @@ import 'wheelchair_state.dart';
 export 'wheelchair_state.dart';
 
 class WheelchairCubit extends EyeTrackingCubit {
-  // الكرسي يحتاج عداد أسرع (3 ثوانٍ)
   WheelchairCubit() : super(timerSec: 3) {
     emit(const WheelchairState(totalTimer: 3));
   }
@@ -50,7 +49,6 @@ class WheelchairCubit extends EyeTrackingCubit {
     executeCommand(gesture);
   }
 
-  // 🎯 الدالة الموحدة لتنفيذ الأوامر بالعين أو بالضغط باليد فوراً
   void executeCommand(String gesture) {
     switch (gesture) {
       case 'closed':
@@ -89,7 +87,6 @@ class WheelchairCubit extends EyeTrackingCubit {
     _resetToStopAfterTurn();
   }
 
-  // بما أن السيرفر يلف لفترة قصيرة ثم يقف تلقائياً، نعيد الحالة لـ متوقف بعد الدوران
   void _resetToStopAfterTurn() {
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (wheelchairState.currentDirection == 'L' || wheelchairState.currentDirection == 'R') {

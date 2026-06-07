@@ -18,7 +18,6 @@ class SmartHomeRoomState extends EyeTrackingState {
     this.fanOn      = false,
     this.bedUp      = false,
     this.windowOpen = false,
-    // Eye-tracking fields forwarded to parent
     super.currentEye,
     super.stableDirection,
     super.countdownSeconds,

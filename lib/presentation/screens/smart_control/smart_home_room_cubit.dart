@@ -1,11 +1,3 @@
-// ════════════════════════════════════════════════════════════════════════════
-// smart_home_room_cubit.dart
-//
-// Handles all Bedroom logic.
-// Identical architectural pattern to SmartHomeHallCubit — no code duplication
-// of the polling loop; only device-specific actions differ.
-// ════════════════════════════════════════════════════════════════════════════
-
 import 'package:eye_comm_project/data/iot_service.dart';
 import 'package:eye_comm_project/presentation/core/language_service.dart';
 import 'package:eye_comm_project/presentation/core/voice_service.dart';
@@ -16,16 +8,13 @@ import 'smart_home_room_state.dart';
 
 export 'smart_home_room_state.dart';
 
-// Re-export the unawaited helper so consumers don't need to import the hall file.
 void unawaited(Future<void> future) {
-  // ignore: unawaited_futures
   future;
 }
 
 class SmartHomeRoomCubit extends EyeTrackingCubit {
   SmartHomeRoomCubit() : super(timerSec: 5) {
-    // Immediately promote initial state to SmartHomeRoomState.
-    emit(SmartHomeRoomState(totalTimer: 5));
+    emit(const SmartHomeRoomState(totalTimer: 5));
   }
 
   SmartHomeRoomState get roomState {
@@ -42,8 +31,6 @@ class SmartHomeRoomCubit extends EyeTrackingCubit {
 
   bool get _ar => AppLanguage.current == 'ar';
 
-  // ── KEY FIX: override copyStateWith to preserve device fields on every
-  //    base-class poll emit.
   @override
   EyeTrackingState copyStateWith({
     String?  currentEye,
@@ -63,10 +50,15 @@ class SmartHomeRoomCubit extends EyeTrackingCubit {
 
   @override
   Future<void> onGestureConfirmed(String gesture) async {
+    // العين أكدت الحركة -> ننفذ الأمر فوراً
+    executeCommand(gesture);
+  }
+
+  // 🎯 الدالة الجديدة الموحدة لتشغيل الأوامر بالعين أو باليد
+  void executeCommand(String gesture) {
     switch (gesture) {
       case 'closed':
         VoiceService.speak(_ar ? 'رجوع' : 'Back');
-        // Navigation handled by the UI's BlocConsumer listener.
         break;
       case 'down':  _toggleLight();  break;
       case 'left':  _toggleFan();    break;
@@ -75,14 +67,12 @@ class SmartHomeRoomCubit extends EyeTrackingCubit {
     }
   }
 
-  // ── Device actions ─────────────────────────────────────────────────────────
-
   void _toggleLight() {
     final bool next = !roomState.lightOn;
     emit(roomState.copyWith(lightOn: next));
     VoiceService.speak(
       _ar ? (next ? 'النور شغال'  : 'النور مطفي')
-           : (next ? 'Light ON'   : 'Light OFF'),
+          : (next ? 'Light ON'   : 'Light OFF'),
     );
     unawaited(next ? IoTService.light1On() : IoTService.light1Off());
   }
@@ -92,7 +82,7 @@ class SmartHomeRoomCubit extends EyeTrackingCubit {
     emit(roomState.copyWith(fanOn: next));
     VoiceService.speak(
       _ar ? (next ? 'المروحة شغالة'  : 'المروحة مطفية')
-           : (next ? 'Fan ON'         : 'Fan OFF'),
+          : (next ? 'Fan ON'         : 'Fan OFF'),
     );
     unawaited(next ? IoTService.fanOn() : IoTService.fanOff());
   }
@@ -102,7 +92,7 @@ class SmartHomeRoomCubit extends EyeTrackingCubit {
     emit(roomState.copyWith(bedUp: next));
     VoiceService.speak(
       _ar ? (next ? 'السرير اترفع' : 'السرير نزل')
-           : (next ? 'Bed UP'       : 'Bed DOWN'),
+          : (next ? 'Bed UP'       : 'Bed DOWN'),
     );
     unawaited(next ? IoTService.bedUp() : IoTService.bedDown());
   }
@@ -112,7 +102,7 @@ class SmartHomeRoomCubit extends EyeTrackingCubit {
     emit(roomState.copyWith(windowOpen: next));
     VoiceService.speak(
       _ar ? (next ? 'الشباك اتفتح' : 'الشباك اتقفل')
-           : (next ? 'Window OPEN'  : 'Window CLOSED'),
+          : (next ? 'Window OPEN'  : 'Window CLOSED'),
     );
     unawaited(next ? IoTService.windowOpen() : IoTService.windowClose());
   }

@@ -1,7 +1,5 @@
 import 'voice_service.dart';
 
-/// Holds the current locale and all translated strings.
-/// Call [init] once in main() before runApp.
 class AppLanguage {
   static String current = 'en';
 

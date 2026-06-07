@@ -1,5 +1,3 @@
-// Presentation → Core
-// Import this single file to access all core services & constants.
 export 'app_theme.dart';
 export 'language_service.dart';
 export 'voice_service.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ── App-wide colour tokens ────────────────────────────────────────────────────
 const Color kBg          = Color(0xFFF0F6FF);
 const Color kBg1         = Color(0xFFF5F5F5);
 const Color kSurface1    = Color(0xFFFFFFFF);

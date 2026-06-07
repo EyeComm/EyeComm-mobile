@@ -1,6 +1,5 @@
 import 'language_service.dart';
 
-/// Returns the localised name for an eye-gesture key.
 String eyeName(String k) {
   final bool ar = AppLanguage.current == 'ar';
   switch (k) {
@@ -13,7 +12,6 @@ String eyeName(String k) {
   }
 }
 
-/// Maps an eye-gesture key to its directional asset path.
 String assetForEye(String cmd) {
   switch (cmd) {
     case 'left':   return 'assets/look-left.png';
@@ -25,7 +23,6 @@ String assetForEye(String cmd) {
   }
 }
 
-/// Strips emoji code-points from [text], keeping Arabic / Latin / digits.
 String cleanForSpeech(String text) => text
     .replaceAll(
       RegExp(
