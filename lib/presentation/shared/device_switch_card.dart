@@ -5,7 +5,8 @@ import '../core/eye_utils.dart';
 import 'shared.dart';
 
 class DeviceSwitchCard extends StatelessWidget {
-  final String iconAsset;
+  final dynamic iconAsset;
+  final bool isIcon;       // 🎯 القيمة الافتراضية ستكون true
   final String label;
   final String gestureName;
   final String eyeCmd;
@@ -21,6 +22,7 @@ class DeviceSwitchCard extends StatelessWidget {
   const DeviceSwitchCard({
     super.key,
     required this.iconAsset,
+    this.isIcon = true, // 👈 جعلناها true افتراضياً حتى لا تضطري لكتابتها في كل مكان
     required this.label,
     required this.gestureName,
     required this.eyeCmd,
@@ -42,15 +44,8 @@ class DeviceSwitchCard extends StatelessWidget {
     final bool hasSwitch = isOn != null;
     final bool isDeviceOn = isOn ?? false;
 
-    final bool isKeyboardIcon = iconAsset.contains('img') ||
-        iconAsset.contains('GROUP') ||
-        iconAsset.contains('letters/') || //
-        iconAsset.contains('icons/') ||
-        iconAsset.contains('UVWX') ||
-        iconAsset.contains('IJKL') ||
-        iconAsset.contains('MNOP') ||
-        iconAsset.contains('QRST') ||
-        iconAsset.contains('YZ');
+    // 🎯 إذا كانت صورة (isIcon == false) وما فيش سويتش، يبقى ده كيبورد حروف
+    final bool isKeyboard = !isIcon && !hasSwitch;
 
     return GestureDetector(
       onTap: onTap,
@@ -86,17 +81,23 @@ class DeviceSwitchCard extends StatelessWidget {
                     width: badgeSide,
                     height: badgeSide,
                     decoration: BoxDecoration(
-                      color: isKeyboardIcon
+                      color: isKeyboard
                           ? Colors.transparent
                           : (isDeviceOn ? activeColor.withOpacity(0.15) : kBorder1.withOpacity(0.3)),
                       borderRadius: BorderRadius.circular(badgeSide * 0.26),
                     ),
                     child: Center(
-                      child: Image.asset(
-                        iconAsset,
-                        width: isKeyboardIcon ? badgeSide : iconSize * 0.8,
-                        height: isKeyboardIcon ? badgeSide : iconSize * 0.8,
-                        color: isKeyboardIcon ? null : ((!hasSwitch || isDeviceOn) ? activeColor : kTextSub1),
+                      child: isIcon
+                          ? Icon(
+                        iconAsset as IconData,
+                        size: iconSize,
+                        color: (!hasSwitch || isDeviceOn) ? activeColor : kTextSub1,
+                      )
+                          : Image.asset(
+                        iconAsset.toString(),
+                        width: isKeyboard ? badgeSide : iconSize * 0.8,
+                        height: isKeyboard ? badgeSide : iconSize * 0.8,
+                        color: isKeyboard ? null : ((!hasSwitch || isDeviceOn) ? activeColor : kTextSub1),
                         errorBuilder: (_, __, ___) => Icon(Icons.broken_image, color: kTextSub1),
                       ),
                     ),

@@ -440,6 +440,7 @@ class _KeyboardPageState extends State<KeyboardPage> {
 
                 return DeviceSwitchCard(
                   iconAsset: finalIconPath,
+                  isIcon: false,
                   label: cardLabel == '—' ? '' : cardLabel,
                   gestureName: item['eye_name'].toString(),
                   eyeCmd: currentEye,

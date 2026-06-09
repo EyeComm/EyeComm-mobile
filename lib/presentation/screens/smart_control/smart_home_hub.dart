@@ -89,6 +89,7 @@ class _HubView extends StatelessWidget {
 
             return DeviceSwitchCard(
               iconAsset: item['iconAsset'].toString(),
+              isIcon: false,
               label: item['text'].toString(),
               gestureName: item['eye_name'].toString(),
               eyeCmd: currentEye,

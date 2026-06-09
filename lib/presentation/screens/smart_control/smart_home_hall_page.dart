@@ -91,6 +91,7 @@ class _HallView extends StatelessWidget {
           label: ar ? 'التكييف' : 'AC',
           gestureName: eyeName('left'),
           eyeCmd: 'left',
+          isIcon: false,
           isOn: state.acMode != AcMode.off,
           activeColor: state.acMode == AcMode.hot
               ? const Color(0xFFEF5350)
@@ -106,6 +107,7 @@ class _HallView extends StatelessWidget {
       case 1:
         return DeviceSwitchCard(
           iconAsset: 'assets/light.png',
+          isIcon: false,
           label: ar ? 'النور الرئيسي' : 'Main Light',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
@@ -119,6 +121,7 @@ class _HallView extends StatelessWidget {
       case 2:
         return DeviceSwitchCard(
           iconAsset: 'assets/tv.png',
+          isIcon: false,
           label: ar ? 'الشاشة' : 'TV',
           gestureName: eyeName('up'),
           eyeCmd: 'up',
@@ -132,6 +135,7 @@ class _HallView extends StatelessWidget {
       case 3:
         return DeviceSwitchCard(
           iconAsset: 'assets/heater.png',
+          isIcon: false,
           label: ar ? 'الدفاية' : 'Heater',
           gestureName: eyeName('down'),
           eyeCmd: 'down',
@@ -145,6 +149,7 @@ class _HallView extends StatelessWidget {
       case 4:
         return DeviceSwitchCard(
           iconAsset: 'assets/back.png',
+          isIcon: false,
           label: ar ? 'رجوع' : 'Back',
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',

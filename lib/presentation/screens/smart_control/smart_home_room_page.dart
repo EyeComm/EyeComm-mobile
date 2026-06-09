@@ -89,6 +89,7 @@ class _RoomView extends StatelessWidget {
       case 0:
         return DeviceSwitchCard(
           iconAsset: 'assets/light.png',
+          isIcon: false,
           label: ar ? 'النور' : 'Light',
           gestureName: eyeName('down'),
           eyeCmd: 'down',
@@ -102,6 +103,7 @@ class _RoomView extends StatelessWidget {
       case 1:
         return DeviceSwitchCard(
           iconAsset: 'assets/fan.png',
+          isIcon: false,
           label: ar ? 'المروحة' : 'Fan',
           gestureName: eyeName('left'),
           eyeCmd: 'left',
@@ -115,6 +117,7 @@ class _RoomView extends StatelessWidget {
       case 2:
         return DeviceSwitchCard(
           iconAsset: 'assets/bed.png',
+          isIcon: false,
           label: ar ? 'السرير' : 'Bed',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
@@ -131,6 +134,7 @@ class _RoomView extends StatelessWidget {
       case 3:
         return DeviceSwitchCard(
           iconAsset: 'assets/window.png',
+          isIcon: false,
           label: ar ? 'الشباك' : 'Window',
           gestureName: eyeName('up'),
           eyeCmd: 'up',
@@ -148,6 +152,7 @@ class _RoomView extends StatelessWidget {
       default:
         return DeviceSwitchCard(
           iconAsset: 'assets/back.png',
+          isIcon: false,
           label: ar ? 'رجوع' : 'Back',
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',
