@@ -5,11 +5,11 @@ import '../core/eye_utils.dart';
 import 'shared.dart';
 
 class DeviceSwitchCard extends StatelessWidget {
-  final String iconAsset; // ⬅️ مسار الصورة بدل الإيموجي
+  final String iconAsset;
   final String label;
   final String gestureName;
   final String eyeCmd;
-  final bool? isOn; // 🎯 تعديل: جعلها تقبل الـ null لدعم الكروت العادية والإنارة معاً
+  final bool? isOn;
   final Color activeColor;
   final String? statusText;
   final VoidCallback? onTap;
@@ -24,7 +24,7 @@ class DeviceSwitchCard extends StatelessWidget {
     required this.label,
     required this.gestureName,
     required this.eyeCmd,
-    required this.isOn, // 🎯 تم التعديل لتتوافق مع السيرفر والـ Hub
+    required this.isOn,
     required this.activeColor,
     this.statusText,
     this.onTap,
@@ -39,9 +39,18 @@ class DeviceSwitchCard extends StatelessWidget {
     final Color cardBg = active ? activeColor.withOpacity(0.12) : kSurface1;
     final Color borderColor = active ? activeColor.withOpacity(0.5) : kBorder1;
 
-    // تحديد هل الكارت الحالي يمثل جهاز تشغيل/إطفاء أم كارت عادي
     final bool hasSwitch = isOn != null;
     final bool isDeviceOn = isOn ?? false;
+
+    final bool isKeyboardIcon = iconAsset.contains('img') ||
+        iconAsset.contains('GROUP') ||
+        iconAsset.contains('letters/') || //
+        iconAsset.contains('icons/') ||
+        iconAsset.contains('UVWX') ||
+        iconAsset.contains('IJKL') ||
+        iconAsset.contains('MNOP') ||
+        iconAsset.contains('QRST') ||
+        iconAsset.contains('YZ');
 
     return GestureDetector(
       onTap: onTap,
@@ -52,28 +61,16 @@ class DeviceSwitchCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: borderColor, width: active ? 1.8 : 1.0),
           boxShadow: active
-              ? [
-            BoxShadow(
-                color: activeColor.withOpacity(0.18),
-                blurRadius: 18,
-                offset: const Offset(0, 4))
-          ]
-              : [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 6,
-                offset: const Offset(0, 2))
-          ],
+              ? [BoxShadow(color: activeColor.withOpacity(0.18), blurRadius: 18, offset: const Offset(0, 4))]
+              : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2))],
         ),
         child: Stack(
           children: [
-            // 🎯 إذا كان الكارت يحتوي على حالة تشغيل (isOn ليس null) يتم إظهار السويتش
             if (hasSwitch)
               Positioned(
                   top: 12,
                   right: 12,
-                  child: _SmallSwitch(
-                      isOn: isDeviceOn, activeColor: activeColor)),
+                  child: _SmallSwitch(isOn: isDeviceOn, activeColor: activeColor)),
 
             LayoutBuilder(builder: (ctx, box) {
               final double iconSize = (box.maxWidth * 0.22).clamp(24.0, 48.0);
@@ -85,30 +82,26 @@ class DeviceSwitchCard extends StatelessWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // ── 🎯 استخدام الصورة (Asset) ──
                   Container(
                     width: badgeSide,
                     height: badgeSide,
                     decoration: BoxDecoration(
-                      color: isDeviceOn
-                          ? activeColor.withOpacity(
-                          0.15) // خلفية ملونة خفيفة لو شغال
-                          : kBorder1.withOpacity(0.3), // خلفية رمادية لو مطفي
+                      color: isKeyboardIcon
+                          ? Colors.transparent
+                          : (isDeviceOn ? activeColor.withOpacity(0.15) : kBorder1.withOpacity(0.3)),
                       borderRadius: BorderRadius.circular(badgeSide * 0.26),
                     ),
                     child: Center(
-                      child: Opacity(
-                        opacity: (!hasSwitch || isDeviceOn) ? 1.0 : 0.4,
-                        child: Image.asset(
-                          iconAsset,
-                          width: iconSize * 0.8,
-                          height: iconSize * 0.8,
-                          errorBuilder: (_, __, ___) =>
-                              Icon(Icons.broken_image, color: kTextSub1),
-                        ),
+                      child: Image.asset(
+                        iconAsset,
+                        width: isKeyboardIcon ? badgeSide : iconSize * 0.8,
+                        height: isKeyboardIcon ? badgeSide : iconSize * 0.8,
+                        color: isKeyboardIcon ? null : ((!hasSwitch || isDeviceOn) ? activeColor : kTextSub1),
+                        errorBuilder: (_, __, ___) => Icon(Icons.broken_image, color: kTextSub1),
                       ),
                     ),
-                  ), SizedBox(height: vGap),
+                  ),
+                  SizedBox(height: vGap),
 
                   Text(label,
                       textAlign: TextAlign.center,
@@ -137,16 +130,13 @@ class DeviceSwitchCard extends StatelessWidget {
 
                   SizedBox(height: vGap),
                   Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: box.maxWidth * 0.1),
+                    padding: EdgeInsets.symmetric(horizontal: box.maxWidth * 0.1),
                     child: Opacity(
                       opacity: active ? 1.0 : 0.0,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
-                            value: active
-                                ? (totalTimer - cd) / totalTimer.toDouble()
-                                : 0.0,
+                            value: active ? (totalTimer - cd) / totalTimer.toDouble() : 0.0,
                             minHeight: 4,
                             backgroundColor: kBorder1,
                             color: activeColor),
@@ -179,9 +169,7 @@ class _SmallSwitch extends StatelessWidget {
       decoration: BoxDecoration(
         color: isOn ? activeColor.withOpacity(0.3) : Colors.grey.shade300,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-            color: isOn ? activeColor.withOpacity(0.5) : Colors.grey.shade400,
-            width: 1.5),
+        border: Border.all(color: isOn ? activeColor.withOpacity(0.5) : Colors.grey.shade400, width: 1.5),
       ),
       child: AnimatedAlign(
         duration: const Duration(milliseconds: 250),
@@ -190,9 +178,7 @@ class _SmallSwitch extends StatelessWidget {
         child: Container(
           width: 14,
           height: 14,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isOn ? activeColor : Colors.grey.shade500),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: isOn ? activeColor : Colors.grey.shade500),
         ),
       ),
     );
