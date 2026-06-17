@@ -46,66 +46,28 @@ class _KeyboardPageState extends State<KeyboardPage> {
     ['Y', 'Z', ' ', '.'],
   ];
 
-  // ✅ كل المسارات بدون assets/ في البداية
   static const Map<String, String> _letterImages = {
-    'A': 'letters/A.png',
-    'B': 'letters/B.png',
-    'C': 'letters/C.png',
-    'D': 'letters/D.png',
-    'E': 'letters/E.png',
-    'F': 'letters/F.png',
-    'G': 'letters/G.png',
-    'H': 'letters/H.png',
-    'I': 'letters/I.png',
-    'J': 'letters/J.png',
-    'K': 'letters/K.png',
-    'L': 'letters/L.png',
-    'M': 'letters/M.png',
-    'N': 'letters/N.png',
-    'O': 'letters/O.png',
-    'P': 'letters/P.png',
-    'Q': 'letters/Q.png',
-    'R': 'letters/R.png',
-    'S': 'letters/S.png',
-    'T': 'letters/T.png',
-    'U': 'letters/U.png',
-    'V': 'letters/V.png',
-    'W': 'letters/W.png',
-    'X': 'letters/X.png',
-    'Y': 'letters/Y.png',
-    'Z': 'letters/Z.png',
-    'ا': 'letters/ا.png',
-    'ب': 'letters/ب.png',
-    'ت': 'letters/ت.png',
-    'ث': 'letters/ث.png',
-    'ج': 'letters/ج.png',
-    'ح': 'letters/ح.png',
-    'خ': 'letters/خ.png',
-    'د': 'letters/د.png',
-    'ذ': 'letters/ذ.png',
-    'ر': 'letters/ر.png',
-    'ز': 'letters/ز.png',
-    'س': 'letters/س.png',
-    'ش': 'letters/ش.png',
-    'ص': 'letters/ص.png',
-    'ض': 'letters/ض.png',
-    'ط': 'letters/ط.png',
-    'ظ': 'letters/ظ.png',
-    'ع': 'letters/ع.png',
-    'غ': 'letters/غ.png',
-    'ف': 'letters/ف.png',
-    'ق': 'letters/ق.png',
-    'ك': 'letters/ك.png',
-    'ل': 'letters/ل.png',
-    'م': 'letters/م.png',
-    'ن': 'letters/ن.png',
-    'ه': 'letters/ه.png',
-    'و': 'letters/و.png',
+    'A': 'letters/A.png', 'B': 'letters/B.png', 'C': 'letters/C.png',
+    'D': 'letters/D.png', 'E': 'letters/E.png', 'F': 'letters/F.png',
+    'G': 'letters/G.png', 'H': 'letters/H.png', 'I': 'letters/I.png',
+    'J': 'letters/J.png', 'K': 'letters/K.png', 'L': 'letters/L.png',
+    'M': 'letters/M.png', 'N': 'letters/N.png', 'O': 'letters/O.png',
+    'P': 'letters/P.png', 'Q': 'letters/Q.png', 'R': 'letters/R.png',
+    'S': 'letters/S.png', 'T': 'letters/T.png', 'U': 'letters/U.png',
+    'V': 'letters/V.png', 'W': 'letters/W.png', 'X': 'letters/X.png',
+    'Y': 'letters/Y.png', 'Z': 'letters/Z.png',
+    'ا': 'letters/ا.png', 'ب': 'letters/ب.png', 'ت': 'letters/ت.png',
+    'ث': 'letters/ث.png', 'ج': 'letters/ج.png', 'ح': 'letters/ح.png',
+    'خ': 'letters/خ.png', 'د': 'letters/د.png', 'ذ': 'letters/ذ.png',
+    'ر': 'letters/ر.png', 'ز': 'letters/ز.png', 'س': 'letters/س.png',
+    'ش': 'letters/ش.png', 'ص': 'letters/ص.png', 'ض': 'letters/ض.png',
+    'ط': 'letters/ط.png', 'ظ': 'letters/ظ.png', 'ع': 'letters/ع.png',
+    'غ': 'letters/غ.png', 'ف': 'letters/ف.png', 'ق': 'letters/ق.png',
+    'ك': 'letters/ك.png', 'ل': 'letters/ل.png', 'م': 'letters/م.png',
+    'ن': 'letters/ن.png', 'ه': 'letters/ه.png', 'و': 'letters/و.png',
     'ي': 'letters/ي.png',
-    ' ': 'letters/space.png',
-    '.': 'letters/dot.png',
-    '؟': 'letters/q_ar.png',
-    '،': 'letters/comma_ar.png',
+    ' ': 'letters/space.png', '.': 'letters/dot.png',
+    '؟': 'letters/q_ar.png', '،': 'letters/comma_ar.png',
   };
 
   String _getLetterImage(String letter) {
@@ -135,33 +97,22 @@ class _KeyboardPageState extends State<KeyboardPage> {
       if (grps.length > 0) result.add({'eye': 'left', 'text': grps[0].join(' '), 'color': _groupColor(0), 'eye_name': eyeName('left'), 'type': 'group', 'index': 0, 'iconAsset': icons[0]});
       if (grps.length > 1) result.add({'eye': 'right', 'text': grps[1].join(' '), 'color': _groupColor(1), 'eye_name': eyeName('right'), 'type': 'group', 'index': 1, 'iconAsset': icons[1]});
       if (grps.length > 2) result.add({'eye': 'up', 'text': grps[2].join(' '), 'color': _groupColor(2), 'eye_name': eyeName('up'), 'type': 'group', 'index': 2, 'iconAsset': icons[2]});
-
       result.add({'eye': 'down', 'text': _ar ? 'التالي ➡️' : 'Next ➡️', 'color': const Color(0xFFFF8F00), 'eye_name': eyeName('down'), 'type': 'next_page', 'iconAsset': 'icons/next.png'});
     }
     else if (_pageOffset == 3) {
       if (grps.length > 3) result.add({'eye': 'left', 'text': grps[3].join(' '), 'color': _groupColor(3), 'eye_name': eyeName('left'), 'type': 'group', 'index': 3, 'iconAsset': icons[3]});
       if (grps.length > 4) result.add({'eye': 'right', 'text': grps[4].join(' '), 'color': _groupColor(4), 'eye_name': eyeName('right'), 'type': 'group', 'index': 4, 'iconAsset': icons[4]});
-
       result.add({'eye': 'up', 'text': _ar ? '⬅️ السابق' : '⬅️ Previous', 'color': const Color(0xFFFF8F00), 'eye_name': eyeName('up'), 'type': 'prev_page', 'iconAsset': 'icons/back.png'});
       result.add({'eye': 'down', 'text': _ar ? 'التالي ➡️' : 'Next ➡️', 'color': const Color(0xFFFF8F00), 'eye_name': eyeName('down'), 'type': 'next_page', 'iconAsset': 'icons/next.png'});
     }
     else if (_pageOffset == 5) {
       if (grps.length > 5) result.add({'eye': 'left', 'text': grps[5].join(' '), 'color': _groupColor(5), 'eye_name': eyeName('left'), 'type': 'group', 'index': 5, 'iconAsset': icons[5]});
       if (grps.length > 6) result.add({'eye': 'right', 'text': grps[6].join(' '), 'color': _groupColor(6), 'eye_name': eyeName('right'), 'type': 'group', 'index': 6, 'iconAsset': icons[6]});
-
       if (_ar && grps.length > 7) {
         result.add({'eye': 'up', 'text': grps[7].join(' '), 'color': _groupColor(7), 'eye_name': eyeName('up'), 'type': 'group', 'index': 7, 'iconAsset': icons[7]});
       } else {
-        result.add({
-          'eye': 'up',
-          'text': '🛠️ Text Tools',
-          'color': const Color(0xFF9C27B0),
-          'eye_name': eyeName('up'),
-          'type': 'open_tools',
-          'iconAsset': 'icons/settings.png'
-        });
+        result.add({'eye': 'up', 'text': '🛠️ Text Tools', 'color': const Color(0xFF9C27B0), 'eye_name': eyeName('up'), 'type': 'open_tools', 'iconAsset': 'icons/settings.png'});
       }
-
       result.add({'eye': 'down', 'text': _ar ? '⬅️ السابق' : '⬅️ Previous', 'color': const Color(0xFFFF8F00), 'eye_name': eyeName('down'), 'type': 'prev_page', 'iconAsset': 'icons/back.png'});
     }
 
@@ -186,10 +137,7 @@ class _KeyboardPageState extends State<KeyboardPage> {
 
     for (int i = 0; i < 4 && i < letters.length; i++) {
       final String letter = letters[i];
-
-      // ✅ استخدام _getLetterImage مباشرة
       final String iconPath = _getLetterImage(letter);
-
       result.add({
         'eye': eyeOrder[i],
         'text': letter == ' ' ? (_ar ? 'مسافة ␣' : 'Space ␣') : letter,
@@ -303,7 +251,6 @@ class _KeyboardPageState extends State<KeyboardPage> {
 
       if (target['type'] == 'letter') {
         final selectedLetter = target['letter'].toString();
-
         setState(() {
           _isProcessingAction = true;
           _composed += selectedLetter;
@@ -364,53 +311,31 @@ class _KeyboardPageState extends State<KeyboardPage> {
       backgroundColor: kBg1,
       body: SafeArea(
         child: Column(children: [
+          // ✅ صندوق النص المكتوب فوق (slim bar)
           Container(
             width: double.infinity,
-            margin: const EdgeInsets.all(12),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            margin: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+            constraints: const BoxConstraints(minHeight: 75),
             decoration: BoxDecoration(
               color: kSurface1,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: kBorder1),
             ),
-            child: Row(children: [
-              Expanded(
-                child: Text(
-                  _composed.isEmpty
-                      ? (_ar ? 'ابدأ الكتابة بالعين...' : 'Start typing with eyes...')
-                      : _composed,
-                  style: GoogleFonts.cairo(
-                      fontSize: 22,
-                      color: _composed.isEmpty ? Colors.grey : kTextMain1,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.volume_up_rounded, size: 28),
-                color: const Color(0xFF2B8EE8),
-                onPressed: () {
-                  if (_composed.isNotEmpty) VoiceService.speak(_composed);
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.backspace_rounded, size: 26),
-                color: Colors.orange,
-                onPressed: () {
-                  if (_composed.isNotEmpty) {
-                    setState(() => _composed = _composed.substring(0, _composed.length - 1));
-                  }
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete_sweep_rounded, size: 28),
-                color: Colors.red,
-                onPressed: () => setState(() => _composed = ''),
-              ),
-            ]),
+            child: Text(
+              _composed.isEmpty
+                  ? (_ar ? 'ابدأ الكتابة بالعين...' : 'Start typing with eyes...')
+                  : _composed,
+              style: GoogleFonts.cairo(
+                  fontSize: 22,                                                   // ✅ أكبر
+                  color: _composed.isEmpty ? Colors.grey : kTextMain1,
+                  fontWeight: FontWeight.w600),
+            ),
           ),
 
+          // ✅ خطوة التوجيه
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
             child: Align(
               alignment: _ar ? Alignment.centerRight : Alignment.centerLeft,
               child: Text(
@@ -421,21 +346,23 @@ class _KeyboardPageState extends State<KeyboardPage> {
                     : (_ar ? 'لوحة التحكم بالنص المتقدمة 🛠️' : 'Advanced Text Tools Control Board 🛠️')),
                 style: GoogleFonts.cairo(
                     color: const Color(0xFFE82B6A),
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold),
               ),
             ),
           ),
 
+          // ✅ الشبكة مع الكاميرا كأول عنصر (زي الصفحة الرئيسية)
           Expanded(
             child: BaseGridPage(
               title: AppLanguage.t('keyboard'),
               color: const Color(0xFFE82B6A),
               items: currentItems,
+              showCameraCard: true,              // ✅ الكاميرا في الشبكة
+              cameraCardAspectRatio: 1.0,        // ✅ مربعة زي الصفحة الرئيسية
               itemBuilder: (context, index, item, stable, cd, totalTimer) {
                 final String currentEye = item['eye'].toString();
                 final String cardLabel = item['text'].toString();
-
                 final String finalIconPath = item['iconAsset']?.toString() ?? 'icons/abc.png';
 
                 return DeviceSwitchCard(
