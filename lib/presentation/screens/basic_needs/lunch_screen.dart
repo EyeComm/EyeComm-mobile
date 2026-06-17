@@ -19,10 +19,10 @@ class LunchScreen extends StatelessWidget {
       cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'دجاج وطواجن' : 'Chicken', 'iconAsset': 'assets/icons/chicken.png', 'color': const Color(0xFFFB8C00), 'is_nav': true, 'eye_name': eyeName('left')},
-        {'eye': 'up', 'text': ar ? 'نشويات' : 'Carbs', 'iconAsset': 'assets/icons/rice.png', 'color': const Color(0xFF0288D1), 'is_nav': true, 'eye_name': eyeName('up')},
-        {'eye': 'right', 'text': ar ? 'لحوم وأسماك' : 'Meat & Fish', 'iconAsset': 'assets/icons/meat.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('right')},
+        {'eye': 'up', 'text': ar ? 'نشويات' : 'Carbs', 'iconAsset': 'assets/white_rice.png', 'color': const Color(0xFF0288D1), 'is_nav': true, 'eye_name': eyeName('up')},
+        {'eye': 'right', 'text': ar ? 'لحوم وأسماك' : 'Meat & Fish', 'iconAsset': 'assets/icons/fish1.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('right')},
         {'eye': 'down', 'text': ar ? 'سلطة وخضار' : 'Veggies & Salad', 'iconAsset': 'assets/icons/salad.png', 'color': const Color(0xFF43A047), 'is_nav': true, 'eye_name': eyeName('down')},
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }
@@ -31,7 +31,7 @@ class LunchScreen extends StatelessWidget {
           await push(ctx, SubItemsScreen(titleAr: 'دجاج وطواجن', titleEn: 'Chicken & Tagines', options: [
             {'eye': 'left', 'text': ar ? 'صدر دجاج مشوي' : 'Grilled Chicken Breast', 'iconAsset': 'assets/icons/grilled_chicken.png', 'color': const Color(0xFFFB8C00), 'eye_name': eyeName('left')},
             {'eye': 'up', 'text': ar ? 'شيش طاووق' : 'Shish Tawook', 'iconAsset': 'assets/icons/shish.png', 'color': const Color(0xFFEF6C00), 'eye_name': eyeName('up')},
-            {'eye': 'right', 'text': ar ? 'فراخ بانيه' : 'Chicken Pane', 'iconAsset': 'assets/icons/pane.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
+            {'eye': 'right', 'text': ar ? 'فراخ بانيه' : 'Chicken Pane', 'iconAsset': 'assets/icons/grilled_chicken.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
           ]));
         } else if (eye == 'up') {
           await push(ctx, SubItemsScreen(titleAr: 'نشويات', titleEn: 'Carbs', options: [

@@ -29,27 +29,27 @@ class PainCategoriesScreen extends StatelessWidget {
 
         if (eye == 'left') {
           await push(ctx, SubItemsScreen(titleAr: 'الرأس والأسنان', titleEn: 'Head & Face', options: [
-            {'eye': 'left', 'text': ar ? 'صداع' : 'Headache', 'iconAsset': 'assets/icons/headache.png', 'color': const Color(0xFFE53935), 'eye_name': eyeName('left')},
-            {'eye': 'right', 'text': ar ? 'ألم أذن أو عين' : 'Ear/Eye Pain', 'iconAsset': 'assets/icons/ear_pain.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
-            {'eye': 'up', 'text': ar ? 'ألم أسنان' : 'Toothache', 'iconAsset': 'assets/icons/toothache.png', 'color': const Color(0xFF0288D1), 'eye_name': eyeName('up')},
+            {'eye': 'left', 'text': ar ? 'صداع' : 'Headache', 'iconAsset': 'assets/headache.png', 'color': const Color(0xFFE53935), 'eye_name': eyeName('left')},
+            {'eye': 'right', 'text': ar ? 'ألم أذن أو عين' : 'Ear/Eye Pain', 'iconAsset': 'assets/ear_pain.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
+            {'eye': 'up', 'text': ar ? 'ألم أسنان' : 'Toothache', 'iconAsset': 'assets/toothache.png', 'color': const Color(0xFF0288D1), 'eye_name': eyeName('up')},
           ]));
         } else if (eye == 'right') {
           await push(ctx, SubItemsScreen(titleAr: 'الصدر والبطن', titleEn: 'Chest & Stomach', options: [
-            {'eye': 'left', 'text': ar ? 'ألم بالصدر' : 'Chest Pain', 'iconAsset': 'assets/icons/chest_pain.png', 'color': const Color(0xFFD32F2F), 'eye_name': eyeName('left')},
-            {'eye': 'right', 'text': ar ? 'مغص بالبطن' : 'Stomachache', 'iconAsset': 'assets/icons/stomach_pain.png', 'color': const Color(0xFFFBC02D), 'eye_name': eyeName('right')},
-            {'eye': 'up', 'text': ar ? 'ألم بالظهر' : 'Back Pain', 'iconAsset': 'assets/icons/back_pain.png', 'color': const Color(0xFF8D6E63), 'eye_name': eyeName('up')},
+            {'eye': 'left', 'text': ar ? 'ألم بالصدر' : 'Chest Pain', 'iconAsset': 'assets/chest_pain.png', 'color': const Color(0xFFD32F2F), 'eye_name': eyeName('left')},
+            {'eye': 'right', 'text': ar ? 'مغص بالبطن' : 'Stomachache', 'iconAsset': 'assets/stomach_pain.png', 'color': const Color(0xFFFBC02D), 'eye_name': eyeName('right')},
+            {'eye': 'up', 'text': ar ? 'ألم بالظهر' : 'Back Pain', 'iconAsset': 'assets/back_pain.png', 'color': const Color(0xFF8D6E63), 'eye_name': eyeName('up')},
           ]));
         } else if (eye == 'up') {
           await push(ctx, SubItemsScreen(titleAr: 'تشنجات وأعصاب', titleEn: 'Spasms & Nerves', options: [
-            {'eye': 'left', 'text': ar ? 'تشنج عضلي' : 'Muscle Spasm', 'iconAsset': 'assets/icons/muscle_spasm.png', 'color': const Color(0xFF8E24AA), 'eye_name': eyeName('left')},
-            {'eye': 'right', 'text': ar ? 'ألم أعصاب' : 'Nerve Pain', 'iconAsset': 'assets/icons/nerve_pain.png', 'color': const Color(0xFF5E35B1), 'eye_name': eyeName('right')},
-            {'eye': 'up', 'text': ar ? 'ألم بالمفاصل' : 'Joint Pain', 'iconAsset': 'assets/icons/joint_pain.png', 'color': const Color(0xFF3949AB), 'eye_name': eyeName('up')},
+            {'eye': 'left', 'text': ar ? 'تشنج عضلي' : 'Muscle Spasm', 'iconAsset': 'assets/muscle_spasm.png', 'color': const Color(0xFF8E24AA), 'eye_name': eyeName('left')},
+            {'eye': 'right', 'text': ar ? 'ألم أعصاب' : 'Nerve Pain', 'iconAsset': 'assets/nerve.png', 'color': const Color(0xFF5E35B1), 'eye_name': eyeName('right')},
+            {'eye': 'up', 'text': ar ? 'ألم بالمفاصل' : 'Joint Pain', 'iconAsset': 'assets/muscle_spasm.png', 'color': const Color(0xFF3949AB), 'eye_name': eyeName('up')},
           ]));
         } else if (eye == 'down') {
           await push(ctx, SubItemsScreen(titleAr: 'جلد وقرح فراش', titleEn: 'Skin & Bedsores', options: [
-            {'eye': 'left', 'text': ar ? 'ألم قرحة فراش' : 'Bedsore Pain', 'iconAsset': 'assets/icons/bedsore.png', 'color': const Color(0xFFC2185B), 'eye_name': eyeName('left')},
-            {'eye': 'right', 'text': ar ? 'حكة شديدة' : 'Severe Itching', 'iconAsset': 'assets/icons/itching.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
-            {'eye': 'up', 'text': ar ? 'حرقان بالجلد' : 'Burning Sensation', 'iconAsset': 'assets/icons/burning.png', 'color': const Color(0xFFD32F2F), 'eye_name': eyeName('up')},
+            {'eye': 'left', 'text': ar ? 'ألم قرحة فراش' : 'Bedsore Pain', 'iconAsset': 'assets/bedsore.png', 'color': const Color(0xFFC2185B), 'eye_name': eyeName('left')},
+            {'eye': 'right', 'text': ar ? 'حكة شديدة' : 'Severe Itching', 'iconAsset': 'assets/itching.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
+            {'eye': 'up', 'text': ar ? 'حرقان بالجلد' : 'Burning Sensation', 'iconAsset': 'assets/itching.png', 'color': const Color(0xFFD32F2F), 'eye_name': eyeName('up')},
           ]));
         }
       },

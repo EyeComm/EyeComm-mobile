@@ -60,14 +60,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 🎯 الترتيب هنا اتعدل عشان يترص صح في الـ BaseGridPage
-    // الصف الأول (هياخد 3 كروت على الشاشات العريضة): شمال، أعلى (في النص)، يمين
-    // الصف التاني (هياخد كارتين): إغلاق، أسفل
     final List<Map<String, dynamic>> menuItems = [
       {
         'eye': 'left',
         'text': AppLanguage.t("health"),
-        'iconAsset': 'assets/health.png', // تأكدي إن عندك الأيقونات أو استخدمي الإيموجي لو لسه مغيرتيهاش
+        'iconAsset': 'assets/health.png',
         'color': const Color(0xFFE8762B),
         'eye_name': eyeName('left'),
         'page': () => const HealthScreen(),

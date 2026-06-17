@@ -19,10 +19,10 @@ class SnacksScreen extends StatelessWidget {
       cameraCardAspectRatio: 1.15,
       items: [
         {'eye': 'left', 'text': ar ? 'فواكه' : 'Fruits', 'iconAsset': 'assets/icons/fruits.png', 'color': const Color(0xFFE53935), 'is_nav': true, 'eye_name': eyeName('left')},
-        {'eye': 'up', 'text': ar ? 'مقرمشات' : 'Snacks', 'iconAsset': 'assets/icons/popcorn.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('up')},
+        {'eye': 'up', 'text': ar ? 'مقرمشات' : 'Snacks', 'iconAsset': 'assets/popcorn.png', 'color': const Color(0xFFFBC02D), 'is_nav': true, 'eye_name': eyeName('up')},
         {'eye': 'right', 'text': ar ? 'مكسرات' : 'Nuts', 'iconAsset': 'assets/icons/nuts.png', 'color': const Color(0xFF795548), 'is_nav': true, 'eye_name': eyeName('right')},
         {'eye': 'down', 'text': ar ? 'بروتين' : 'Protein', 'iconAsset': 'assets/icons/protein_shake.png', 'color': const Color(0xFF8E24AA), 'is_nav': true, 'eye_name': eyeName('down')},
-        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
+        {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ],
       onAction: (eye, ctx) async {
         if (eye == 'closed') { Navigator.pop(ctx); return; }
@@ -35,9 +35,9 @@ class SnacksScreen extends StatelessWidget {
           ]));
         } else if (eye == 'up') {
           await push(ctx, SubItemsScreen(titleAr: 'مقرمشات خفيفة', titleEn: 'Light Snacks', options: [
-            {'eye': 'left', 'text': ar ? 'فشار كمية صغيرة' : 'Small Popcorn', 'iconAsset': 'assets/icons/popcorn.png', 'color': const Color(0xFFFBC02D), 'eye_name': eyeName('left')},
-            {'eye': 'up', 'text': ar ? 'بسكويت مالح خفيف' : 'Crackers', 'iconAsset': 'assets/icons/crackers.png', 'color': const Color(0xFFF9A825), 'eye_name': eyeName('up')},
-            {'eye': 'right', 'text': ar ? 'رايس كيك صحي' : 'Rice Cakes', 'iconAsset': 'assets/icons/rice_cake.png', 'color': const Color(0xFFF57F17), 'eye_name': eyeName('right')},
+            {'eye': 'left', 'text': ar ? 'فشار كمية صغيرة' : 'Small Popcorn', 'iconAsset': 'assets/popcorn.png', 'color': const Color(0xFFFBC02D), 'eye_name': eyeName('left')},
+            {'eye': 'up', 'text': ar ? 'بسكويت مالح خفيف' : 'Crackers', 'iconAsset': 'assets/icons/cracker.png', 'color': const Color(0xFFF9A825), 'eye_name': eyeName('up')},
+            {'eye': 'right', 'text': ar ? 'رايس كيك صحي' : 'Rice Cakes', 'iconAsset': 'assets/icons/rice_cakes.png', 'color': const Color(0xFFF57F17), 'eye_name': eyeName('right')},
           ]));
         } else if (eye == 'right') {
           await push(ctx, SubItemsScreen(titleAr: 'مكسرات صحية', titleEn: 'Healthy Nuts', options: [

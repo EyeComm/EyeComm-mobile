@@ -143,7 +143,7 @@ class SocialScreen extends StatelessWidget {
         {
           'eye': 'down',
           'text': ar ? 'أشعر بالقلق والخوف' : 'I feel anxious and scared',
-          'iconAsset': 'assets/icons/anxious.png',
+          'iconAsset': 'assets/icons/worry.png',
           'color': const Color(0xFF8E24AA),
           'eye_name': eyeName('down')
         },

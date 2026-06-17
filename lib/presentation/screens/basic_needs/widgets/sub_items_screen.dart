@@ -20,7 +20,7 @@ class SubItemsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool ar = AppLanguage.current == 'ar';
     final List<Map<String, dynamic>> items = [
-      {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/icons/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
+      {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png', 'color': const Color(0xFF455A64), 'is_nav': false, 'eye_name': eyeName('closed')},
       ...options,
     ];
 

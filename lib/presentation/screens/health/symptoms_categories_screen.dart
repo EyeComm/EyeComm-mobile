@@ -31,12 +31,12 @@ class SymptomsCategoriesScreen extends StatelessWidget {
           await push(ctx, SubItemsScreen(titleAr: 'التنفس', titleEn: 'Breathing', options: [
             {'eye': 'left', 'text': ar ? 'ضيق تنفس' : 'Shortness of Breath', 'iconAsset': 'assets/short_breath.png', 'color': const Color(0xFF0288D1), 'eye_name': eyeName('left')},
             {'eye': 'right', 'text': ar ? 'سعال / كحة' : 'Coughing', 'iconAsset': 'assets/cough.png', 'color': const Color(0xFFF57C00), 'eye_name': eyeName('right')},
-            {'eye': 'up', 'text': ar ? 'شرقة / غصة' : 'Choking', 'iconAsset': 'assets/choking.png', 'color': const Color(0xFFD32F2F), 'eye_name': eyeName('up')},
+            {'eye': 'up', 'text': ar ? 'شرقة / غصة' : 'Choking', 'iconAsset': 'assets/cough.png', 'color': const Color(0xFFD32F2F), 'eye_name': eyeName('up')},
           ]));
         } else if (eye == 'right') {
           await push(ctx, SubItemsScreen(titleAr: 'معدة وهضم', titleEn: 'Digestion', options: [
             {'eye': 'left', 'text': ar ? 'غثيان' : 'Nausea', 'iconAsset': 'assets/nausea.png', 'color': const Color(0xFF43A047), 'eye_name': eyeName('left')},
-            {'eye': 'right', 'text': ar ? 'قيء' : 'Vomiting', 'iconAsset': 'assets/vomiting.png', 'color': const Color(0xFFE53935), 'eye_name': eyeName('right')},
+            {'eye': 'right', 'text': ar ? 'قيء' : 'Vomiting', 'iconAsset': 'assets/nausea.png', 'color': const Color(0xFFE53935), 'eye_name': eyeName('right')},
             {'eye': 'up', 'text': ar ? 'إمساك أو انتفاخ' : 'Constipation/Bloating', 'iconAsset': 'assets/stomach_pain.png', 'color': const Color(0xFF8D6E63), 'eye_name': eyeName('up')},
           ]));
         } else if (eye == 'up') {

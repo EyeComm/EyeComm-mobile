@@ -18,7 +18,7 @@ class DinnerScreen extends StatelessWidget {
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
       items: [
-        {'eye': 'left', 'text': ar ? 'بروتين خفيف' : 'Light Protein', 'iconAsset': 'assets/yogurt.png', 'color': const Color(0xFF039BE5), 'is_nav': true, 'eye_name': eyeName('left')},
+        {'eye': 'left', 'text': ar ? 'بروتين خفيف' : 'Light Protein', 'iconAsset': 'assets/tuna.png', 'color': const Color(0xFF039BE5), 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'شوربات دافئة' : 'Warm Soups', 'iconAsset': 'assets/soup_bowl.png', 'color': const Color(0xFFFB8C00), 'is_nav': true, 'eye_name': eyeName('up')},
         {'eye': 'right', 'text': ar ? 'سلطات وعشاء خفيف' : 'Salads', 'iconAsset': 'assets/salad_bowl.png', 'color': const Color(0xFF43A047), 'is_nav': true, 'eye_name': eyeName('right')},
         {'eye': 'down', 'text': ar ? 'باقي الغداء' : 'Leftovers', 'iconAsset': 'assets/leftover.png', 'color': const Color(0xFF8D6E63), 'is_nav': true, 'eye_name': eyeName('down')},
