@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class EyeCameraPreview extends StatefulWidget {
   final String serverBase;
-  final String stableDirection; // ⬅️ مررنا الاتجاه الحالي لمطابقة الأيقونة واللون
+  final String stableDirection;
 
   const EyeCameraPreview({
     super.key,
@@ -24,15 +24,71 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
   late http.Client _client;
   StreamSubscription<List<int>>? _sub;
 
+  // ✅ منع محاولات إعادة الاتصال المتزامنة/المتداخلة
+  bool _disposed = false;
+  Timer? _retryTimer;
+  int _retryAttempt = 0;
+
+  late String _currentDirection;
+
   @override
   void initState() {
     super.initState();
+    _currentDirection = widget.stableDirection;
     _client = http.Client();
     _connectStream();
   }
 
+  @override
+  void didUpdateWidget(covariant EyeCameraPreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.stableDirection != widget.stableDirection) {
+      setState(() => _currentDirection = widget.stableDirection);
+    }
+    if (oldWidget.serverBase != widget.serverBase) {
+      _restartConnection();
+    }
+  }
+
+  void _restartConnection() {
+    _retryTimer?.cancel();
+    _sub?.cancel();
+    _sub = null;
+    try {
+      _client.close();
+    } catch (_) {}
+    _client = http.Client();
+    _retryAttempt = 0;
+    _connectStream();
+  }
+
+  // ✅ إعادة الاتصال تلقائياً بعد أي خطأ أو انقطاع، بدل ما تفضل الصورة
+  // سوداء للأبد لحد ما المستخدم يخرج ويدخل الصفحة تاني.
+  void _scheduleRetry() {
+    if (_disposed) return;
+    _retryTimer?.cancel();
+
+    // ✅ backoff بسيط: 1s, 2s, 3s... لحد أقصى 5s، عشان منضغطش على
+    // السيرفر بمحاولات متلاحقة لو فيه مشكلة مستمرة.
+    _retryAttempt++;
+    final int delaySeconds = _retryAttempt.clamp(1, 5);
+
+    _retryTimer = Timer(Duration(seconds: delaySeconds), () {
+      if (!_disposed && mounted) {
+        _connectStream();
+      }
+    });
+  }
+
   Future<void> _connectStream() async {
-    if (!mounted) return;
+    if (!mounted || _disposed) return;
+
+    // ✅ تنظيف أي اشتراك قديم قبل ما نفتح اتصال جديد، عشان مانخليش
+    // اتصالات قديمة مفتوحة على السيرفر (وده كان بيستهلك من الحد
+    // الأقصى لعدد عملاء الفيديو على السيرفر بدون داعي).
+    await _sub?.cancel();
+    _sub = null;
+
     setState(() {
       _connecting = true;
       _streamError = false;
@@ -43,25 +99,39 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
       final request = http.Request('GET', uri);
       final response = await _client.send(request).timeout(const Duration(seconds: 8));
 
+      if (!mounted || _disposed) return;
+
       if (response.statusCode != 200) {
-        if (mounted) setState(() { _streamError = true; _connecting = false; });
+        setState(() { _streamError = true; _connecting = false; });
+        _scheduleRetry();
         return;
       }
 
-      if (mounted) setState(() => _connecting = false);
+      setState(() => _connecting = false);
+      _retryAttempt = 0; // ✅ نجح الاتصال، نصفّر عداد المحاولات
       final List<int> buffer = [];
 
       _sub = response.stream.listen(
-            (chunk) {
+        (chunk) {
           buffer.addAll(chunk);
           _extractFrames(buffer);
         },
-        onError: (_) { if (mounted) setState(() => _streamError = true); },
-        onDone: () { if (mounted) setState(() => _streamError = true); },
+        onError: (_) {
+          if (!mounted || _disposed) return;
+          setState(() => _streamError = true);
+          _scheduleRetry();
+        },
+        onDone: () {
+          if (!mounted || _disposed) return;
+          setState(() => _streamError = true);
+          _scheduleRetry();
+        },
         cancelOnError: true,
       );
     } catch (_) {
-      if (mounted) setState(() { _streamError = true; _connecting = false; });
+      if (!mounted || _disposed) return;
+      setState(() { _streamError = true; _connecting = false; });
+      _scheduleRetry();
     }
   }
 
@@ -75,12 +145,19 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
       if (end == -1) break;
       final frameBytes = Uint8List.fromList(buf.sublist(start, end + 2));
       buf.removeRange(0, end + 2);
-      if (mounted) setState(() => _frameBytes = frameBytes);
+      if (mounted && !_disposed) {
+        setState(() => _frameBytes = frameBytes);
+      }
       start = _indexOf(buf, _jpegStart, 0);
     }
     if (buf.isNotEmpty) {
       final next = _indexOf(buf, _jpegStart, 0);
       if (next > 0) buf.removeRange(0, next);
+    }
+    // ✅ حماية إضافية: لو الـ buffer كبر جداً من غير ما نلاقي فريم كامل
+    // (مثلاً بيانات تالفة)، نفضّيه بدل ما يفضل يكبر ويبطّئ التطبيق.
+    if (buf.length > 2 * 1024 * 1024) {
+      buf.clear();
     }
   }
 
@@ -95,7 +172,6 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
     return -1;
   }
 
-  // 🎯 جلب مسار الأيقونة النظيفة الموحدة للتطبيق
   String? _assetForEye(String cmd) {
     switch (cmd) {
       case 'left':   return 'assets/look-left.png';
@@ -107,7 +183,6 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
     }
   }
 
-  // 🎨 نفس باليتة الألوان المريحة للعين المتطابقة مع الكروت
   Color _colorForEye(String cmd) {
     switch (cmd) {
       case 'left':   return const Color(0xFF2B8EE8);
@@ -121,6 +196,8 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
 
   @override
   void dispose() {
+    _disposed = true;
+    _retryTimer?.cancel();
     _sub?.cancel();
     _client.close();
     super.dispose();
@@ -128,68 +205,98 @@ class _EyeCameraPreviewState extends State<EyeCameraPreview> {
 
   @override
   Widget build(BuildContext context) {
-    if (_connecting) {
+    // ✅ حالة الاتصال الأولى فقط (مفيش فريم اتعرض قبل كده)
+    if (_connecting && _frameBytes == null) {
       return Container(
         color: const Color(0xFF1E1E24),
-        child: const Center(child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue))),
+        child: const Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue),
+          ),
+        ),
       );
     }
 
-    if (_streamError || _frameBytes == null) {
+    // ✅ في حالة الخطأ: لو عندنا آخر فريم اتعرض قبل كده، نفضل نوريه
+    // (بدل شاشة سودا فجأة) لحد ما إعادة الاتصال التلقائي تنجح.
+    if (_streamError && _frameBytes == null) {
       return Container(
         color: const Color(0xFF1E1E24),
-        child: const Center(child: Icon(Icons.videocam_off_rounded, color: Colors.white24, size: 34)),
+        child: const Center(
+          child: Icon(Icons.videocam_off_rounded, color: Colors.white24, size: 34),
+        ),
       );
     }
 
-    final String? eyeAsset = _assetForEye(widget.stableDirection);
-    final Color eyeColor = _colorForEye(widget.stableDirection);
+    if (_frameBytes == null) {
+      return Container(
+        color: const Color(0xFF1E1E24),
+        child: const Center(
+          child: Icon(Icons.videocam_off_rounded, color: Colors.white24, size: 34),
+        ),
+      );
+    }
 
-    return Stack(
-      children: [
-        // بث الكاميرا الأساسي
-        Positioned.fill(
-          child: Image.memory(
+    final String? eyeAsset = _assetForEye(_currentDirection);
+    final Color eyeColor = _colorForEye(_currentDirection);
+
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.memory(
             _frameBytes!,
             fit: BoxFit.cover,
             gaplessPlayback: true,
-            filterQuality: FilterQuality.high,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: Colors.black,
+                child: const Center(
+                  child: Icon(Icons.broken_image, color: Colors.white24, size: 40),
+                ),
+              );
+            },
           ),
-        ),
 
-        // 🎯 غطاء علوي ناعم (شريط ذكي ومطفي يخفي الكتابة القديمة ويظهر اتجاهك بنظافة)
-        if (widget.stableDirection != 'none' && eyeAsset != null)
-          Positioned(
-            top: 8,
-            right: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.65), // خلفية داكنة معتمة لمسح أي تشتيت خلفها
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: eyeColor.withOpacity(0.4), width: 1),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    eyeAsset,
-                    width: 16,
-                    height: 16,
-                    color: eyeColor,
-                    colorBlendMode: BlendMode.srcIn,
-                  ),
-                  const SizedBox(width: 6),
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: eyeColor),
-                  )
-                ],
+          if (_currentDirection != 'none' && eyeAsset != null)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.65),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: eyeColor.withOpacity(0.4), width: 1),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      eyeAsset,
+                      width: 16,
+                      height: 16,
+                      color: eyeColor,
+                      colorBlendMode: BlendMode.srcIn,
+                    ),
+                    const SizedBox(width: 6),
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: eyeColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

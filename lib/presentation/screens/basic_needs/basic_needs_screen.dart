@@ -21,6 +21,7 @@ class BasicNeedsScreen extends StatelessWidget {
       color: Colors.blue,
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
+      timerSeconds: 5,  // ✅ 5 ثواني
       items: [
         {'eye': 'left', 'text': ar ? 'طعام' : 'Food', 'iconAsset': 'assets/food.png', 'color': Colors.red, 'is_nav': true, 'eye_name': eyeName('left')},
         {'eye': 'up', 'text': ar ? 'عناية ونظافة' : 'Personal Care', 'iconAsset': 'assets/care.png', 'color': Colors.teal, 'is_nav': true, 'eye_name': eyeName('up')},

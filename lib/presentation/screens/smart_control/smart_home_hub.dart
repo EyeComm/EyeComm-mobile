@@ -34,15 +34,29 @@ class _HubView extends StatelessWidget {
   Future<void> _handleNavigation(String eye, BuildContext ctx, SmartHomeHubCubit cubit) async {
     switch (eye) {
       case 'closed':
-        await cubit.executeHubCommand('closed');
+        // ✅ إيقاف الـ polling عند الخروج
+        cubit.stopPolling();
         if (Navigator.canPop(ctx)) Navigator.pop(ctx);
         break;
+
       case 'left':
+        // ✅✅ الإصلاح الأساسي: لازم نوقف قراءة العين بتاعة الـ Hub
+        // قبل ما ندخل صفحة الصالة، وإلا الـ Hub هيفضل شغال في الخلفية
+        // وهيفسر حركات عينك جوه صفحة الصالة على إنها أوامر للـ Hub
+        // (وده اللي كان بيسبب التنقل العشوائي بين الصفحات وصوت الباب
+        // اللي بيظهر فجأة من غير ما تطلبه).
+        cubit.stopPolling();
         await push(ctx, const SmartHomeHallPage());
+        // ✅ لما يرجع المستخدم هنا، نشغّل القراءة تاني
+        cubit.resumePolling();
         break;
+
       case 'right':
+        cubit.stopPolling();
         await push(ctx, const SmartHomeRoomPage());
+        cubit.resumePolling();
         break;
+
       case 'up':
         await cubit.executeHubCommand('up');
         break;
@@ -98,7 +112,6 @@ class _HubView extends StatelessWidget {
               cd: cd,
               totalTimer: totalTimer,
               isOn: isDoorCard ? hubState.isDoorOpen : null,
-              onTap: () => _handleNavigation(currentEye, context, cubit),
             );
           },
           onAction: (eye, ctx) async {

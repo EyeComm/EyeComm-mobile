@@ -1,68 +1,47 @@
-// ════════════════════════════════════════════════════════════════════════════
-// eye_tracking_cubit.dart
-//
-// ⭐ THE KEY DRY FIX: Every screen that needs eye-tracking extends this cubit
-//    instead of duplicating the Timer + HTTP polling logic.
-//
-// Responsibilities:
-//   • Poll /predict every 800 ms
-//   • Debounce: a direction must be held stable for [timerSec] seconds
-//   • Emit [EyeTrackingState] (or a subclass) with live currentEye,
-//     countdown, stableDirection, and a one-shot [confirmedGesture] field
-//   • Subclasses override [onGestureConfirmed] to react (call IoT / Voice)
-//
-// FIX vs original: We no longer try to override the `state` getter. Instead:
-//   • The constructor calls [buildInitialState] which subclasses can override
-//     to return their own initial state (e.g. SmartHomeHallState).
-//   • The helper [emitCopyWith] provides a safe typed emit for subclasses.
-// ════════════════════════════════════════════════════════════════════════════
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
+import '../../core/voice_service.dart';
 import 'eye_tracking_state.dart';
 
 export 'eye_tracking_state.dart';
 
 abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
   EyeTrackingCubit({
-    int    timerSec   = 5,
+    int    timerSec   = 7,
     String predictUrl = 'http://127.0.0.1:5000/predict',
   })  : _timerSec   = timerSec,
         _predictUrl = predictUrl,
-        // buildInitialState lets subclasses inject their own typed initial state
-        // without needing to override the `state` getter (which doesn't work).
         super(EyeTrackingState(totalTimer: timerSec)) {
+    cooldownUntil = DateTime.now().add(const Duration(milliseconds: 1500));
     _startPolling();
   }
 
-  // ── Configuration ─────────────────────────────────────────────────────────
   final int    _timerSec;
   final String _predictUrl;
 
-  // ── Internal polling state ─────────────────────────────────────────────────
   Timer?    _pollTimer;
   bool      _busy      = false;
   String    _stableDir = 'none';
   DateTime? _stableAt;
+  DateTime  cooldownUntil = DateTime.now();
 
-  // ── Contract ───────────────────────────────────────────────────────────────
+  bool _isActive = true;
+  bool _isDisposed = false;
+  bool _faceDetected = false;  // ✅ متغير لتتبع وجود الوجه
 
-  /// Subclasses MUST implement this to handle a confirmed gesture.
-  /// VoiceService.speak() and IoTService calls go here — NOT in the UI.
-  /// Navigation is NOT done here; instead the cubit emits confirmedGesture
-  /// and the UI BlocConsumer listener handles navigation.
+  // ✅ تتبع آخر مرة شُوف فيها وجه - لمنع الأوامر بعد الابتعاد
+  DateTime _lastFaceSeenAt = DateTime.now();
+  static const Duration _faceGracePeriod = Duration(milliseconds: 1500);
+
   Future<void> onGestureConfirmed(String gesture);
 
-  /// Subclasses override this to return a typed copy of the current state
-  /// with new eye-tracking fields. This avoids the broken `state` getter
-  /// override pattern.
-  ///
-  /// Default implementation returns a plain [EyeTrackingState]. Subclasses
-  /// like [SmartHomeHallCubit] override this to return [SmartHomeHallState].
+  // ✅ labelForGesture للنطق عند تأكيد الأمر (بعد العد)
+  String? labelForGesture(String gesture) => null;
+
   EyeTrackingState copyStateWith({
     String?  currentEye,
     String?  stableDirection,
@@ -79,10 +58,10 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
     );
   }
 
-  // ── Polling ────────────────────────────────────────────────────────────────
-
   void _startPolling() {
     _pollTimer?.cancel();
+    _isActive = true;
+    _isDisposed = false;
     _stableDir = 'none';
     _stableAt  = null;
     _pollTimer = Timer.periodic(
@@ -91,24 +70,71 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
     );
   }
 
+  void resumePolling() {
+    if (isClosed) return;
+    _startPolling();
+  }
+
+  void stopPolling() {
+    _isActive = false;
+    _isDisposed = true;
+    _pollTimer?.cancel();
+    _pollTimer = null;
+    _stableDir = 'none';
+    _stableAt  = null;
+    if (!isClosed) {
+      emit(copyStateWith(
+        currentEye: 'none',
+        stableDirection: 'none',
+        countdownSeconds: 0,
+      ));
+    }
+  }
+
   Future<void> _poll() async {
-    if (_busy || isClosed) return;
+    if (!_isActive || _isDisposed || _busy || isClosed) return;
+
+    if (DateTime.now().isBefore(cooldownUntil)) {
+      _stableDir = 'none';
+      _stableAt  = null;
+      return;
+    }
+
     _busy = true;
     try {
       final response = await http
           .get(Uri.parse(_predictUrl))
           .timeout(const Duration(seconds: 4));
 
-      if (isClosed) return;
+      if (isClosed || !_isActive || _isDisposed) return;
       if (response.statusCode != 200) return;
 
-      final String eye =
-          (jsonDecode(response.body) as Map<String, dynamic>)['prediction']
-              as String? ??
-              'none';
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final String eye = body['prediction'] as String? ?? 'none';
 
-      // ── Always update the raw eye indicator so the camera bar reacts ──────
-      if (!isClosed) {
+      // ✅ تحديث متغيرات الوجه
+      final bool faceDetected = body['face_detected'] as bool? ?? true;
+      final bool faceVerified = body['face_verified'] as bool? ?? true;
+      _faceDetected = faceDetected;  // ✅ حفظ حالة الوجه
+
+      if (faceDetected && faceVerified) {
+        _lastFaceSeenAt = DateTime.now();
+      }
+
+      // ✅ لو الوجه اختفى أو غير موثق، إعادة ضبط العداد فوراً
+      final bool faceActive = faceDetected &&
+          (faceVerified ||
+              DateTime.now().difference(_lastFaceSeenAt) < _faceGracePeriod);
+
+      if (!faceActive) {
+        if (!isClosed && _isActive && !_isDisposed) {
+          emit(copyStateWith(currentEye: 'none'));
+        }
+        _resetStable();
+        return;
+      }
+
+      if (!isClosed && _isActive && !_isDisposed) {
         emit(copyStateWith(currentEye: eye));
       }
 
@@ -118,41 +144,49 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
       }
 
       if (eye == _stableDir) {
-        // Same direction — count down
         final int elapsed   = DateTime.now().difference(_stableAt!).inSeconds;
         final int remaining = (_timerSec - elapsed).clamp(0, _timerSec);
 
-        if (!isClosed) emit(copyStateWith(countdownSeconds: remaining));
+        if (!isClosed && _isActive && !_isDisposed) {
+          emit(copyStateWith(countdownSeconds: remaining));
+        }
 
         if (elapsed >= _timerSec) {
-          // ✅ Gesture confirmed — stop polling, fire action, restart
           _pollTimer?.cancel();
           final String confirmed = eye;
           _resetStable();
 
-          // Step 1: emit confirmedGesture so the BlocConsumer listener fires
-          if (!isClosed) {
+          cooldownUntil = DateTime.now().add(const Duration(milliseconds: 1500));
+
+          if (!isClosed && _isActive && !_isDisposed) {
             emit(copyStateWith(confirmedGesture: confirmed));
           }
 
-          // Step 2: execute side-effects (Voice + IoT) — subclass responsibility
-          await onGestureConfirmed(confirmed);
+          // ✅ النطق هنا بعد اكتمال العد
+          final String? label = labelForGesture(confirmed);
+          if (label != null && label.isNotEmpty) {
+            VoiceService.speak(label);
+          }
 
-          // Step 3: clear confirmedGesture so the listener won't re-fire on
-          // future rebuilds. Use a microtask so the listener gets its frame first.
+          if (_isActive && !_isDisposed && !isClosed) {
+            await onGestureConfirmed(confirmed);
+          }
+
           await Future.microtask(() {
-            if (!isClosed) {
+            if (!isClosed && _isActive && !_isDisposed) {
               emit(copyStateWith(confirmedGesture: null));
             }
           });
 
-          _startPolling();
+          if (_isActive && !_isDisposed && !isClosed) {
+            _startPolling();
+          }
         }
       } else {
-        // New direction — start tracking it
         _stableDir = eye;
         _stableAt  = DateTime.now();
-        if (!isClosed) {
+
+        if (!isClosed && _isActive && !_isDisposed) {
           emit(copyStateWith(
             stableDirection  : eye,
             countdownSeconds : _timerSec,
@@ -160,9 +194,7 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
         }
       }
     } on TimeoutException {
-      // Server not reachable — silently ignore, keep polling
     } catch (_) {
-      // Any other error — silently ignore
     } finally {
       _busy = false;
     }
@@ -171,7 +203,7 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
   void _resetStable() {
     _stableDir = 'none';
     _stableAt  = null;
-    if (!isClosed) {
+    if (!isClosed && _isActive && !_isDisposed) {
       emit(copyStateWith(
         stableDirection  : 'none',
         countdownSeconds : 0,
@@ -179,17 +211,15 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
     }
   }
 
-  // ── Manual trigger ─────────────────────────────────────────────────────────
-  /// Allows the UI to simulate a confirmed gesture (e.g. card tap fallback).
-  /// Also emits confirmedGesture so BlocConsumer listeners (for navigation)
-  /// fire correctly — even on manual taps.
   Future<void> triggerManual(String gesture) async {
-    if (!isClosed) {
+    if (!isClosed && _isActive && !_isDisposed) {
       emit(copyStateWith(confirmedGesture: gesture));
     }
-    await onGestureConfirmed(gesture);
+    if (_isActive && !_isDisposed && !isClosed) {
+      await onGestureConfirmed(gesture);
+    }
     await Future.microtask(() {
-      if (!isClosed) {
+      if (!isClosed && _isActive && !_isDisposed) {
         emit(copyStateWith(confirmedGesture: null));
       }
     });
@@ -197,6 +227,8 @@ abstract class EyeTrackingCubit extends Cubit<EyeTrackingState> {
 
   @override
   Future<void> close() {
+    _isActive = false;
+    _isDisposed = true;
     _pollTimer?.cancel();
     return super.close();
   }

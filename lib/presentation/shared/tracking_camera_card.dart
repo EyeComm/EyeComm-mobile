@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../core/app_theme.dart';
 import 'eye_camera_preview.dart';
 
@@ -26,29 +25,28 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
   late final AnimationController _glowCtrl;
   late final Animation<double> _glowAnim;
 
+  Color _colorForEye(String cmd) {
+    switch (cmd) {
+      case 'left':   return const Color(0xFF2B8EE8);
+      case 'right':  return const Color(0xFFF9A825);
+      case 'up':     return const Color(0xFFE53935);
+      case 'down':   return const Color(0xFF7E57C2);
+      case 'closed': return const Color(0xFF78909C);
+      default:       return const Color(0xFF4CAF50);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _glowCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000), // إبطاء الحركة لراحة العين
+      duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
 
     _glowAnim = Tween<double>(begin: 0.08, end: 0.25).animate(
       CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut),
     );
-  }
-
-  // 🎯 دالة الألوان الموحدة والمطابقة تماماً للكروت لحماية العين من الأصفر الفاقع
-  Color _colorForEye(String cmd) {
-    switch (cmd) {
-      case 'left':   return const Color(0xFF2B8EE8); // أزرق
-      case 'right':  return const Color(0xFFF9A825); // برتقالي
-      case 'up':     return const Color(0xFFE53935); // أحمر
-      case 'down':   return const Color(0xFF7E57C2); // بنفسجي
-      case 'closed': return const Color(0xFF78909C); // رمادي
-      default:       return const Color(0xFF4CAF50); // أخضر التتبع المستقر الافتراضي
-    }
   }
 
   @override
@@ -60,11 +58,9 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
   @override
   Widget build(BuildContext context) {
     final bool isTracking = widget.currentEye != 'none';
-
-    // 🎨 سحب اللون ديناميكياً بناءً على اتجاه العين الحالي ليتطابق الكارت مع حركة المستخدم
     final Color glowColor = isTracking
         ? _colorForEye(widget.currentEye)
-        : const Color(0xFF90A4AE); // رمادي معتدل مريح للعين أثناء وضع الاستعداد والبحث
+        : const Color(0xFF90A4AE);
 
     return AnimatedBuilder(
       animation: _glowAnim,
@@ -89,17 +85,15 @@ class _TrackingCameraCardState extends State<TrackingCameraCard>
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Stack(
+              fit: StackFit.expand,
               children: [
-
-                // ── 📸 عرض بث الكاميرا مع تمرير الحركة النشطة لتفعيل الفلتر الذكي ──
-                Positioned.fill(
-                  child: EyeCameraPreview(
-                    serverBase: widget.serverBase,
-                    stableDirection: widget.currentEye, // ⬅️ تمرير الاتجاه لغلق وعزل البيانات القديمة بنجاح
-                  ),
+                // ✅ key ثابت يضمن إن الحالة (الستريم) متتحفظش وتتعاد
+                // من غير داعي لو الـ Widget اتبنى تاني بنفس السيرفر
+                EyeCameraPreview(
+                  key: ValueKey('eye_cam_${widget.serverBase}'),
+                  serverBase: widget.serverBase,
+                  stableDirection: widget.currentEye,
                 ),
-
-                // ── خط سفلي انسيابي ناعم يعطي تأكيداً مرئياً بلون الحركة ──
                 Positioned(
                   bottom: 0,
                   left: 0,

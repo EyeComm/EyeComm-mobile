@@ -36,6 +36,10 @@ class _HallView extends StatelessWidget {
       listenWhen: (prev, current) => current.confirmedGesture == 'closed',
       listener: (context, state) {
         if (state.confirmedGesture == 'closed' && Navigator.canPop(context)) {
+          try {
+            final cubit = context.read<SmartHomeHallCubit>();
+            cubit.stopPolling();
+          } catch (_) {}
           Navigator.pop(context);
         }
       },
@@ -44,11 +48,11 @@ class _HallView extends StatelessWidget {
         final hallState = cubit.hallState;
 
         final List<Map<String, dynamic>> items = [
-          {'eye': 'left', 'text': ar ? 'التكييف' : 'AC'},
-          {'eye': 'right', 'text': ar ? 'النور الرئيسي' : 'Main Light'},
-          {'eye': 'up', 'text': ar ? 'الشاشة' : 'TV'},
-          {'eye': 'down', 'text': ar ? 'الدفاية' : 'Heater'},
-          {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back'},
+          {'eye': 'left', 'text': ar ? 'التكييف' : 'AC', 'iconAsset': 'assets/ac.png'},
+          {'eye': 'right', 'text': ar ? 'النور الرئيسي' : 'Main Light', 'iconAsset': 'assets/light.png'},
+          {'eye': 'up', 'text': ar ? 'الشاشة' : 'TV', 'iconAsset': 'assets/tv.png'},
+          {'eye': 'down', 'text': ar ? 'الدفاية' : 'Heater', 'iconAsset': 'assets/heater.png'},
+          {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png'},
         ];
 
         return BaseGridPage(
@@ -62,10 +66,16 @@ class _HallView extends StatelessWidget {
           stableDirection: state.stableDirection,
           countdownSeconds: state.countdownSeconds,
           itemBuilder: (context, index, item, stable, cd, totalTimer) {
-            return _buildDeviceCard(context, index, hallState, ar, stable, cd, totalTimer, cubit);
+            return _buildDeviceCard(context, index, hallState, ar, stable, cd, totalTimer, cubit, item);
           },
           onAction: (eye, ctx) async {
-            if (eye != 'closed') {
+            if (eye == 'closed') {
+              try {
+                final cubit = context.read<SmartHomeHallCubit>();
+                cubit.stopPolling();
+              } catch (_) {}
+              if (Navigator.canPop(ctx)) Navigator.pop(ctx);
+            } else {
               cubit.executeCommand(eye);
             }
           },
@@ -83,32 +93,35 @@ class _HallView extends StatelessWidget {
       int cd,
       int totalTimer,
       SmartHomeHallCubit cubit,
+      Map<String, dynamic> item,
       ) {
+    
+    final String eye = item['eye'] as String;
+    final String label = item['text'] as String;
+    final String iconAsset = item['iconAsset'] as String;
+    
     switch (index) {
       case 0:
         return DeviceSwitchCard(
-          iconAsset: 'assets/ac.png',
-          label: ar ? 'التكييف' : 'AC',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('left'),
           eyeCmd: 'left',
-          isIcon: false,
           isOn: state.acMode != AcMode.off,
           activeColor: state.acMode == AcMode.hot
               ? const Color(0xFFEF5350)
               : (state.acMode == AcMode.cold ? const Color(0xFF4FC3F7) : Colors.grey),
           statusText: state.acMode == AcMode.hot
-              ? (ar ? ' سخن' : ' Hot')
-              : (state.acMode == AcMode.cold ? (ar ? ' بارد' : ' Cold') : null),
+              ? (ar ? 'سخن' : 'Hot')
+              : (state.acMode == AcMode.cold ? (ar ? 'بارد' : 'Cold') : null),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('left'),
         );
       case 1:
         return DeviceSwitchCard(
-          iconAsset: 'assets/light.png',
-          isIcon: false,
-          label: ar ? 'النور الرئيسي' : 'Main Light',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('right'),
           eyeCmd: 'right',
           isOn: state.lightOn,
@@ -116,13 +129,11 @@ class _HallView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('right'),
         );
       case 2:
         return DeviceSwitchCard(
-          iconAsset: 'assets/tv.png',
-          isIcon: false,
-          label: ar ? 'الشاشة' : 'TV',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('up'),
           eyeCmd: 'up',
           isOn: state.tvOn,
@@ -130,13 +141,11 @@ class _HallView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('up'),
         );
       case 3:
         return DeviceSwitchCard(
-          iconAsset: 'assets/heater.png',
-          isIcon: false,
-          label: ar ? 'الدفاية' : 'Heater',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('down'),
           eyeCmd: 'down',
           isOn: state.heaterOn,
@@ -144,13 +153,11 @@ class _HallView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('down'),
         );
       case 4:
         return DeviceSwitchCard(
-          iconAsset: 'assets/back.png',
-          isIcon: false,
-          label: ar ? 'رجوع' : 'Back',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',
           isOn: null,
@@ -158,10 +165,6 @@ class _HallView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () {
-            cubit.executeCommand('closed');
-            if (Navigator.canPop(context)) Navigator.pop(context);
-          },
         );
       default:
         return const SizedBox();

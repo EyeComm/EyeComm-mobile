@@ -36,6 +36,10 @@ class _EmergencyView extends StatelessWidget {
       listenWhen: (prev, current) => current.confirmedGesture == 'closed',
       listener: (context, state) {
         if (state.confirmedGesture == 'closed' && Navigator.canPop(context)) {
+          try {
+            final cubit = context.read<EmergencyCubit>();
+            cubit.stopPolling();
+          } catch (_) {}
           Navigator.pop(context);
         }
       },
@@ -44,14 +48,14 @@ class _EmergencyView extends StatelessWidget {
         final emState = cubit.emergencyState;
 
         final List<Map<String, dynamic>> gridItems = [
-          {'eye': 'left'},
-          {'eye': 'up'},
-          {'eye': 'right'},
-          {'eye': 'closed'},
+          {'eye': 'left', 'text': ar ? 'طلب مساعدة' : 'HELP', 'iconAsset': 'assets/help.png'},
+          {'eye': 'up', 'text': ar ? 'حالة طوارئ' : 'EMERGENCY', 'iconAsset': 'assets/siren.png'},
+          {'eye': 'right', 'text': ar ? 'إيقاف التنبيه' : 'STOP ALERT', 'iconAsset': 'assets/stop.png'},
+          {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back', 'iconAsset': 'assets/back.png'},
         ];
 
         return BaseGridPage(
-          title: ar ? ' طوارئ' : ' EMERGENCY',
+          title: ar ? 'الطوارئ' : 'EMERGENCY',
           color: const Color(0xFFC62828),
           items: gridItems,
           isMainScreen: false,
@@ -70,10 +74,17 @@ class _EmergencyView extends StatelessWidget {
                 stable,
                 cd,
                 totalTimer,
-                cubit);
+                cubit,
+                item);
           },
           onAction: (eye, ctx) async {
-            if (eye != 'closed') {
+            if (eye == 'closed') {
+              try {
+                final cubit = context.read<EmergencyCubit>();
+                cubit.stopPolling();
+              } catch (_) {}
+              if (Navigator.canPop(ctx)) Navigator.pop(ctx);
+            } else {
               cubit.executeCommand(eye);
             }
           },
@@ -89,46 +100,50 @@ class _EmergencyView extends StatelessWidget {
       String stable,
       int cd,
       int totalTimer,
-      EmergencyCubit cubit,) {
+      EmergencyCubit cubit,
+      Map<String, dynamic> item,) {
+    
+    final String eye = item['eye'] as String;
+    final String label = item['text'] as String;
+    final String iconAsset = item['iconAsset'] as String;
+    
     switch (index) {
       case 0:
         final bool isHelp = emState.activeAlert == 'help';
         return DeviceSwitchCard(
-          iconAsset: 'assets/help.png',
-          label: ar ? ' مساعدة' : ' HELP',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('left'),
           eyeCmd: 'left',
           isOn: isHelp,
           activeColor: const Color(0xFFE65100),
           statusText: ar
-              ? (isHelp ? 'يعمل' : 'مغلق')
+              ? (isHelp ? 'يعمل' : 'متوقف')
               : (isHelp ? 'Working' : 'Closed'),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('left'),
         );
       case 1:
         final bool isEmergency = emState.activeAlert == 'emergency';
         return DeviceSwitchCard(
-          iconAsset: 'assets/siren.png',
-          label: ar ? ' طوارئ' : ' EMERGENCY',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('up'),
           eyeCmd: 'up',
           isOn: isEmergency,
           activeColor: const Color(0xFFD32F2F),
           statusText: ar
-              ? (isEmergency ? 'يعمل' : 'مغلق')
+              ? (isEmergency ? 'يعمل' : 'متوقف')
               : (isEmergency ? 'Working' : 'Closed'),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('up'),
         );
       case 2:
         return DeviceSwitchCard(
-          iconAsset: 'assets/stop.png',
-          label: ar ? ' إيقاف التنبيه' : ' STOP ALERT',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('right'),
           eyeCmd: 'right',
           isOn: null,
@@ -136,13 +151,12 @@ class _EmergencyView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('right'),
         );
       case 3:
       default:
         return DeviceSwitchCard(
-          iconAsset: 'assets/back.png',
-          label: ar ? 'رجوع' : 'Back',
+          iconAsset: iconAsset,
+          label: label,
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',
           isOn: null,
@@ -150,10 +164,6 @@ class _EmergencyView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () {
-            cubit.executeCommand('closed');
-            if (Navigator.canPop(context)) Navigator.pop(context);
-          },
         );
     }
   }

@@ -9,8 +9,9 @@ import 'wheelchair_state.dart';
 export 'wheelchair_state.dart';
 
 class WheelchairCubit extends EyeTrackingCubit {
-  WheelchairCubit() : super(timerSec: 3) {
-    emit(const WheelchairState(totalTimer: 3));
+  // ✅ 7 ثواني للكرسي بردو
+  WheelchairCubit() : super(timerSec: 7) {
+    emit(const WheelchairState(totalTimer: 7));
   }
 
   WheelchairState get wheelchairState {
@@ -26,6 +27,19 @@ class WheelchairCubit extends EyeTrackingCubit {
   }
 
   bool get _ar => AppLanguage.current == 'ar';
+
+  // ✅ اسم الزرار اللي يتقال أول ما العين تستقر عليه
+  @override
+  String? labelForGesture(String gesture) {
+    switch (gesture) {
+      case 'up':     return _ar ? 'للأمام' : 'Forward';
+      case 'down':   return _ar ? 'للخلف'  : 'Backward';
+      case 'left':   return _ar ? 'يسار'   : 'Left';
+      case 'right':  return _ar ? 'يمين'   : 'Right';
+      case 'closed': return _ar ? 'رجوع'   : 'Back';
+      default:       return null;
+    }
+  }
 
   @override
   EyeTrackingState copyStateWith({
@@ -46,8 +60,12 @@ class WheelchairCubit extends EyeTrackingCubit {
 
   @override
   Future<void> onGestureConfirmed(String gesture) async {
+    if (DateTime.now().isBefore(_cooldownUntil)) return;
+    _cooldownUntil = DateTime.now().add(const Duration(milliseconds: 1500));
     executeCommand(gesture);
   }
+
+  DateTime _cooldownUntil = DateTime.now();
 
   void executeCommand(String gesture) {
     switch (gesture) {

@@ -14,6 +14,7 @@ void unawaited(Future<void> future) {
 }
 
 class EmergencyCubit extends EyeTrackingCubit {
+  // ✅ timerSec = 5 ثواني لتثبيت الإيماءة
   EmergencyCubit() : super(timerSec: 5) {
     emit(const EmergencyState(totalTimer: 5));
   }
@@ -51,8 +52,13 @@ class EmergencyCubit extends EyeTrackingCubit {
 
   @override
   Future<void> onGestureConfirmed(String gesture) async {
+    // ✅ منع التكرار لمدة 2 ثانية
+    if (DateTime.now().isBefore(_cooldownUntil)) return;
+    _cooldownUntil = DateTime.now().add(const Duration(seconds: 2));
     executeCommand(gesture);
   }
+
+  DateTime _cooldownUntil = DateTime.now();
 
   void executeCommand(String gesture) {
     switch (gesture) {

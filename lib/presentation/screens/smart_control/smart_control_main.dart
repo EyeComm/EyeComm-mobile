@@ -1,10 +1,3 @@
-// ════════════════════════════════════════════════════════════════════════════
-// smart_control_main.dart
-//
-// Top-level Smart Control menu — pure routing, zero logic.
-// All cubits are created inside the destination pages.
-// ════════════════════════════════════════════════════════════════════════════
-
 import 'package:flutter/material.dart';
 import 'package:eye_comm_project/presentation/core/language_service.dart';
 import 'package:eye_comm_project/presentation/core/eye_utils.dart';
@@ -27,6 +20,7 @@ class SmartControlMain extends StatelessWidget {
       color: const Color(0xFF7C2BE8),
       showCameraCard: true,
       cameraCardAspectRatio: 1.15,
+      timerSeconds: 5,
       items: [
         {
           'eye': 'left',
@@ -38,17 +32,17 @@ class SmartControlMain extends StatelessWidget {
         },
         {
           'eye': 'up',
-          'text': ar ? 'طوارئ' : 'Emergency',
-          'iconAsset': 'assets/siren.png',
-          'color': const Color(0xFFC62828),
+          'text': ar ? 'الكرسي المتحرك' : 'Wheel Chair',
+          'iconAsset': 'assets/wheelchair.png',
+          'color': const Color(0xFF2E7D32),
           'is_nav': true,
           'eye_name': eyeName('up'),
         },
         {
           'eye': 'right',
-          'text': ar ? 'الكرسي المتحرك' : 'Wheel Chair',
-          'iconAsset': 'assets/wheelchair.png',
-          'color': const Color(0xFF2E7D32),
+          'text': ar ? 'طوارئ' : 'Emergency',
+          'iconAsset': 'assets/siren.png',
+          'color': const Color(0xFFC62828),
           'is_nav': true,
           'eye_name': eyeName('right'),
         },
@@ -64,15 +58,15 @@ class SmartControlMain extends StatelessWidget {
       onAction: (eye, ctx) async {
         switch (eye) {
           case 'closed':
-            Navigator.pop(ctx);
+            if (Navigator.canPop(ctx)) Navigator.pop(ctx);
             break;
           case 'left':
             await push(ctx, const SmartHomeHub());
             break;
-          case 'right':
+          case 'up':
             await push(ctx, const WheelchairPage());
             break;
-          case 'up':
+          case 'right':
             await push(ctx, const EmergencyPage());
             break;
         }

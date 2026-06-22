@@ -26,6 +26,19 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
 
   bool get _ar => AppLanguage.current == 'ar';
 
+  // ✅ labelForGesture بترجع null للزرار اللي ليها نطق خاص
+  @override
+  String? labelForGesture(String gesture) {
+    switch (gesture) {
+      case 'left':   return null;  // التكييف بينطق من جوه
+      case 'right':  return null;  // النور بينطق من جوه
+      case 'up':     return null;  // الشاشة بينطق من جوه
+      case 'down':   return null;  // الدفاية بينطق من جوه
+      case 'closed': return _ar ? 'رجوع' : 'Back';
+      default:       return null;
+    }
+  }
+
   @override
   EyeTrackingState copyStateWith({
     String?  currentEye,
@@ -45,8 +58,12 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
 
   @override
   Future<void> onGestureConfirmed(String gesture) async {
+    if (DateTime.now().isBefore(_cooldownUntil)) return;
+    _cooldownUntil = DateTime.now().add(const Duration(seconds: 2));
     executeCommand(gesture);
   }
+
+  DateTime _cooldownUntil = DateTime.now();
 
   void executeCommand(String gesture) {
     switch (gesture) {
@@ -54,12 +71,13 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
         VoiceService.speak(_ar ? 'رجوع' : 'Back');
         break;
       case 'left':  _toggleAc();     break;
-      case 'right': _toggleDoor();   break;
+      case 'right': _toggleLight();  break;
       case 'up':    _toggleTv();     break;
       case 'down':  _toggleHeater(); break;
     }
   }
 
+  // ✅ أول ضغطة: بارد - تاني ضغطة: سخن - تالت ضغطة: غلق
   void _toggleAc() {
     final AcMode next = _nextAcMode(hallState.acMode);
     emit(hallState.copyWith(acMode: next));
@@ -71,32 +89,35 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
     }
   }
 
-  void _toggleDoor() {
+  // ✅ النور: تم فتح / تم غلق
+  void _toggleLight() {
     final bool next = !hallState.lightOn;
     emit(hallState.copyWith(lightOn: next));
     VoiceService.speak(
-      _ar ? (next ? 'نور الصالة مفتوح' : 'نور الصالة مطفي')
-          : (next ? 'hall light on'  : 'hall light off'),
+      _ar ? (next ? 'تم فتح النور' : 'تم غلق النور')
+          : (next ? 'Light ON'     : 'Light OFF'),
     );
     unawaited(next ? IoTService.light2On() : IoTService.light2Off());
   }
 
+  // ✅ الشاشة: تم فتح / تم غلق
   void _toggleTv() {
     final bool next = !hallState.tvOn;
     emit(hallState.copyWith(tvOn: next));
     VoiceService.speak(
-      _ar ? (next ? 'الشاشة شغالة' : 'الشاشة مطفية')
-          : (next ? 'TV ON'        : 'TV OFF'),
+      _ar ? (next ? 'تم فتح الشاشة' : 'تم غلق الشاشة')
+          : (next ? 'TV ON'         : 'TV OFF'),
     );
     unawaited(next ? IoTService.tvOn() : IoTService.tvOff());
   }
 
+  // ✅ الدفاية: تم فتح / تم غلق
   void _toggleHeater() {
     final bool next = !hallState.heaterOn;
     emit(hallState.copyWith(heaterOn: next));
     VoiceService.speak(
-      _ar ? (next ? 'الدفاية شغالة' : 'الدفاية مطفية')
-          : (next ? 'Heater ON'     : 'Heater OFF'),
+      _ar ? (next ? 'تم فتح الدفاية' : 'تم غلق الدفاية')
+          : (next ? 'Heater ON'      : 'Heater OFF'),
     );
     unawaited(next ? IoTService.heaterOn() : IoTService.heaterOff());
   }
@@ -111,9 +132,9 @@ class SmartHomeHallCubit extends EyeTrackingCubit {
 
   String _acFeedback(AcMode mode) {
     switch (mode) {
-      case AcMode.cold: return _ar ? 'تكييف بارد'    : 'AC Cold';
-      case AcMode.hot: return _ar ? 'تكييف سخن'     : 'AC Hot';
-      case AcMode.off: return _ar ? 'التكييف اتطفى' : 'AC OFF';
+      case AcMode.cold: return _ar ? 'تكييف شغال على البارد' : 'AC Cold';
+      case AcMode.hot:  return _ar ? 'تكييف شغال على سخن'    : 'AC Hot';
+      case AcMode.off:  return _ar ? 'تم غلق التكييف'        : 'AC OFF';
     }
   }
 }

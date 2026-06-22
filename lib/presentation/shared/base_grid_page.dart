@@ -40,7 +40,6 @@ class BaseGridPage extends StatefulWidget {
   final int? countdownSeconds;
 
   final bool showCameraCard;
-
   final double cameraCardAspectRatio;
 
   const BaseGridPage({
@@ -48,7 +47,7 @@ class BaseGridPage extends StatefulWidget {
     required this.title,
     required this.color,
     required this.items,
-    this.timerSeconds = 5,
+    this.timerSeconds = 7,
     this.onAction,
     this.itemBuilder,
     this.isMainScreen = false,
@@ -77,25 +76,79 @@ class _BaseGridPageState extends State<BaseGridPage> {
   Timer? _dialogTimer;
   bool _busy = false;
 
+  late DateTime _cooldownUntil;
+  bool _isActive = true;
+
+  // مهم: لمنع تنفيذ أوامر بعد الخروج
+  bool _isDisposed = false;
+
+  // ✅ هل البيج دي بتستخدم Cubit خارجي (currentEye جاي من برّه)؟
+  bool get _isExternallyDriven => widget.currentEye != null;
+
+  // ✅ لمنع تكرار النطق
+  String _lastSpokenStable = 'none';
+
   @override
   void initState() {
     super.initState();
-    if (widget.currentEye == null) {
+    _cooldownUntil = DateTime.now().add(const Duration(milliseconds: 1500));
+    if (!_isExternallyDriven) {
       _startPoll();
     }
   }
 
+  @override
+  void didUpdateWidget(covariant BaseGridPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // ✅ الصفحات الخارجية مش محتاجة نطق هنا لأن النطق بيحصل في الـ Cubit
+  }
+
   void _startPoll() {
     _pollTimer?.cancel();
+    _isActive = true;
+    _isDisposed = false;
     _stable = 'none';
     _stableAt = null;
     _cd = 0;
+    _lastSpokenStable = 'none';
     _pollTimer =
         Timer.periodic(const Duration(milliseconds: 800), (_) => _poll());
   }
 
+  void stopPolling() {
+    _isActive = false;
+    _isDisposed = true;
+    _pollTimer?.cancel();
+    _pollTimer = null;
+    _stable = 'none';
+    _stableAt = null;
+    _cd = 0;
+    if (mounted) {
+      setState(() {
+        _eye = 'none';
+        _stable = 'none';
+        _cd = 0;
+      });
+    }
+  }
+
   Future<void> _poll() async {
-    if (!mounted || !ModalRoute.of(context)!.isCurrent) return;
+    // التأكد أن الصفحة لسه مفتوحة ونشطة
+    if (!mounted || !_isActive || _isDisposed) return;
+
+    final route = ModalRoute.of(context);
+    if (route == null || !route.isCurrent) {
+      // الصفحة مش الحالية، نوقف القراءة
+      stopPolling();
+      return;
+    }
+
+    if (DateTime.now().isBefore(_cooldownUntil)) {
+      if (_stable != 'none') {
+        setState(() { _stable = 'none'; _stableAt = null; _cd = 0; });
+      }
+      return;
+    }
 
     if (_busy) return;
     _busy = true;
@@ -103,11 +156,12 @@ class _BaseGridPageState extends State<BaseGridPage> {
       final r = await http
           .get(Uri.parse('${widget.serverBase}/predict'))
           .timeout(const Duration(seconds: 4));
-      if (!mounted) return;
+
+      if (!mounted || !_isActive || _isDisposed) return;
 
       if (r.statusCode == 200) {
-        final String eye =
-            jsonDecode(r.body)['prediction'] as String? ?? 'none';
+        final body = jsonDecode(r.body);
+        final String eye = body['prediction'] as String? ?? 'none';
         setState(() {
           _eye = eye;
           _connected = true;
@@ -118,11 +172,14 @@ class _BaseGridPageState extends State<BaseGridPage> {
           if (eye == _stable) {
             final int diff = DateTime.now().difference(_stableAt!).inSeconds;
             final int nc = widget.timerSeconds - diff;
-            if (nc != _cd)
-              setState(() => _cd = nc.clamp(0, widget.timerSeconds));
+            if (nc != _cd) setState(() => _cd = nc.clamp(0, widget.timerSeconds));
             if (diff >= widget.timerSeconds) {
               _pollTimer?.cancel();
-              _execute(eye);
+              _cooldownUntil = DateTime.now().add(const Duration(milliseconds: 1500));
+              // التأكد أن الصفحة لسه مفتوحة قبل التنفيذ
+              if (mounted && _isActive && !_isDisposed) {
+                _execute(eye);
+              }
               _stable = 'none';
               _stableAt = null;
               _cd = 0;
@@ -133,13 +190,23 @@ class _BaseGridPageState extends State<BaseGridPage> {
               _stableAt = DateTime.now();
               _cd = widget.timerSeconds;
             });
+            
+            // ✅ نطق اسم الزرار عند الاستقرار (مرة واحدة بس)
+            // للصفحات اللي مش بتستخدم Cubit خارجي
+            if (!_isExternallyDriven && eye != _lastSpokenStable) {
+              final item = widget.items.firstWhere(
+                (e) => e['eye'] == eye,
+                orElse: () => {},
+              );
+              if (item.isNotEmpty && item['text'] != null) {
+                VoiceService.speak(cleanForSpeech(item['text'].toString()));
+                _lastSpokenStable = eye;
+              }
+            }
           }
         } else {
-          setState(() {
-            _stable = 'none';
-            _stableAt = null;
-            _cd = 0;
-          });
+          setState(() { _stable = 'none'; _stableAt = null; _cd = 0; });
+          _lastSpokenStable = 'none';
         }
       } else {
         setState(() => _connected = false);
@@ -152,25 +219,33 @@ class _BaseGridPageState extends State<BaseGridPage> {
   }
 
   void _execute(String eye) async {
+    // التأكد أن الصفحة لسه مفتوحة
+    if (!mounted || !_isActive || _isDisposed) return;
+
     final item =
-    widget.items.firstWhere((e) => e['eye'] == eye, orElse: () => {});
-    if (item.isNotEmpty) {
-      VoiceService.speak(cleanForSpeech(item['text'].toString()));
-    }
+        widget.items.firstWhere((e) => e['eye'] == eye, orElse: () => {});
 
     if (widget.onAction != null) {
       await widget.onAction!(eye, context);
-      if (mounted) _startPoll();
+      // التأكد أن الصفحة لسه مفتوحة قبل إعادة تشغيل القراءة
+      if (mounted && _isActive && !_isDisposed) {
+        _startPoll();
+      }
       return;
     }
 
-    if (eye == 'down') {
-      if (mounted && Navigator.canPop(context)) Navigator.pop(context);
+    if (eye == 'down' || eye == 'closed') {
+      if (mounted && Navigator.canPop(context)) {
+        stopPolling();
+        Navigator.pop(context);
+      }
       return;
     }
     if (item.isNotEmpty) {
       _showConfirmDialog(item['text'].toString());
-      if (mounted) _startPoll();
+      if (mounted && _isActive && !_isDisposed) {
+        _startPoll();
+      }
     }
   }
 
@@ -188,14 +263,11 @@ class _BaseGridPageState extends State<BaseGridPage> {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const Icon(Icons.check_circle_rounded,
-                color: Colors.green, size: 52),
+            const Icon(Icons.check_circle_rounded, color: Colors.green, size: 52),
             const SizedBox(height: 10),
             Text(AppLanguage.t('confirmed'),
                 style: GoogleFonts.cairo(
-                    color: Colors.green,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold)),
+                    color: Colors.green, fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text(msg,
                 textAlign: TextAlign.center,
@@ -211,6 +283,8 @@ class _BaseGridPageState extends State<BaseGridPage> {
 
   @override
   void dispose() {
+    _isActive = false;
+    _isDisposed = true;
     _pollTimer?.cancel();
     _dialogTimer?.cancel();
     super.dispose();
@@ -230,36 +304,13 @@ class _BaseGridPageState extends State<BaseGridPage> {
     }
 
     final int actualItemIndex = widget.showCameraCard ? i - 1 : i;
-
-    if (actualItemIndex >= widget.items.length) {
-      return const SizedBox();
-    }
+    if (actualItemIndex >= widget.items.length) return const SizedBox();
 
     final currentItem = widget.items[actualItemIndex];
-    final String currentEyeCmd = currentItem['eye'].toString();
 
-    // 🎯 دعم التغليف بالضغط اليدوي سواء كان الكارد مبنياً خارجياً عبر itemBuilder أو افتراضياً
-    return GestureDetector(
-      onTap: () {
-        _pollTimer?.cancel(); // إيقاف مؤقت للتايمر لمنع التدخل أثناء الأكشن اليدوي
-        _execute(currentEyeCmd); // تنفيذ نفس دالة التوجيه والنطق فوراً
-      },
-      child: widget.itemBuilder != null
-          ? widget.itemBuilder!(
-        context,
-        actualItemIndex,
-        currentItem,
-        stable,
-        cd,
-        widget.timerSeconds,
-      )
-          : DynamicEyeCard(
-        item: currentItem,
-        stable: stable,
-        cd: cd,
-        totalTimer: widget.timerSeconds,
-      ),
-    );
+    return widget.itemBuilder != null
+        ? widget.itemBuilder!(context, actualItemIndex, currentItem, stable, cd, widget.timerSeconds)
+        : DynamicEyeCard(item: currentItem, stable: stable, cd: cd, totalTimer: widget.timerSeconds);
   }
 
   int _getTotalCards() => widget.items.length + (widget.showCameraCard ? 1 : 0);
@@ -267,81 +318,62 @@ class _BaseGridPageState extends State<BaseGridPage> {
   Widget _portraitGrid(double gap, String stable, int cd) {
     final len = _getTotalCards();
     return Column(children: [
-      Expanded(
-          child: Row(children: [
-            Expanded(flex: 2, child: _safeCard(0, stable, cd)),
-            SizedBox(width: gap),
-            Expanded(flex: 2, child: _safeCard(1, stable, cd)),
-          ])),
+      Expanded(child: Row(children: [
+        Expanded(flex: 2, child: _safeCard(0, stable, cd)),
+        SizedBox(width: gap),
+        Expanded(flex: 2, child: _safeCard(1, stable, cd)),
+      ])),
       if (len > 2) ...[
         SizedBox(height: gap),
-        Expanded(
-            child: Row(children: [
-              if (len == 3) ...[
-                const Expanded(flex: 1, child: SizedBox()),
-                Expanded(flex: 2, child: _safeCard(2, stable, cd)),
-                const Expanded(flex: 1, child: SizedBox()),
-              ] else ...[
-                Expanded(flex: 2, child: _safeCard(2, stable, cd)),
-                SizedBox(width: gap),
-                Expanded(flex: 2, child: _safeCard(3, stable, cd)),
-              ]
-            ])),
+        Expanded(child: Row(children: [
+          if (len == 3) ...[
+            const Expanded(flex: 1, child: SizedBox()),
+            Expanded(flex: 2, child: _safeCard(2, stable, cd)),
+            const Expanded(flex: 1, child: SizedBox()),
+          ] else ...[
+            Expanded(flex: 2, child: _safeCard(2, stable, cd)),
+            SizedBox(width: gap),
+            Expanded(flex: 2, child: _safeCard(3, stable, cd)),
+          ]
+        ])),
       ],
       if (len > 4) ...[
         SizedBox(height: gap),
-        Expanded(
-            child: Row(children: [
-              const Expanded(flex: 1, child: SizedBox()),
-              Expanded(flex: 2, child: _safeCard(4, stable, cd)),
-              const Expanded(flex: 1, child: SizedBox()),
-            ])),
+        Expanded(child: Row(children: [
+          const Expanded(flex: 1, child: SizedBox()),
+          Expanded(flex: 2, child: _safeCard(4, stable, cd)),
+          const Expanded(flex: 1, child: SizedBox()),
+        ])),
       ]
     ]);
   }
 
   Widget _wideGrid(double gap, String stable, int cd) {
     final len = _getTotalCards();
-
-    return Column(
-      children: [
-        // ───────────────── TOP ROW ─────────────────
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(flex: 2, child: _safeCard(0, stable, cd)),
-              SizedBox(width: gap),
-              Expanded(flex: 2, child: _safeCard(1, stable, cd)),
-              SizedBox(width: gap),
-              Expanded(flex: 2, child: _safeCard(2, stable, cd)),
-            ],
-          ),
-        ),
-
-        // ───────────────── BOTTOM ROW ─────────────────
-        if (len > 3) ...[
-          SizedBox(height: gap),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(flex: 2, child: _safeCard(3, stable, cd)),
-                SizedBox(width: gap),
-                Expanded(flex: 2, child: _safeCard(4, stable, cd)),
-                SizedBox(width: gap),
-                Expanded(flex: 2, child: _safeCard(5, stable, cd)),
-              ],
-            ),
-          ),
-        ],
+    return Column(children: [
+      Expanded(child: Row(children: [
+        Expanded(flex: 2, child: _safeCard(0, stable, cd)),
+        SizedBox(width: gap),
+        Expanded(flex: 2, child: _safeCard(1, stable, cd)),
+        SizedBox(width: gap),
+        Expanded(flex: 2, child: _safeCard(2, stable, cd)),
+      ])),
+      if (len > 3) ...[
+        SizedBox(height: gap),
+        Expanded(child: Row(children: [
+          Expanded(flex: 2, child: _safeCard(3, stable, cd)),
+          SizedBox(width: gap),
+          Expanded(flex: 2, child: _safeCard(4, stable, cd)),
+          SizedBox(width: gap),
+          Expanded(flex: 2, child: _safeCard(5, stable, cd)),
+        ])),
       ],
-    );
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     final bool ar = AppLanguage.current == 'ar';
-
-    // 🎯 Smart value selection: external source → fallback to local
     final String effectiveEye = widget.currentEye ?? _eye;
     final String effectiveStable = widget.stableDirection ?? _stable;
     final int effectiveCd = widget.countdownSeconds ?? _cd;
@@ -357,19 +389,13 @@ class _BaseGridPageState extends State<BaseGridPage> {
                 duration: const Duration(milliseconds: 300),
                 width: double.infinity,
                 color: widget.warningColor,
-                padding:
-                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
                 child: Text(widget.warningMsg,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.cairo(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold)),
+                        color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
               ),
-
             const SizedBox(height: 4),
-
-            // ✅ SLIM tracking bar (camera removed)
             ModernTrackingQualityBar(
               currentEye: effectiveEye,
               stableDirection: effectiveStable,
@@ -380,20 +406,14 @@ class _BaseGridPageState extends State<BaseGridPage> {
               pageTitle: widget.title,
               isMainScreen: widget.isMainScreen,
             ),
-
             const SizedBox(height: 4),
-
-            // ✅ Grid with optional camera card
             Expanded(
               child: LayoutBuilder(builder: (ctx, screen) {
-                final bool wide =
-                    screen.maxWidth > 600 || screen.maxWidth > screen.maxHeight;
+                final bool wide = screen.maxWidth > 600 || screen.maxWidth > screen.maxHeight;
                 final double gap = (screen.maxWidth * 0.025).clamp(8.0, 24.0);
                 final double pad = (screen.maxWidth * 0.03).clamp(12.0, 32.0);
-
                 return Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: pad, vertical: pad / 2),
+                  padding: EdgeInsets.symmetric(horizontal: pad, vertical: pad / 2),
                   child: wide
                       ? _wideGrid(gap, effectiveStable, effectiveCd)
                       : _portraitGrid(gap, effectiveStable, effectiveCd),

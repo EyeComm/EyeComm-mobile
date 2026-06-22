@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+ 
 import 'presentation/core/app_theme.dart';
 import 'presentation/core/language_service.dart';
 import 'presentation/shared/eye_tracker_dots.dart';
@@ -12,25 +12,25 @@ import 'presentation/screens/smart_control/smart_home_room_cubit.dart';
 import 'presentation/screens/smart_control/wheelchair_cubit.dart';
 import 'presentation/screens/smart_control/smart_home_hub_cubit.dart';
 import 'presentation/screens/emergency/emergency_cubit.dart';
-
+ 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+ 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
+ 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
+ 
   await AppLanguage.init();
-
+ 
   runApp(const EyeCommApp());
 }
-
+ 
 class EyeCommApp extends StatelessWidget {
   const EyeCommApp({super.key});
-
+ 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

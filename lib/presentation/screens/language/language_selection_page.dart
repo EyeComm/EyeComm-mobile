@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
+ 
 import '../../core/app_theme.dart';
 import '../../core/language_service.dart';
 import '../../core/voice_service.dart';
@@ -12,24 +12,28 @@ import '../../shared/dynamic_eye_card.dart';
 import '../../shared/modern_tracking_quality_bar.dart';
 import '../../shared/eye_camera_preview.dart';
 import '../home/home_screen.dart';
-
+import '../face_registration/face_registration_screen.dart';
+ 
 class LanguageSelectionPage extends StatefulWidget {
   const LanguageSelectionPage({super.key});
-
+ 
   @override
   State<LanguageSelectionPage> createState() =>
       _LanguageSelectionPageState();
 }
-
-class _LanguageSelectionPageState
-    extends State<LanguageSelectionPage> {
+ 
+class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   String _eye = 'none';
   int _cd = 0;
   String _stable = 'none';
   DateTime? _stableAt;
   Timer? _t;
   bool _busy = false;
-
+ 
+  bool _faceVerified = false;
+  bool _verificationEnabled = false;
+  bool _showUnknownFaceWarning = false;
+ 
   static const _cards = [
     _CardDef(
         symbol: 'Aa',
@@ -46,19 +50,19 @@ class _LanguageSelectionPageState
         eyeCmd: 'right',
         iconAsset: 'assets/ar.png'),
   ];
-
+ 
   @override
   void initState() {
     super.initState();
     _startPoll();
   }
-
+ 
   void _startPoll() {
     _t?.cancel();
     _t = Timer.periodic(
         const Duration(milliseconds: 800), (_) => _poll());
   }
-
+ 
   Future<void> _poll() async {
     if (_busy) return;
     _busy = true;
@@ -67,13 +71,31 @@ class _LanguageSelectionPageState
           .get(Uri.parse('http://127.0.0.1:5000/predict'))
           .timeout(const Duration(seconds: 4));
       if (r.statusCode == 200 && mounted) {
-        final String eye =
-            jsonDecode(r.body)['prediction'] as String? ?? 'none';
-        setState(() => _eye = eye);
+        final data = jsonDecode(r.body) as Map<String, dynamic>;
+        final String eye = data['prediction'] as String? ?? 'none';
+ 
+        final bool verified = data['face_verified'] ?? true;
+        final bool verEnabled = data['verification_enabled'] ?? false;
+ 
+        setState(() {
+          _eye = eye;
+          _faceVerified = verified;
+          _verificationEnabled = verEnabled;
+          _showUnknownFaceWarning = verEnabled && !verified;
+        });
+ 
+        if (verEnabled && !verified) {
+          setState(() {
+            _stable = 'none';
+            _stableAt = null;
+            _cd = 0;
+          });
+          return;
+        }
+ 
         if (eye != 'none') {
           if (eye == _stable) {
-            final int d =
-                DateTime.now().difference(_stableAt!).inSeconds;
+            final int d = DateTime.now().difference(_stableAt!).inSeconds;
             final int nc = 5 - d;
             if (nc != _cd) setState(() => _cd = nc.clamp(0, 5));
             if (d >= 5) {
@@ -82,16 +104,16 @@ class _LanguageSelectionPageState
             }
           } else {
             setState(() {
-              _stable   = eye;
+              _stable = eye;
               _stableAt = DateTime.now();
-              _cd       = 5;
+              _cd = 5;
             });
           }
         } else {
           setState(() {
-            _stable   = 'none';
+            _stable = 'none';
             _stableAt = null;
-            _cd       = 0;
+            _cd = 0;
           });
         }
       }
@@ -100,7 +122,7 @@ class _LanguageSelectionPageState
       _busy = false;
     }
   }
-
+ 
   void _selectLang(String eye) async {
     if (eye == 'left') {
       AppLanguage.current = 'en';
@@ -116,136 +138,188 @@ class _LanguageSelectionPageState
     }
     if (mounted) pushReplacement(context, const MainScreen());
   }
-
+ 
   @override
   void dispose() {
     _t?.cancel();
     super.dispose();
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBg1,
       body: SafeArea(
         child: LayoutBuilder(builder: (ctx, screen) {
-          final double cardSize = (screen.maxWidth * 0.42).clamp(140.0, 240.0);
+          final double cardSize =
+              (screen.maxWidth * 0.42).clamp(140.0, 240.0);
           final double gap = (screen.maxWidth * 0.04).clamp(16.0, 32.0);
-          final double cameraWidth = (screen.maxWidth * 0.50).clamp(160.0, 260.0);
-
-          return Column(children: [
-            const SizedBox(height: 12),
-
-            ModernTrackingQualityBar(
-              currentEye: _eye,
-              stableDirection: _stable,
-              countdownSeconds: _cd,
-              totalTimer: 5,
-              serverBase: 'http://127.0.0.1:5000',
-              activeColor: const Color(0xFF2B8EE8),
-            ),
-
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          final double cameraWidth =
+              (screen.maxWidth * 0.50).clamp(160.0, 260.0);
+ 
+          return Column(
+            children: [
+              const SizedBox(height: 12),
+ 
+              // ✅ زر تسجيل الوجه أعلى اليمين
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: IconButton(
+                      onPressed: () {
+                        _t?.cancel();
+                        pushReplacement(context, const FaceRegistrationScreen());
+                      },
+                      icon: const Icon(Icons.face_retouching_natural,
+                          color: Color(0xFF2B8EE8), size: 28),
+                      tooltip: 'تغيير الوجه المسجل',
+                    ),
+                  ),
+                ],
+              ),
+ 
+              ModernTrackingQualityBar(
+                currentEye: _eye,
+                stableDirection: _stable,
+                countdownSeconds: _cd,
+                totalTimer: 5,
+                serverBase: 'http://127.0.0.1:5000',
+                activeColor: const Color(0xFF2B8EE8),
+              ),
+ 
+              // ✅ تحذير وجه مجهول
+              if (_showUnknownFaceWarning)
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border:
+                        Border.all(color: Colors.red.withOpacity(0.5)),
+                  ),
+                  child: Row(
                     children: [
-                      const SizedBox(height: 10),
-
-                      Container(
-                        width: cameraWidth,
-                        height: cameraWidth / 1.15, // التناسق المتبع 1.15
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: kBorder1, width: 2),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: EyeCameraPreview(
-                            serverBase: 'http://127.0.0.1:5000',
-                            stableDirection: _stable,
+                      const Icon(Icons.warning_rounded,
+                          color: Colors.red, size: 22),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'وجه غير معروف! هذا البرنامج مخصص لصاحبه فقط.',
+                          style: GoogleFonts.cairo(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
                           ),
                         ),
                       ),
-
-                      const SizedBox(height: 20),
-                      Text('EyeComm',
-                          style: GoogleFonts.orbitron(
-                              color: kTextMain1,
-                              fontSize:
-                                  (screen.maxWidth * 0.06).clamp(20.0, 30.0),
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Choose Language / اختر اللغة',
-                        style: GoogleFonts.cairo(
-                            color: const Color(0xFF606060),
-                            fontSize:
-                                (screen.maxWidth * 0.035).clamp(14.0, 16.0),
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 24),
-
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          children: [
-                            for (int i = 0;
-                            i < _cards.length;
-                            i++) ...[
-                              if (i > 0) SizedBox(width: gap),
-                              SizedBox(
-                                width: cardSize,
-                                height: cardSize,
-                                // 🎯 تغليف الكارد بـ GestureDetector ليدعم الضغط اليدوي الفوري
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _t?.cancel(); // إيقاف الفحص مؤقتاً لمنع التعارض أثناء النقل
-                                    _selectLang(_cards[i]
-                                        .eyeCmd); // تنفيذ نفس دالة التوجيه فوراً
-                                  },
+                    ],
+                  ),
+                ),
+ 
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 10),
+ 
+                        // الكاميرا
+                        Container(
+                          width: cameraWidth,
+                          height: cameraWidth / 1.15,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: _faceVerified || !_verificationEnabled
+                                  ? const Color(0xFF00C853)
+                                  : Colors.red,
+                              width: 2,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: EyeCameraPreview(
+                              serverBase: 'http://127.0.0.1:5000',
+                              stableDirection: _stable,
+                            ),
+                          ),
+                        ),
+ 
+                        const SizedBox(height: 20),
+                        Text('EyeComm',
+                            style: GoogleFonts.orbitron(
+                                color: kTextMain1,
+                                fontSize: (screen.maxWidth * 0.06)
+                                    .clamp(20.0, 30.0),
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Choose Language / اختر اللغة',
+                          style: GoogleFonts.cairo(
+                              color: const Color(0xFF606060),
+                              fontSize: (screen.maxWidth * 0.035)
+                                  .clamp(14.0, 16.0),
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 24),
+ 
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (int i = 0; i < _cards.length; i++) ...[
+                                if (i > 0) SizedBox(width: gap),
+                                SizedBox(
+                                  width: cardSize,
+                                  height: cardSize,
                                   child: DynamicEyeCard(
                                     item: {
                                       'eye': _cards[i].eyeCmd,
                                       'text': _cards[i].title,
                                       'color': _cards[i].color,
                                       'eye_name': _cards[i].hint,
-                                    'iconAsset': _cards[i].iconAsset,},
+                                      'iconAsset': _cards[i].iconAsset,
+                                    },
                                     stable: _stable,
                                     cd: _cd,
                                     totalTimer: 5,
                                   ),
                                 ),
-                              ),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ]);
+            ],
+          );
         }),
       ),
     );
   }
 }
-
+ 
 class _CardDef {
   final String symbol, title, hint, eyeCmd, iconAsset;
   final Color color;
-  const _CardDef(
-      {required this.symbol,
-      required this.title,
-      required this.hint,
-      required this.color,
-      required this.eyeCmd,
-        required this.iconAsset});
+  const _CardDef({
+    required this.symbol,
+    required this.title,
+    required this.hint,
+    required this.color,
+    required this.eyeCmd,
+    required this.iconAsset,
+  });
 }

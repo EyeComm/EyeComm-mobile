@@ -36,6 +36,11 @@ class _WheelchairView extends StatelessWidget {
       listenWhen: (prev, current) => current.confirmedGesture == 'closed',
       listener: (context, state) {
         if (state.confirmedGesture == 'closed' && Navigator.canPop(context)) {
+          // ✅ إيقاف الـ polling عند الخروج
+          try {
+            final cubit = context.read<WheelchairCubit>();
+            cubit.stopPolling();
+          } catch (_) {}
           Navigator.pop(context);
         }
       },
@@ -44,11 +49,11 @@ class _WheelchairView extends StatelessWidget {
         final wheelchairState = cubit.wheelchairState;
 
         final List<Map<String, dynamic>> items = [
-          {'eye': 'up', 'text': ar ? 'للأمام' : 'Forward'},
-          {'eye': 'down', 'text': ar ? 'للخلف' : 'Backward'},
-          {'eye': 'left', 'text': ar ? 'يسار' : 'Left'},
-          {'eye': 'right', 'text': ar ? 'يمين' : 'Right'},
-          {'eye': 'closed', 'text': ar ? 'رجوع' : 'Back'},
+          {'eye': 'up',     'text': ar ? 'للأمام'  : 'Forward'},
+          {'eye': 'down',   'text': ar ? 'للخلف'   : 'Backward'},
+          {'eye': 'left',   'text': ar ? 'يسار'    : 'Left'},
+          {'eye': 'right',  'text': ar ? 'يمين'    : 'Right'},
+          {'eye': 'closed', 'text': ar ? 'رجوع'    : 'Back'},
         ];
 
         return BaseGridPage(
@@ -62,10 +67,18 @@ class _WheelchairView extends StatelessWidget {
           stableDirection: state.stableDirection,
           countdownSeconds: state.countdownSeconds,
           itemBuilder: (context, index, item, stable, cd, totalTimer) {
-            return _buildMovementCard(context, index, wheelchairState, ar, stable, cd, totalTimer, cubit);
+            return _buildCard(context, index, wheelchairState, ar,
+                stable, cd, totalTimer, cubit);
           },
           onAction: (eye, ctx) async {
-            if (eye != 'closed') {
+            if (eye == 'closed') {
+              // ✅ إيقاف الـ polling عند الخروج
+              try {
+                final cubit = context.read<WheelchairCubit>();
+                cubit.stopPolling();
+              } catch (_) {}
+              if (Navigator.canPop(ctx)) Navigator.pop(ctx);
+            } else {
               cubit.executeCommand(eye);
             }
           },
@@ -74,72 +87,78 @@ class _WheelchairView extends StatelessWidget {
     );
   }
 
-  Widget _buildMovementCard(
-      BuildContext context,
-      int index,
-      WheelchairState state,
-      bool ar,
-      String stable,
-      int cd,
-      int totalTimer,
-      WheelchairCubit cubit,
-      ) {
+  Widget _buildCard(
+    BuildContext context,
+    int index,
+    WheelchairState state,
+    bool ar,
+    String stable,
+    int cd,
+    int totalTimer,
+    WheelchairCubit cubit,
+  ) {
     switch (index) {
       case 0:
         return DeviceSwitchCard(
           iconAsset: 'assets/forward.png',
+          isIcon: false,
           label: ar ? 'للأمام' : 'Forward',
           gestureName: eyeName('up'),
           eyeCmd: 'up',
-          isOn: null,
+          isOn: state.currentDirection == 'F' ? true : null,
           activeColor: const Color(0xFF388E3C),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('up'),
         );
+
       case 1:
         return DeviceSwitchCard(
           iconAsset: 'assets/backward.png',
+          isIcon: false,
           label: ar ? 'للخلف' : 'Backward',
           gestureName: eyeName('down'),
           eyeCmd: 'down',
-          isOn: null,
+          isOn: state.currentDirection == 'B' ? true : null,
           activeColor: const Color(0xFFD32F2F),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('down'),
         );
+
       case 2:
         return DeviceSwitchCard(
           iconAsset: 'assets/left_arrow.png',
+          isIcon: false,
           label: ar ? 'يسار' : 'Left',
           gestureName: eyeName('left'),
           eyeCmd: 'left',
-          isOn: null,
+          isOn: state.currentDirection == 'L' ? true : null,
           activeColor: const Color(0xFF1976D2),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('left'),
         );
+
       case 3:
         return DeviceSwitchCard(
           iconAsset: 'assets/right_arrow.png',
+          isIcon: false,
           label: ar ? 'يمين' : 'Right',
           gestureName: eyeName('right'),
           eyeCmd: 'right',
-          isOn: null,
+          isOn: state.currentDirection == 'R' ? true : null,
           activeColor: const Color(0xFF7B1FA2),
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () => cubit.executeCommand('right'),
         );
+
       case 4:
+      default:
         return DeviceSwitchCard(
           iconAsset: 'assets/back.png',
+          isIcon: false,
           label: ar ? 'رجوع' : 'Back',
           gestureName: eyeName('closed'),
           eyeCmd: 'closed',
@@ -148,13 +167,7 @@ class _WheelchairView extends StatelessWidget {
           stable: stable,
           cd: cd,
           totalTimer: totalTimer,
-          onTap: () {
-            cubit.executeCommand('closed');
-            if (Navigator.canPop(context)) Navigator.pop(context);
-          },
         );
-      default:
-        return const SizedBox();
     }
   }
 }
